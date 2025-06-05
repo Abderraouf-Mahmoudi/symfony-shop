@@ -1,0 +1,44 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Blog Detail{% endblock %}
+
+{% block body %}
+    <!-- Title page -->
+    <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('{{ asset('front/images/bg-02.jpg') }}');">
+        <h2 class="ltext-105 cl0 txt-center">
+            Blog Detail
+        </h2>
+    </section>
+    <!-- Content page -->
+    <section class="bg0 p-t-62 p-b-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-lg-9 p-b-80">
+                    <div class="p-r-45 p-r-0-lg">
+                        <div class="wrap-pic-w how-pos5-parent">
+                            <img src="{{ asset('front/images/blog-04.jpg') }}" alt="IMG-BLOG">
+                            <div class="flex-col-c-m size-123 bg9 how-pos5">
+                                <span class="ltext-107 cl2 txt-center">22</span>
+                                <span class="stext-109 cl3 txt-center">Jan 2018</span>
+                            </div>
+                        </div>
+                        <div class="p-t-32">
+                            <span class="flex-w flex-m stext-111 cl2 p-b-19">
+                                <span><span class="cl4">By</span> Admin  <span class="cl12 m-l-4 m-r-6">|</span></span>
+                                <span>StreetStyle, Fashion, Couple  <span class="cl12 m-l-4 m-r-6">|</span></span>
+                                <span>8 Comments</span>
+                            </span>
+                            <h4 class="p-b-15">
+                                8 Inspiring Ways to Wear Dresses in the Winter
+                            </h4>
+                            <p class="stext-117 cl6 p-b-26">Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce eget dictum tortor. Donec dictum vitae sapien eu varius</p>
+                            <p class="stext-117 cl6 p-b-26">Mauris non lacinia magna. Sed nec lobortis dolor. Vestibulum rhoncus dignissim risus, sed consectetur erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam maximus mauris sit amet odio convallis, in pharetra magna gravida. Praesent sed nunc fermentum mi molestie tempor. Morbi vitae viverra odio. Pellentesque ac velit egestas, luctus arcu non, laoreet mauris. Sed in ipsum tempor, consequat odio in, porttitor ante. Ut mauris ligula, volutpat in sodales in, porta non odio. Pellentesque tempor urna vitae mi vestibulum, nec venenatis nulla lobortis. Proin at gravida ante. Mauris auctor purus at lacus maximus euismod. Pellentesque vulputate massa ut nisl hendrerit, eget elementum libero iaculis.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Sidebar content can be added here if needed -->
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

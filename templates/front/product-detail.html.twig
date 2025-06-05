@@ -1,0 +1,44 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Product Detail{% endblock %}
+
+{% block body %}
+    <!-- Title page -->
+    <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('{{ asset('front/images/bg-02.jpg') }}');">
+        <h2 class="ltext-105 cl0 txt-center">
+            Product Detail
+        </h2>
+    </section>
+    <!-- Content page -->
+    <section class="sec-product-detail bg0 p-t-65 p-b-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-7 p-b-30">
+                    <div class="p-l-25 p-r-30 p-lr-0-lg">
+                        <div class="wrap-slick3 flex-sb flex-w">
+                            <div class="wrap-slick3-dots"></div>
+                            <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
+                            <div class="slick3 gallery-lb">
+                                <div class="item-slick3" data-thumb="{{ asset('front/images/product-detail-01.jpg') }}">
+                                    <div class="wrap-pic-w pos-relative">
+                                        <img src="{{ asset('front/images/product-detail-01.jpg') }}" alt="IMG-PRODUCT">
+                                    </div>
+                                </div>
+                                <!-- More product images can be added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-5 p-b-30">
+                    <div class="p-r-50 p-t-5 p-lr-0-lg">
+                        <h4 class="mtext-105 cl2 js-name-detail p-b-14">Product Name</h4>
+                        <span class="mtext-106 cl2">$58.79</span>
+                        <p class="stext-102 cl3 p-t-23">Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.</p>
+                        <!-- Add to cart form or button can go here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
