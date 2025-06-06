@@ -59,15 +59,15 @@
                                         </td>
                                         <td>{{ order.createdAt|date('Y-m-d H:i') }}</td>
                                         <td>
-                                            <div class="form-button-action">
-                                                <a href="{{ path('admin_orders_show', {'id': order.id}) }}" class="btn btn-link btn-info btn-lg" data-toggle="tooltip" title="View Order">
+                                            <div class="form-button-action d-flex justify-content-center">
+                                                <a href="{{ path('admin_orders_show', {'id': order.id}) }}" class="btn btn-info btn-sm rounded-circle shadow-sm mx-2" data-toggle="tooltip" title="View Order">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                                 
-                                                <form method="POST" action="{{ path('admin_orders_delete', {'id': order.id}) }}" onsubmit="return confirm('Are you sure you want to delete this order?');" style="display: inline-block;">
+                                                <form method="POST" action="{{ path('admin_orders_delete', {'id': order.id}) }}" onsubmit="return confirm('Are you sure you want to delete this order?');" class="mx-2">
                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ order.id) }}">
-                                                    <button type="submit" class="btn btn-link btn-danger" data-toggle="tooltip" title="Delete Order">
-                                                        <i class="fa fa-times"></i>
+                                                    <button type="submit" class="btn btn-danger btn-sm rounded-circle shadow-sm" data-toggle="tooltip" title="Delete Order">
+                                                        <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
                                             </div>

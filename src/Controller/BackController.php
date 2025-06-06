@@ -6,6 +6,7 @@ use App\Entity\Order;
 use App\Entity\Product;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,30 +16,35 @@ use Symfony\Component\Routing\Annotation\Route;
 class BackController extends AbstractController
 {
     #[Route('', name: 'admin_dashboard')]
-    public function dashboard(ProductRepository $productRepository, OrderRepository $orderRepository): Response
+    public function dashboard(EntityManagerInterface $entityManager): Response
     {
-        // Get count of products for dashboard widgets
-        $productCount = $productRepository->count([]);
+        // Get total number of products
+        $productRepository = $entityManager->getRepository('App\Entity\Product');
+        $totalProducts = $productRepository->count([]);
         
-        // Get only pending orders
-        $pendingOrders = $orderRepository->findBy(['status' => 'pending'], ['createdAt' => 'DESC']);
-        $pendingOrderCount = count($pendingOrders);
+        // Get orders counts by status
+        $orderRepository = $entityManager->getRepository('App\Entity\Order');
+        $pendingOrderCount = $orderRepository->count(['status' => 'pending']);
+        $canceledOrderCount = $orderRepository->count(['status' => 'canceled']);
         
-        // Get recent orders for the orders table (limit to 5)
+        // Get revenue (income)
+        $settingRepository = $entityManager->getRepository('App\Entity\Setting');
+        $incomeSetting = $settingRepository->findOneBy(['name' => 'income']);
+        $revenue = $incomeSetting ? $incomeSetting->getValue() : '0';
+        
+        // Get recent orders (limit 5)
         $recentOrders = $orderRepository->findBy([], ['createdAt' => 'DESC'], 5);
         
-        // Calculate revenue from completed orders
-        $completedOrders = $orderRepository->findBy(['status' => 'done']);
-        $revenue = 0;
-        foreach ($completedOrders as $order) {
-            $revenue += $order->getTotalAmount();
-        }
-        
+        // Get current date
+        $now = new \DateTimeImmutable();
+
         return $this->render('back/home.html.twig', [
-            'product_count' => $productCount,
+            'product_count' => $totalProducts,
             'pending_order_count' => $pendingOrderCount,
+            'canceled_order_count' => $canceledOrderCount,
+            'revenue' => $revenue,
             'recent_orders' => $recentOrders,
-            'revenue' => $revenue
+            'current_date' => $now
         ]);
     }
     

@@ -79,24 +79,24 @@
         </div>
         
         <div class="col-sm-6 col-md-3">
-            <div class="card card-stats card-secondary card-round">
+            <div class="card card-stats card-danger card-round">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-5">
                             <div class="icon-big text-center">
-                                <i class="fas fa-users"></i>
+                                <i class="fas fa-times-circle"></i>
                             </div>
                         </div>
                         <div class="col-7 col-stats">
                             <div class="numbers">
-                                <p class="card-category">Customers</p>
-                                <h4 class="card-title">0</h4>
+                                <p class="card-category">Canceled Orders</p>
+                                <h4 class="card-title">{{ canceled_order_count }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="card-link">Total registered <i class="fa fa-users ml-2"></i></div>
+                    <a href="{{ path('admin_orders_index') }}" class="card-link">View all orders <i class="fa fa-arrow-right ml-2"></i></a>
                 </div>
             </div>
         </div>
@@ -164,13 +164,13 @@
                 </div>
                 <div class="card-body pb-0">
                     <div class="d-flex mb-3">
-                        <a href="{{ path('admin_products_new') }}" class="btn btn-primary btn-block"><i class="fa fa-plus mr-2"></i> Add New Product</a>
+                        <a href="{{ path('admin_products_new') }}" class="btn btn-primary btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-plus mr-2"></i> Add New Product</a>
                     </div>
                     <div class="d-flex mb-3">
-                        <a href="{{ path('admin_products') }}" class="btn btn-info btn-block"><i class="fa fa-list mr-2"></i> Manage Products</a>
+                        <a href="{{ path('admin_products') }}" class="btn btn-info btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-list mr-2"></i> Manage Products</a>
                     </div>
                     <div class="d-flex mb-3">
-                        <a href="{{ path('admin_orders_index') }}" class="btn btn-warning btn-block"><i class="fa fa-shopping-cart mr-2"></i> Manage Orders</a>
+                        <a href="{{ path('admin_orders_index') }}" class="btn btn-warning btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-shopping-cart mr-2"></i> Manage Orders</a>
                     </div>
                 </div>
             </div>
