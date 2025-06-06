@@ -39,6 +39,9 @@ class Product
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    #[ORM\Column(type: 'boolean', options: ["default" => false])]
+    private $isNew = false;
+
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: OrderItem::class)]
     private $orderItems;
 
@@ -176,6 +179,18 @@ class Product
             }
         }
 
+        return $this;
+    }
+
+    public function isNew(): ?bool
+    {
+        return $this->isNew;
+    }
+
+    public function setIsNew(bool $isNew): self
+    {
+        $this->isNew = $isNew;
+        
         return $this;
     }
 }

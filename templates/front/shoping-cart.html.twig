@@ -10,7 +10,7 @@
         </h2>
     </section>
     <!-- Content page -->
-    <form class="bg0 p-t-75 p-b-85">
+    <form class="bg0 p-t-75 p-b-85" action="{{ path('update_cart_form') }}" method="post">
         <div class="container">
             <div class="row">
                 <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
@@ -23,44 +23,62 @@
                                     <th class="column-3">Price</th>
                                     <th class="column-4">Quantity</th>
                                     <th class="column-5">Total</th>
+                                    <th class="column-5">Action</th>
                                 </tr>
-                                <tr class="table_row">
-                                    <td class="column-1">
-                                        <div class="how-itemcart1">
-                                            <img src="{{ asset('front/images/item-cart-01.jpg') }}" alt="IMG">
-                                        </div>
-                                    </td>
-                                    <td class="column-2">Product Name</td>
-                                    <td class="column-3">$36.00</td>
-                                    <td class="column-4">
-                                        <div class="wrap-num-product flex-w m-l-auto m-r-0">
-                                            <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-                                                <i class="fs-16 zmdi zmdi-minus"></i>
-                                            </div>
-                                            <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product1" value="1">
-                                            <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-                                                <i class="fs-16 zmdi zmdi-plus"></i>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="column-5">$36.00</td>
-                                </tr>
-                                <!-- More cart items can be added here -->
+                                
+                                {% if items is empty %}
+                                    <tr class="table_row">
+                                        <td colspan="6" class="text-center p-4">
+                                            <div class="alert alert-info">Your cart is empty</div>
+                                            <a href="{{ path('front_home') }}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-tb-10">
+                                                Continue Shopping
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    {% for item in items %}
+                                        <tr class="table_row">
+                                            <td class="column-1">
+                                                <div class="how-itemcart1">
+                                                    {% if item.product.imagePath %}
+                                                        <img src="{{ asset('uploads/products/' ~ item.product.imagePath) }}" alt="{{ item.product.name }}">
+                                                    {% else %}
+                                                        <img src="{{ asset('front/images/product-placeholder.jpg') }}" alt="{{ item.product.name }}">
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td class="column-2">{{ item.product.name }}</td>
+                                            <td class="column-3">${{ item.product.price|number_format(2) }}</td>
+                                            <td class="column-4">
+                                                <div class="wrap-num-product flex-w m-l-auto m-r-0">
+                                                    <a href="{{ path('update_cart_item_quantity', {'id': item.product.id, 'action': 'decrease'}) }}" class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                                        <i class="fs-16 zmdi zmdi-minus"></i>
+                                                    </a>
+                                                    <input class="mtext-104 cl3 txt-center num-product" type="number" name="quantities[{{ item.product.id }}]" value="{{ item.quantity }}">
+                                                    <a href="{{ path('update_cart_item_quantity', {'id': item.product.id, 'action': 'increase'}) }}" class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                                        <i class="fs-16 zmdi zmdi-plus"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td class="column-5">${{ (item.product.price * item.quantity)|number_format(2) }}</td>
+                                            <td class="column-6">
+                                                <a href="{{ path('remove_from_cart', {'id': item.product.id}) }}" class="btn-remove-cart" onclick="return confirm('Are you sure you want to remove this item?')">
+                                                    <i class="fs-16 zmdi zmdi-delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
                             </table>
                         </div>
-                        <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-                            <div class="flex-w flex-m m-r-20 m-tb-5">
-                                <input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Coupon Code">
-                                <div class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-                                    Apply coupon
-                                </div>
-                            </div>
-                            <div class="flex-c-m stext-101 cl2 size-119 bg3 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-                                Update Cart
-                            </div>
-                        </div>
+                        
+                        {% if items is not empty %}
+                        <!-- Cart controls removed -->
+                        {% endif %}
                     </div>
                 </div>
+                
+                {% if items is not empty %}
                 <div class="col-lg-7 col-xl-5 m-lr-auto m-b-50">
                     <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-lr-0-xl p-lr-15-sm">
                         <h4 class="mtext-109 cl2 p-b-30">Cart Totals</h4>
@@ -69,7 +87,7 @@
                                 <span class="stext-110 cl2">Subtotal:</span>
                             </div>
                             <div class="size-209">
-                                <span class="mtext-110 cl2">$36.00</span>
+                                <span class="mtext-110 cl2">${{ total|number_format(2) }}</span>
                             </div>
                         </div>
                         <div class="flex-w flex-t bor12 p-t-15 p-b-30">
@@ -77,14 +95,101 @@
                                 <span class="stext-110 cl2">Total:</span>
                             </div>
                             <div class="size-209">
-                                <span class="mtext-110 cl2">$36.00</span>
+                                <span class="mtext-110 cl2">${{ total|number_format(2) }}</span>
                             </div>
                         </div>
-                        <a href="{{ path('front_contact') }}" class="flex-c-m stext-101 cl0 size-112 bg3 bor15 hov-btn3 p-lr-15 trans-04 pointer">Proceed to Checkout</a>
+                        <button type="button" class="flex-c-m stext-101 cl0 size-112 bg3 bor15 hov-btn3 p-lr-15 trans-04 pointer" data-toggle="modal" data-target="#checkoutModal">Proceed to Checkout</button>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </form>
+    <!-- Checkout Modal -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mtext-105" id="checkoutModalLabel">Checkout Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ path('place_order') }}" method="post">
+                <div class="modal-body p-4">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Full Name</label>
+                                <input type="text" class="form-control" id="fullname" name="fullname" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="text" class="form-control" id="phone" name="phone" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="address">Delivery Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" id="city" name="city" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="postalCode">Postal Code</label>
+                                <input type="text" class="form-control" id="postalCode" name="postalCode" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="size">Size</label>
+                                <select class="form-control" id="size" name="size" required>
+                                    <option value="">Select Size</option>
+                                    <option value="XS">XS</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                    <option value="XXXL">XXXL</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="notes">Additional Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+                    </div>
+                    <div class="order-summary mt-4">
+                        <h4 class="mtext-105 mb-3">Order Summary</h4>
+                        <ul class="list-group mb-3">
+                            {% for item in items %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                                <strong>${{ (item.product.price * item.quantity)|number_format(2) }}</strong>
+                            </li>
+                            {% endfor %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Total</span>
+                                <strong>${{ total|number_format(2) }}</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
-

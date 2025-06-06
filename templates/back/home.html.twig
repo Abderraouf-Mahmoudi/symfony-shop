@@ -44,13 +44,13 @@
                         <div class="col-7 col-stats">
                             <div class="numbers">
                                 <p class="card-category">Pending Orders</p>
-                                <h4 class="card-title">{{ recent_orders|length }}</h4>
+                                <h4 class="card-title">{{ pending_order_count }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('admin_orders') }}" class="card-link">View all orders <i class="fa fa-arrow-right ml-2"></i></a>
+                    <a href="{{ path('admin_orders_index') }}" class="card-link">View all orders <i class="fa fa-arrow-right ml-2"></i></a>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
                         <div class="col-7 col-stats">
                             <div class="numbers">
                                 <p class="card-category">Revenue</p>
-                                <h4 class="card-title">$0</h4>
+                                <h4 class="card-title">${{ revenue }}</h4>
                             </div>
                         </div>
                     </div>
@@ -132,14 +132,12 @@
                                         <td>
                                             {% if order.status == 'pending' %}
                                                 <span class="badge badge-warning">Pending</span>
-                                            {% elseif order.status == 'processing' %}
-                                                <span class="badge badge-info">Processing</span>
-                                            {% elseif order.status == 'shipped' %}
-                                                <span class="badge badge-primary">Shipped</span>
-                                            {% elseif order.status == 'delivered' %}
-                                                <span class="badge badge-success">Delivered</span>
-                                            {% elseif order.status == 'cancelled' %}
-                                                <span class="badge badge-danger">Cancelled</span>
+                                            {% elseif order.status == 'done' %}
+                                                <span class="badge badge-success">Done</span>
+                                            {% elseif order.status == 'canceled' %}
+                                                <span class="badge badge-danger">Canceled</span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">{{ order.status|capitalize }}</span>
                                             {% endif %}
                                         </td>
                                         <td>{{ order.createdAt|date('Y-m-d') }}</td>
@@ -172,7 +170,7 @@
                         <a href="{{ path('admin_products') }}" class="btn btn-info btn-block"><i class="fa fa-list mr-2"></i> Manage Products</a>
                     </div>
                     <div class="d-flex mb-3">
-                        <a href="{{ path('admin_orders') }}" class="btn btn-warning btn-block"><i class="fa fa-shopping-cart mr-2"></i> Manage Orders</a>
+                        <a href="{{ path('admin_orders_index') }}" class="btn btn-warning btn-block"><i class="fa fa-shopping-cart mr-2"></i> Manage Orders</a>
                     </div>
                 </div>
             </div>

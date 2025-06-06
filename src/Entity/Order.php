@@ -40,8 +40,23 @@ class Order
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'orderRef', targetEntity: OrderItem::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'orderRef', targetEntity: OrderItem::class, orphanRemoval: true, cascade: ['persist'])]
     private $items;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    private $phone;
+
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    private $size;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private $city;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    private $postalCode;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $notes;
 
     public function __construct()
     {
@@ -177,6 +192,66 @@ class Order
                 $item->setOrderRef(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getSize(): ?string
+    {
+        return $this->size;
+    }
+
+    public function setSize(?string $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): self
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): self
+    {
+        $this->notes = $notes;
 
         return $this;
     }

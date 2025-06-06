@@ -16,7 +16,7 @@
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ path('admin_orders') }}">Orders</a>
+                <a href="{{ path('admin_orders_index') }}">Orders</a>
             </li>
             <li class="separator">
                 <i class="flaticon-right-arrow"></i>
@@ -51,7 +51,7 @@
                                     <i class="fa fa-trash"></i> Delete Order
                                 </button>
                             </form>
-                            <a href="{{ path('admin_orders') }}" class="btn btn-primary btn-sm ml-2">
+                            <a href="{{ path('admin_orders_index') }}" class="btn btn-primary btn-sm ml-2">
                                 <i class="fa fa-arrow-left"></i> Back to Orders
                             </a>
                         </div>
@@ -74,6 +74,8 @@
                                                 <p class="card-category">Customer Information</p>
                                                 <h4 class="card-title">{{ order.customerName }}</h4>
                                                 <p class="card-text">{{ order.customerEmail }}</p>
+                                                <p class="card-text">Phone: {{ order.phone }}</p>
+                                                <p class="card-text">Size: {{ order.size }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -93,13 +95,11 @@
                                         <div class="col col-stats ml-3 ml-sm-0">
                                             <div class="numbers">
                                                 <p class="card-category">Status</p>
-                                                <form method="POST" action="{{ path('admin_orders_status', {'id': order.id}) }}" id="statusForm">
-                                                    <select name="status" id="orderStatus" class="form-control form-control-sm" onchange="document.getElementById('statusForm').submit();">
-                                                        <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
-                                                        <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
-                                                        <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
-                                                        <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
-                                                        <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                                <form method="GET" id="statusForm">
+                                                    <select name="status" class="form-control form-control-sm" onchange="updateOrderStatus(this.value);">
+                                                        <option value="pending" {{ order.status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                                        <option value="done" {{ order.status == 'done' ? 'selected' : '' }}>Done</option>
+                                                        <option value="canceled" {{ order.status == 'canceled' ? 'selected' : '' }}>Canceled</option>
                                                     </select>
                                                 </form>
                                                 <p class="card-text mt-2">Order Date: {{ order.createdAt|date('Y-m-d H:i') }}</p>
@@ -125,6 +125,8 @@
                                             <div class="numbers">
                                                 <p class="card-category">Shipping Address</p>
                                                 <p class="card-text">{{ order.shippingAddress }}</p>
+                                                <p class="card-text">City: {{ order.city }}</p>
+                                                <p class="card-text">Postal Code: {{ order.postalCode }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -181,7 +183,7 @@
                                                 </td>
                                                 <td>
                                                     <strong>{{ item.product.name }}</strong><br>
-                                                    <small class="text-muted">{{ item.product.description|u.truncate(50, '...') }}</small>
+                                                    <small class="text-muted">{{ item.product.description|length > 50 ? item.product.description|slice(0, 50) ~ '...' : item.product.description }}</small>
                                                 </td>
                                                 <td>${{ item.price }}</td>
                                                 <td>{{ item.quantity }}</td>
@@ -208,4 +210,22 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('#recent-orders').DataTable({
+                "pageLength": 5,
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+            });
+        });
+        
+        function updateOrderStatus(status) {
+            if (confirm('Are you sure you want to change the order status to ' + status + '?')) {
+                window.location.href = '{{ path('admin_orders_update_status', {'id': order.id, 'status': 'STATUS_PLACEHOLDER'}) }}'.replace('STATUS_PLACEHOLDER', status);
+            }
+        }
+    </script>
 {% endblock %}

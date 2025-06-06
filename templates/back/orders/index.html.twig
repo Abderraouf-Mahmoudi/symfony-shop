@@ -49,14 +49,12 @@
                                         <td>
                                             {% if order.status == 'pending' %}
                                                 <span class="badge badge-warning">Pending</span>
-                                            {% elseif order.status == 'processing' %}
-                                                <span class="badge badge-info">Processing</span>
-                                            {% elseif order.status == 'shipped' %}
-                                                <span class="badge badge-primary">Shipped</span>
-                                            {% elseif order.status == 'delivered' %}
-                                                <span class="badge badge-success">Delivered</span>
-                                            {% elseif order.status == 'cancelled' %}
-                                                <span class="badge badge-danger">Cancelled</span>
+                                            {% elseif order.status == 'done' %}
+                                                <span class="badge badge-success">Done</span>
+                                            {% elseif order.status == 'canceled' %}
+                                                <span class="badge badge-danger">Canceled</span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">{{ order.status|capitalize }}</span>
                                             {% endif %}
                                         </td>
                                         <td>{{ order.createdAt|date('Y-m-d H:i') }}</td>

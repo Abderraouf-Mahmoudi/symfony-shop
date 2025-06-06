@@ -17,13 +17,28 @@ class BackController extends AbstractController
     #[Route('', name: 'admin_dashboard')]
     public function dashboard(ProductRepository $productRepository, OrderRepository $orderRepository): Response
     {
-        // Get count of products and recent orders for dashboard widgets
+        // Get count of products for dashboard widgets
         $productCount = $productRepository->count([]);
+        
+        // Get only pending orders
+        $pendingOrders = $orderRepository->findBy(['status' => 'pending'], ['createdAt' => 'DESC']);
+        $pendingOrderCount = count($pendingOrders);
+        
+        // Get recent orders for the orders table (limit to 5)
         $recentOrders = $orderRepository->findBy([], ['createdAt' => 'DESC'], 5);
+        
+        // Calculate revenue from completed orders
+        $completedOrders = $orderRepository->findBy(['status' => 'done']);
+        $revenue = 0;
+        foreach ($completedOrders as $order) {
+            $revenue += $order->getTotalAmount();
+        }
         
         return $this->render('back/home.html.twig', [
             'product_count' => $productCount,
-            'recent_orders' => $recentOrders
+            'pending_order_count' => $pendingOrderCount,
+            'recent_orders' => $recentOrders,
+            'revenue' => $revenue
         ]);
     }
     
@@ -114,46 +129,5 @@ class BackController extends AbstractController
         return $this->redirectToRoute('admin_products');
     }
     
-    // Order CRUD Operations
-    #[Route('/orders', name: 'admin_orders')]
-    public function orderList(OrderRepository $orderRepository): Response
-    {
-        return $this->render('back/orders/index.html.twig', [
-            'orders' => $orderRepository->findAll()
-        ]);
-    }
-    
-    #[Route('/orders/{id}', name: 'admin_orders_show')]
-    public function orderShow(Order $order): Response
-    {
-        return $this->render('back/orders/show.html.twig', [
-            'order' => $order
-        ]);
-    }
-    
-    #[Route('/orders/{id}/status', name: 'admin_orders_status', methods: ['POST'])]
-    public function orderUpdateStatus(Request $request, Order $order, OrderRepository $orderRepository): Response
-    {
-        $newStatus = $request->request->get('status');
-        if (in_array($newStatus, ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])) {
-            $order->setStatus($newStatus);
-            $order->setUpdatedAt(new \DateTimeImmutable());
-            $orderRepository->add($order);
-            
-            $this->addFlash('success', 'Order status updated successfully!');
-        }
-        
-        return $this->redirectToRoute('admin_orders_show', ['id' => $order->getId()]);
-    }
-    
-    #[Route('/orders/{id}/delete', name: 'admin_orders_delete', methods: ['POST'])]
-    public function deleteOrder(Request $request, Order $order, OrderRepository $orderRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$order->getId(), $request->request->get('_token'))) {
-            $orderRepository->remove($order);
-            $this->addFlash('success', 'Order deleted successfully!');
-        }
-        
-        return $this->redirectToRoute('admin_orders');
-    }
+    // Order operations moved to OrderController - see OrderController.php for all order related functionality
 }
