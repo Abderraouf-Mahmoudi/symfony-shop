@@ -1,0 +1,110 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Create New Product{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Products Management</h4>
+        <ul class="breadcrumbs">
+            <li class="nav-home">
+                <a href="{{ path('admin_dashboard') }}">
+                    <i class="flaticon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('admin_products') }}">Products</a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <span>New Product</span>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Create New Product</div>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">Product Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter product name" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="price">Price ($)</label>
+                                    <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" placeholder="Enter price" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="stock">Stock Quantity</label>
+                                    <input type="number" min="0" class="form-control" id="stock" name="stock" placeholder="Enter stock quantity" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="category">Category</label>
+                                    <select class="form-control" id="category" name="category" required>
+                                        <option value="">Select a category</option>
+                                        <option value="men">Men</option>
+                                        <option value="women">Women</option>
+                                        <option value="kids">Kids</option>
+                                        <option value="accessories">Accessories</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="Enter product description" required></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="image">Product Image</label>
+                                    <div class="input-file input-file-image">
+                                        <img class="img-upload-preview" width="150" src="{{ asset('back/img/placeholder.jpg') }}" alt="preview">
+                                        <input type="file" class="form-control form-control-file" id="image" name="image" accept="image/*">
+                                        <label for="image" class="btn btn-primary btn-round btn-lg"><i class="fa fa-file-image"></i> Upload an Image</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">Create Product</button>
+                            <a href="{{ path('admin_products') }}" class="btn btn-danger">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Image preview
+        $(document).ready(function() {
+            $('#image').change(function() {
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    $('.img-upload-preview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            });
+        });
+    </script>
+{% endblock %}

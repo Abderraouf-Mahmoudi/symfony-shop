@@ -1,0 +1,3 @@
+This file indicates the need for a placeholder.jpg image in this directory. 
+Please add a 300x300px placeholder image with the filename 'placeholder.jpg' to this directory.
+The image should be used for products that don't have an assigned image.

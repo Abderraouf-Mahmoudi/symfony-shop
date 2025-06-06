@@ -1,0 +1,213 @@
+{% extends 'base_back.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('back/assets/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/assets/css/plugins.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/assets/css/kaiadmin.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/assets/css/fonts.min.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('back/assets/js/plugin/webfont/webfont.min.js') }}"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["{{ asset('back/assets/css/fonts.min.css') }}"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+    
+    <!--   Core JS Files   -->
+    <script src="{{ asset('back/assets/js/core/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('back/assets/js/core/popper.min.js') }}"></script>
+    <script src="{{ asset('back/assets/js/core/bootstrap.min.js') }}"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="{{ asset('back/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
+
+    <!-- Chart JS -->
+    <script src="{{ asset('back/assets/js/plugin/chart.js/chart.min.js') }}"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="{{ asset('back/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js') }}"></script>
+
+    <!-- Chart Circle -->
+    <script src="{{ asset('back/assets/js/plugin/chart-circle/circles.min.js') }}"></script>
+
+    <!-- Datatables -->
+    <script src="{{ asset('back/assets/js/plugin/datatables/datatables.min.js') }}"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="{{ asset('back/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="{{ asset('back/assets/js/plugin/jsvectormap/jsvectormap.min.js') }}"></script>
+    <script src="{{ asset('back/assets/js/plugin/jsvectormap/world.js') }}"></script>
+
+    <!-- Sweet Alert -->
+    <script src="{{ asset('back/assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="{{ asset('back/assets/js/kaiadmin.min.js') }}"></script>
+
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="{{ asset('back/assets/js/setting-demo.js') }}"></script>
+    <script src="{{ asset('back/assets/js/demo.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="wrapper">
+  <!-- Sidebar -->
+  <div class="sidebar" data-background-color="dark">
+    <div class="sidebar-logo">
+      <!-- Logo Header -->
+      <div class="logo-header" data-background-color="dark">
+        <a href="{{ path('admin_dashboard') }}" class="logo">
+          <img
+            src="{{ asset('back/assets/img/kaiadmin/logo_light.svg') }}"
+            alt="navbar brand"
+            class="navbar-brand"
+            height="20"
+          />
+        </a>
+        <div class="nav-toggle">
+          <button class="btn btn-toggle toggle-sidebar">
+            <i class="gg-menu-right"></i>
+          </button>
+          <button class="btn btn-toggle sidenav-toggler">
+            <i class="gg-menu-left"></i>
+          </button>
+        </div>
+        <button class="topbar-toggler more">
+          <i class="gg-more-vertical-alt"></i>
+        </button>
+      </div>
+      <!-- End Logo Header -->
+    </div>
+    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+      <div class="sidebar-content">
+        <ul class="nav nav-secondary">
+          <li class="nav-item {% if app.request.attributes.get('_route') == 'admin_dashboard' %}active{% endif %}">
+            <a href="{{ path('admin_dashboard') }}">
+              <i class="fas fa-home"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-section">
+            <span class="sidebar-mini-icon">
+              <i class="fa fa-ellipsis-h"></i>
+            </span>
+            <h4 class="text-section">Catalog</h4>
+          </li>
+          <li class="nav-item {% if app.request.attributes.get('_route') starts with 'admin_products' %}active{% endif %}">
+            <a href="{{ path('admin_products') }}">
+              <i class="fas fa-tshirt"></i>
+              <p>Products</p>
+            </a>
+          </li>
+          <li class="nav-section">
+            <span class="sidebar-mini-icon">
+              <i class="fa fa-ellipsis-h"></i>
+            </span>
+            <h4 class="text-section">Sales</h4>
+          </li>
+          <li class="nav-item {% if app.request.attributes.get('_route') starts with 'admin_orders' %}active{% endif %}">
+            <a href="{{ path('admin_orders') }}">
+              <i class="fas fa-shopping-cart"></i>
+              <p>Orders</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- End Sidebar -->
+
+  <div class="main-panel">
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+    
+    <footer class="footer">
+      <div class="container-fluid">
+        <nav class="pull-left">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#"> Help </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="copyright ml-auto">
+          {{ "now"|date("Y") }} © Clothing Shop Admin
+        </div>
+      </div>
+    </footer>
+  </div>
+  
+  <!-- Custom template -->
+  <div class="custom-template">
+    <div class="title">Settings</div>
+    <div class="custom-content">
+      <div class="switcher">
+        <div class="switch-block">
+          <h4>Logo Header</h4>
+          <div class="btnSwitch">
+            <button type="button" class="changeLogoHeaderColor" data-color="dark"></button>
+            <button type="button" class="selected changeLogoHeaderColor" data-color="blue"></button>
+            <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
+            <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
+            <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
+            <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
+            <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
+            <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
+          </div>
+        </div>
+        <div class="switch-block">
+          <h4>Navbar Header</h4>
+          <div class="btnSwitch">
+            <button type="button" class="changeTopBarColor" data-color="dark"></button>
+            <button type="button" class="changeTopBarColor" data-color="blue"></button>
+            <button type="button" class="changeTopBarColor" data-color="purple"></button>
+            <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
+            <button type="button" class="changeTopBarColor" data-color="green"></button>
+            <button type="button" class="changeTopBarColor" data-color="orange"></button>
+            <button type="button" class="changeTopBarColor" data-color="red"></button>
+            <button type="button" class="selected changeTopBarColor" data-color="white"></button>
+            <button type="button" class="changeTopBarColor" data-color="dark2"></button>
+            <button type="button" class="changeTopBarColor" data-color="blue2"></button>
+            <button type="button" class="changeTopBarColor" data-color="purple2"></button>
+            <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
+            <button type="button" class="changeTopBarColor" data-color="green2"></button>
+            <button type="button" class="changeTopBarColor" data-color="orange2"></button>
+            <button type="button" class="changeTopBarColor" data-color="red2"></button>
+          </div>
+        </div>
+        <div class="switch-block">
+          <h4>Sidebar</h4>
+          <div class="btnSwitch">
+            <button type="button" class="changeSideBarColor" data-color="white"></button>
+            <button type="button" class="selected changeSideBarColor" data-color="dark"></button>
+            <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-toggle">
+      <i class="icon-settings"></i>
+    </div>
+  </div>
+  <!-- End Custom template -->
+</div>
+{% endblock %}
