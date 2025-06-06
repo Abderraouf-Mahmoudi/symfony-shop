@@ -1,7 +1,6 @@
 # Symfony Clothing Shop
 
 <div align="center">
-  <img src="ClothingApp/public/img/logo.png" alt="Clothing Shop Logo" width="200"/>
   <h3>A modern e-commerce platform built with Symfony</h3>
 </div>
 
