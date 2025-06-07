@@ -17,7 +17,11 @@
 
                     {% if app.user %}
                         <div class="alert alert-info mb-3">
-                            You are already logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                            You are already logged in as {{ app.user.userIdentifier }},
+                            <form method="post" action="{{ path('admin_logout') }}" class="d-inline">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+                                <button type="submit" class="btn btn-link p-0 align-baseline text-decoration-underline">Logout</button>
+                            </form>
                         </div>
                     {% endif %}
                     

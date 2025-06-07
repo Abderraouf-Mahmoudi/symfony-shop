@@ -21,21 +21,33 @@ security:
         # Back office firewall - with authentication
         back:
             pattern: ^/(admin|login)
-            lazy: true
+            lazy: false  # Désactive le chargement paresseux pour forcer la vérification immédiate
             provider: app_user_provider
             custom_authenticator: App\Security\AppCustomAuthenticator
+            entry_point: App\Security\AppCustomAuthenticator
+            
+            # Configuration explicite de la session
+            stateless: false 
+            
+            # Configuration du logout Symfony natif 
             logout:
-                path: app_logout
-                # where to redirect after logout
+                path: admin_logout
                 target: app_login
-
+                invalidate_session: true
+                delete_cookies:
+                    PHPSESSID: { path: '/' }
+                    REMEMBERME: { path: '/' }
+                    sf_redirect: { path: '/' }
+                csrf_token_generator: security.csrf.token_manager
+                csrf_parameter: _csrf_token
+                csrf_token_id: logout
+            # Configuration remember_me
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /admin
-                # by default, the feature is enabled by checking a checkbox in the
-                # login form, uncomment the following line to always enable it.
-                #always_remember_me: true
+                secure: true
+                httponly: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
