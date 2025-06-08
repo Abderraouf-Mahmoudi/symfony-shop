@@ -51,18 +51,18 @@
                                             <td class="column-3">${{ item.product.price|number_format(2) }}</td>
                                             <td class="column-4">
                                                 <div class="wrap-num-product flex-w m-l-auto m-r-0">
-                                                    <a href="{{ path('update_cart_item_quantity', {'id': item.product.id, 'action': 'decrease'}) }}" class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                                    <a href="{{ path('update_cart_item_quantity', {'id': item.product.id, 'size': item.size, 'action': 'decrease'}) }}" class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
                                                         <i class="fs-16 zmdi zmdi-minus"></i>
                                                     </a>
-                                                    <input class="mtext-104 cl3 txt-center num-product" type="number" name="quantities[{{ item.product.id }}]" value="{{ item.quantity }}">
-                                                    <a href="{{ path('update_cart_item_quantity', {'id': item.product.id, 'action': 'increase'}) }}" class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                                    <input class="mtext-104 cl3 txt-center num-product" type="number" name="quantities[{{ item.product.id }}-{{ item.size }}]" value="{{ item.quantity }}">
+                                                    <a href="{{ path('update_cart_item_quantity', {'id': item.product.id, 'size': item.size, 'action': 'increase'}) }}" class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                                         <i class="fs-16 zmdi zmdi-plus"></i>
                                                     </a>
                                                 </div>
                                             </td>
                                             <td class="column-5">${{ (item.product.price * item.quantity)|number_format(2) }}</td>
                                             <td class="column-6">
-                                                <a href="{{ path('remove_from_cart', {'id': item.product.id}) }}" class="btn-remove-cart" onclick="return confirm('Are you sure you want to remove this item?')">
+                                                <a href="{{ path('remove_from_cart', {'id': item.product.id, 'size': item.size}) }}" class="btn-remove-cart" onclick="return confirm('Are you sure you want to remove this item?')">
                                                     <i class="fs-16 zmdi zmdi-delete"></i>
                                                 </a>
                                             </td>
@@ -146,21 +146,6 @@
                             <div class="form-group">
                                 <label for="postalCode">Postal Code</label>
                                 <input type="text" class="form-control" id="postalCode" name="postalCode" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="size">Size</label>
-                                <select class="form-control" id="size" name="size" required>
-                                    <option value="">Select Size</option>
-                                    <option value="XS">XS</option>
-                                    <option value="S">S</option>
-                                    <option value="M">M</option>
-                                    <option value="L">L</option>
-                                    <option value="XL">XL</option>
-                                    <option value="XXL">XXL</option>
-                                    <option value="XXXL">XXXL</option>
-                                </select>
                             </div>
                         </div>
                     </div>

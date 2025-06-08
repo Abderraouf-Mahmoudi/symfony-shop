@@ -180,28 +180,30 @@
                                     <thead>
                                         <tr>
                                             <th>Product</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
+                                            <th>Size</th>
                                             <th>Quantity</th>
+                                            <th>Price</th>
                                             <th class="text-right">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for item in order.items %}
                                             <tr>
-                                                <td width="80">
-                                                    {% if item.product.imagePath %}
-                                                        <img src="{{ asset('uploads/products/' ~ item.product.imagePath) }}" alt="{{ item.product.name }}" width="50">
-                                                    {% else %}
-                                                        <span class="badge badge-warning">No Image</span>
-                                                    {% endif %}
-                                                </td>
                                                 <td>
-                                                    <strong>{{ item.product.name }}</strong><br>
-                                                    <small class="text-muted">{{ item.product.description|length > 50 ? item.product.description|slice(0, 50) ~ '...' : item.product.description }}</small>
+                                                    <div class="d-flex align-items-center">
+                                                        {% if item.product.imagePath %}
+                                                            <img src="{{ asset('uploads/products/' ~ item.product.imagePath) }}" alt="{{ item.product.name }}" class="mr-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                        {% else %}
+                                                            <div class="mr-3" style="width: 50px; height: 50px; background-color: #eee; display: flex; align-items: center; justify-content: center;">
+                                                                <i class="fas fa-image text-muted"></i>
+                                                            </div>
+                                                        {% endif %}
+                                                        <span>{{ item.product.name }}</span>
+                                                    </div>
                                                 </td>
-                                                <td>${{ item.price }}</td>
+                                                <td>{{ item.size }}</td>
                                                 <td>{{ item.quantity }}</td>
+                                                <td>${{ item.price }}</td>
                                                 <td class="text-right">${{ (item.price * item.quantity)|number_format(2) }}</td>
                                             </tr>
                                         {% else %}

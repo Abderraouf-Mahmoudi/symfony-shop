@@ -50,11 +50,62 @@
                                 </div>
                             </div>
 
+                            <!-- Size Selection -->
+                            <div class="flex-w flex-r-m p-b-10">
+                                <div class="size-203 flex-c-m respon6">
+                                    Size
+                                </div>
+                                <div class="size-204 respon6-next">
+                                    <div class="flex-w">
+                                        <div class="flex-w flex-r-m p-b-10">
+                                            <div class="size-selector flex-w flex-r-m">
+                                                <input type="radio" id="size-s" name="size" value="S" class="size-radio" checked>
+                                                <label for="size-s" class="size-btn m-r-5">S</label>
+
+                                                <input type="radio" id="size-m" name="size" value="M" class="size-radio">
+                                                <label for="size-m" class="size-btn m-r-5">M</label>
+
+                                                <input type="radio" id="size-l" name="size" value="L" class="size-radio">
+                                                <label for="size-l" class="size-btn m-r-5">L</label>
+
+                                                <input type="radio" id="size-xl" name="size" value="XL" class="size-radio">
+                                                <label for="size-xl" class="size-btn">XL</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="flex-w flex-r-m p-b-10">
+                                <div class="size-203 flex-c-m respon6">
+                                    Quantity
+                                </div>
+                                <div class="size-204 respon6-next">
+                                    <div class="wrap-num-product flex-w m-r-20 m-tb-10">
+                                        <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                            <i class="fs-16 zmdi zmdi-minus"></i>
+                                        </div>
+
+                                        <input class="mtext-104 cl3 txt-center num-product" type="number" name="quantity" value="1" min="1">
+
+                                        <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                            <i class="fs-16 zmdi zmdi-plus"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add to Cart button -->
                             <div class="flex-w flex-r-m p-b-10 p-t-20">
                                 <div class="size-204 flex-w flex-m respon6-next">
-                                    <a href="{{ path('front_cart') }}" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-                                        Add to cart
-                                    </a>
+                                    <form action="{{ path('add_to_cart', {'id': product.id}) }}" method="post" class="w-100">
+                                        <input type="hidden" name="size" id="selected-size" value="S">
+                                        <input type="hidden" name="quantity" id="selected-quantity" value="1">
+                                        <button type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 w-100">
+                                            Add to cart
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -65,3 +116,85 @@
     </section>
 {% endblock %}
 
+{% block javascripts %}
+{{ parent() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle size selection
+        const sizeInputs = document.querySelectorAll('input[name="size"]');
+        const selectedSizeInput = document.getElementById('selected-size');
+        
+        sizeInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if(this.checked) {
+                    selectedSizeInput.value = this.value;
+                    
+                    // Update visual styling for selected size
+                    document.querySelectorAll('.size-btn').forEach(btn => {
+                        btn.classList.remove('active-size');
+                    });
+                    
+                    document.querySelector('label[for="' + this.id + '"]').classList.add('active-size');
+                }
+            });
+        });
+        
+        // Initialize first size as selected
+        document.querySelector('label[for="size-s"]').classList.add('active-size');
+        
+        // Handle quantity changes
+        const quantityInput = document.querySelector('.num-product');
+        const selectedQuantityInput = document.getElementById('selected-quantity');
+        const btnUp = document.querySelector('.btn-num-product-up');
+        const btnDown = document.querySelector('.btn-num-product-down');
+        
+        // Update hidden field when quantity changes
+        quantityInput.addEventListener('change', function() {
+            if(this.value < 1) this.value = 1;
+            selectedQuantityInput.value = this.value;
+        });
+        
+        // Plus button
+        btnUp.addEventListener('click', function() {
+            let currentValue = parseInt(quantityInput.value);
+            quantityInput.value = currentValue + 1;
+            selectedQuantityInput.value = quantityInput.value;
+        });
+        
+        // Minus button
+        btnDown.addEventListener('click', function() {
+            let currentValue = parseInt(quantityInput.value);
+            if(currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+                selectedQuantityInput.value = quantityInput.value;
+            }
+        });
+    });
+</script>
+
+<style>
+    /* Style for size selector */
+    .size-radio {
+        display: none;
+    }
+    
+    .size-btn {
+        display: inline-block;
+        min-width: 40px;
+        height: 40px;
+        line-height: 38px;
+        padding: 0 10px;
+        border: 1px solid #e6e6e6;
+        text-align: center;
+        cursor: pointer;
+        margin-right: 5px;
+        transition: all 0.3s;
+    }
+    
+    .size-btn:hover, .active-size {
+        background-color: #222;
+        color: white;
+        border-color: #222;
+    }
+</style>
+{% endblock %}

@@ -27,6 +27,9 @@ class OrderItem
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     private $price;
 
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    private $size;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,5 +89,17 @@ class OrderItem
     public function getTotalPrice(): float
     {
         return $this->price * $this->quantity;
+    }
+
+    public function getSize(): ?string
+    {
+        return $this->size;
+    }
+
+    public function setSize(?string $size): self
+    {
+        $this->size = $size;
+
+        return $this;
     }
 }

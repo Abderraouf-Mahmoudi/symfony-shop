@@ -37,14 +37,36 @@ class CartExtension implements EventSubscriberInterface
             'total' => 0
         ];
         
-        foreach ($cart as $id => $quantity) {
-            $product = $this->productRepository->find($id);
+        foreach ($cart as $cartKey => $cartItem) {
+            // Debugging: Log the cart key and item
+            error_log("Cart Key: " . $cartKey);
+            error_log("Cart Item: " . print_r($cartItem, true));
+
+            // Ensure cartKey is split correctly
+            $keyParts = explode('-', $cartKey);
+            $productId = $keyParts[0];
+            $size = isset($keyParts[1]) ? $keyParts[1] : null;
+
+            // Check if cartItem is an array
+            if (!is_array($cartItem)) {
+                error_log("Invalid cart item structure for key: " . $cartKey);
+                continue; // Skip this item if it's not an array
+            }
+
+            // Additional check to ensure quantity and size are set
+            if (!isset($cartItem['quantity']) || !isset($cartItem['size'])) {
+                error_log("Missing quantity or size for cart item with key: " . $cartKey);
+                continue;
+            }
+
+            $product = $this->productRepository->find($productId);
             if ($product) {
                 $cartData['items'][] = [
                     'product' => $product,
-                    'quantity' => $quantity
+                    'quantity' => (int)$cartItem['quantity'],
+                    'size' => $size
                 ];
-                $cartData['total'] += $product->getPrice() * $quantity;
+                $cartData['total'] += $product->getPrice() * (int)$cartItem['quantity'];
             }
         }
         
