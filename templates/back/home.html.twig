@@ -1,11 +1,11 @@
 {% extends 'back/base.html.twig' %}
 
-{% block title %}Admin Dashboard - Clothing Shop{% endblock %}
+{% block title %}Tableau de bord administrateur - BAdiscount{% endblock %}
 
 {% block content %}
 <div class="page-inner">
     <div class="page-header">
-        <h4 class="page-title">Dashboard</h4>
+        <h4 class="page-title">Tableau de bord</h4>
     </div>
     
     <div class="row">
@@ -20,14 +20,14 @@
                         </div>
                         <div class="col-7 col-stats">
                             <div class="numbers">
-                                <p class="card-category">Products</p>
+                                <p class="card-category">Produits</p>
                                 <h4 class="card-title">{{ product_count }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('admin_products') }}" class="card-link">View all products <i class="fa fa-arrow-right ml-2"></i></a>
+                    <a href="{{ path('admin_products') }}" class="card-link">Voir tous les produits <i class="fa fa-arrow-right ml-2"></i></a>
                 </div>
             </div>
         </div>
@@ -43,14 +43,14 @@
                         </div>
                         <div class="col-7 col-stats">
                             <div class="numbers">
-                                <p class="card-category">Pending Orders</p>
+                                <p class="card-category">Commandes en attente</p>
                                 <h4 class="card-title">{{ pending_order_count }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('admin_orders_index') }}" class="card-link">View all orders <i class="fa fa-arrow-right ml-2"></i></a>
+                    <a href="{{ path('admin_orders_index') }}" class="card-link text-white">View all orders <i class="fa fa-arrow-right ml-2"></i></a>
                 </div>
             </div>
         </div>
@@ -61,19 +61,19 @@
                     <div class="row">
                         <div class="col-5">
                             <div class="icon-big text-center">
-                                <i class="fas fa-dollar-sign"></i>
+                                <i class="fas fa-wallet"></i>
                             </div>
                         </div>
                         <div class="col-7 col-stats">
                             <div class="numbers">
-                                <p class="card-category">Revenue</p>
-                                <h4 class="card-title">${{ revenue }}</h4>
+                                <p class="card-category">Revenus</p>
+                                <h4 class="card-title">{{ revenue }} TND</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="card-link">Last 7 days <i class="fa fa-calendar ml-2"></i></div>
+                    <div class="card-link">7 derniers jours <i class="fa fa-calendar ml-2"></i></div>
                 </div>
             </div>
         </div>
@@ -89,14 +89,14 @@
                         </div>
                         <div class="col-7 col-stats">
                             <div class="numbers">
-                                <p class="card-category">Canceled Orders</p>
+                                <p class="card-category">Commandes annulées</p>
                                 <h4 class="card-title">{{ canceled_order_count }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('admin_orders_index') }}" class="card-link">View all orders <i class="fa fa-arrow-right ml-2"></i></a>
+                    <a href="{{ path('admin_orders_index') }}" class="card-link text-white">View all orders <i class="fa fa-arrow-right ml-2"></i></a>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">Recent Orders</div>
+                        <div class="card-title">Commandes récentes</div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -116,9 +116,9 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
+                                    <th>Client</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -128,14 +128,14 @@
                                     <tr>
                                         <td>{{ order.id }}</td>
                                         <td>{{ order.customerName }}</td>
-                                        <td>${{ order.totalAmount }}</td>
+                                        <td>{{ order.totalAmount }} TND</td>
                                         <td>
                                             {% if order.status == 'pending' %}
-                                                <span class="badge badge-warning">Pending</span>
+                                                <span class="badge badge-warning">En attente</span>
                                             {% elseif order.status == 'done' %}
-                                                <span class="badge badge-success">Done</span>
+                                                <span class="badge badge-success">Terminée</span>
                                             {% elseif order.status == 'canceled' %}
-                                                <span class="badge badge-danger">Canceled</span>
+                                                <span class="badge badge-danger">Annulée</span>
                                             {% else %}
                                                 <span class="badge badge-secondary">{{ order.status|capitalize }}</span>
                                             {% endif %}
@@ -147,7 +147,7 @@
                                     </tr>
                                 {% else %}
                                     <tr>
-                                        <td colspan="6" class="text-center">No recent orders</td>
+                                        <td colspan="6" class="text-center">Pas de commandes récentes</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -160,17 +160,17 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Quick Actions</div>
+                    <div class="card-title">Actions rapides</div>
                 </div>
                 <div class="card-body pb-0">
                     <div class="d-flex mb-3">
-                        <a href="{{ path('admin_products_new') }}" class="btn btn-primary btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-plus mr-2"></i> Add New Product</a>
+                        <a href="{{ path('admin_products_new') }}" class="btn btn-primary btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-plus mr-2"></i> Ajouter un produit</a>
                     </div>
                     <div class="d-flex mb-3">
-                        <a href="{{ path('admin_products') }}" class="btn btn-info btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-list mr-2"></i> Manage Products</a>
+                        <a href="{{ path('admin_products') }}" class="btn btn-info btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-list mr-2"></i> Gérer les produits</a>
                     </div>
                     <div class="d-flex mb-3">
-                        <a href="{{ path('admin_orders_index') }}" class="btn btn-warning btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-shopping-cart mr-2"></i> Manage Orders</a>
+                        <a href="{{ path('admin_orders_index') }}" class="btn btn-warning btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-shopping-cart mr-2"></i> Gérer les commandes</a>
                     </div>
                 </div>
             </div>

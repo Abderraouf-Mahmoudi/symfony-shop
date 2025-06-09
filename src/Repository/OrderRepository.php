@@ -44,4 +44,19 @@ class OrderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
+    /**
+     * Find orders by phone number (partial match)
+     */
+    public function findByPhone(string $phone)
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.phone LIKE :phone')
+            ->setParameter('phone', '%' . $phone . '%')
+            ->orderBy('o.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    // Les méthodes statistiques ont été déplacées vers App\Service\StatisticsService
 }

@@ -1,11 +1,11 @@
 {% extends 'back/base.html.twig' %}
 
-{% block title %}Order Details{% endblock %}
+{% block title %}Détails de la commande{% endblock %}
 
 {% block content %}
 <div class="page-inner">
     <div class="page-header">
-        <h4 class="page-title">Order Details</h4>
+        <h4 class="page-title">Détails de la commande</h4>
         <ul class="breadcrumbs">
             <li class="nav-home">
                 <a href="{{ path('admin_dashboard') }}">
@@ -16,13 +16,13 @@
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ path('admin_orders_index') }}">Orders</a>
+                <a href="{{ path('admin_orders_index') }}">Commandes</a>
             </li>
             <li class="separator">
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <span>Order #{{ order.id }}</span>
+                <span>Commande #{{ order.id }}</span>
             </li>
         </ul>
     </div>
@@ -43,9 +43,10 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Order #{{ order.id }}</h4>
+                        <h4 class="card-title">Commande #{{ order.id }}</h4>
                         <div class="ml-auto">
-                            <a href="{{ path('admin_orders_index') }}" class="btn btn-primary btn-sm shadow-sm rounded-pill"><i class="fas fa-arrow-left mr-2"></i> Back to Orders</a>
+                            <a href="{{ path('admin_orders_pdf', {'id': order.id}) }}" class="btn btn-danger btn-sm shadow-sm rounded-pill mr-2" target="_blank"><i class="fas fa-file-pdf mr-2"></i> Télécharger le reçu</a>
+                            <a href="{{ path('admin_orders_index') }}" class="btn btn-primary btn-sm shadow-sm rounded-pill"><i class="fas fa-arrow-left mr-2"></i> Retour aux commandes</a>
                         </div>
                     </div>
                 </div>
@@ -53,21 +54,21 @@
                 <div class="card-header bg-light">
                     <div class="row align-items-center">
                         <div class="col-md-12 mb-2">
-                            <h5 class="mb-0">Change Order Status</h5>
+                            <h5 class="mb-0">Modifier le statut de la commande</h5>
                         </div>
                         <div class="col-md-12 d-flex flex-wrap justify-content-center">
                             <form method="GET" action="{{ path('admin_orders_update_status', {'id': order.id, 'status': 'pending'}) }}" class="mx-2 mb-2" onsubmit="return confirmStatusChange('pending');">
-                                <button type="submit" class="btn btn-warning btn-md shadow-sm rounded-pill px-4"><i class="fas fa-clock mr-2"></i> Mark as Pending</button>
+                                <button type="submit" class="btn btn-warning btn-md shadow-sm rounded-pill px-4"><i class="fas fa-clock mr-2"></i> Marquer comme En attente</button>
                             </form>
                             <form method="GET" action="{{ path('admin_orders_update_status', {'id': order.id, 'status': 'done'}) }}" class="mx-2 mb-2" onsubmit="return confirmStatusChange('done');">
-                                <button type="submit" class="btn btn-success btn-md shadow-sm rounded-pill px-4"><i class="fas fa-check-circle mr-2"></i> Mark as Done</button>
+                                <button type="submit" class="btn btn-success btn-md shadow-sm rounded-pill px-4"><i class="fas fa-check-circle mr-2"></i> Marquer comme Terminée</button>
                             </form>
                             <form method="GET" action="{{ path('admin_orders_update_status', {'id': order.id, 'status': 'canceled'}) }}" class="mx-2 mb-2" onsubmit="return confirmStatusChange('canceled');">
-                                <button type="submit" class="btn btn-danger btn-md shadow-sm rounded-pill px-4"><i class="fas fa-times-circle mr-2"></i> Mark as Canceled</button>
+                                <button type="submit" class="btn btn-danger btn-md shadow-sm rounded-pill px-4"><i class="fas fa-times-circle mr-2"></i> Marquer comme Annulée</button>
                             </form>
-                            <form method="POST" action="{{ path('admin_orders_delete', {'id': order.id}) }}" class="mx-2 mb-2" onsubmit="return confirm('Are you sure you want to delete this order?');">
+                            <form method="POST" action="{{ path('admin_orders_delete', {'id': order.id}) }}" class="mx-2 mb-2" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette commande?');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ order.id) }}">
-                                <button type="submit" class="btn btn-danger btn-md shadow-sm rounded-pill px-4"><i class="fas fa-trash-alt mr-2"></i> Delete Order</button>
+                                <button type="submit" class="btn btn-danger btn-md shadow-sm rounded-pill px-4"><i class="fas fa-trash-alt mr-2"></i> Supprimer la commande</button>
                             </form>
                         </div>
                     </div>
@@ -86,11 +87,11 @@
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
                                             <div class="numbers">
-                                                <p class="card-category">Customer Information</p>
+                                                <p class="card-category">Informations client</p>
                                                 <h4 class="card-title">{{ order.customerName }}</h4>
                                                 <p class="card-text">{{ order.customerEmail }}</p>
-                                                <p class="card-text">Phone: {{ order.phone }}</p>
-                                                <p class="card-text">Size: {{ order.size }}</p>
+                                                <p class="card-text">Téléphone: {{ order.phone }}</p>
+                                                <p class="card-text">Taille: {{ order.size }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -109,15 +110,15 @@
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
                                             <div class="numbers">
-                                                <p class="card-category">Status</p>
+                                                <p class="card-category">Statut</p>
                                                 <form method="GET" id="statusForm">
                                                     <select name="status" class="form-control form-control-sm" onchange="updateOrderStatus(this.value);">
-                                                        <option value="pending" {{ order.status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                                        <option value="done" {{ order.status == 'done' ? 'selected' : '' }}>Done</option>
-                                                        <option value="canceled" {{ order.status == 'canceled' ? 'selected' : '' }}>Canceled</option>
+                                                        <option value="pending" {{ order.status == 'pending' ? 'selected' : '' }}>En attente</option>
+                                                        <option value="done" {{ order.status == 'done' ? 'selected' : '' }}>Terminée</option>
+                                                        <option value="canceled" {{ order.status == 'canceled' ? 'selected' : '' }}>Annulée</option>
                                                     </select>
                                                 </form>
-                                                <p class="card-text mt-2">Order Date: {{ order.createdAt|date('Y-m-d H:i') }}</p>
+                                                <p class="card-text mt-2">Date de commande: {{ order.createdAt|date('Y-m-d H:i') }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -138,10 +139,10 @@
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
                                             <div class="numbers">
-                                                <p class="card-category">Shipping Address</p>
+                                                <p class="card-category">Adresse de livraison</p>
                                                 <p class="card-text">{{ order.shippingAddress }}</p>
-                                                <p class="card-text">City: {{ order.city }}</p>
-                                                <p class="card-text">Postal Code: {{ order.postalCode }}</p>
+                                                <p class="card-text">Ville: {{ order.city }}</p>
+                                                <p class="card-text">Code postal: {{ order.postalCode }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -160,7 +161,7 @@
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
                                             <div class="numbers">
-                                                <p class="card-category">Billing Address</p>
+                                                <p class="card-category">Adresse de facturation</p>
                                                 <p class="card-text">{{ order.billingAddress ? order.billingAddress : order.shippingAddress }}</p>
                                             </div>
                                         </div>
@@ -174,15 +175,16 @@
                     
                     <div class="row">
                         <div class="col-md-12">
-                            <h4>Order Items</h4>
+                            <h4>Articles commandés</h4>
                             <div class="table-responsive">
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Product</th>
-                                            <th>Size</th>
-                                            <th>Quantity</th>
-                                            <th>Price</th>
+                                            <th>Produit</th>
+                                            <th>Taille</th>
+                                            <th>Couleur</th>
+                                            <th>Quantité</th>
+                                            <th>Prix</th>
                                             <th class="text-right">Total</th>
                                         </tr>
                                     </thead>
@@ -191,8 +193,8 @@
                                             <tr>
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        {% if item.product.imagePath %}
-                                                            <img src="{{ asset('uploads/products/' ~ item.product.imagePath) }}" alt="{{ item.product.name }}" class="mr-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                        {% if item.product.getPrimaryImage() %}
+                                                            <img src="{{ asset('uploads/products/' ~ item.product.getPrimaryImage().imagePath) }}" alt="{{ item.product.name }}" class="mr-3" style="width: 50px; height: 50px; object-fit: cover;">
                                                         {% else %}
                                                             <div class="mr-3" style="width: 50px; height: 50px; background-color: #eee; display: flex; align-items: center; justify-content: center;">
                                                                 <i class="fas fa-image text-muted"></i>
@@ -202,20 +204,30 @@
                                                     </div>
                                                 </td>
                                                 <td>{{ item.size }}</td>
+                                                <td>
+                                                    {% if item.colorName is defined and item.colorName %}
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="color-sample mr-2" style="background-color: {{ item.colorCode }}; width: 15px; height: 15px; display: inline-block; border-radius: 50%; border: 1px solid #ddd;"></span>
+                                                            <span>{{ item.colorName }}</span>
+                                                        </div>
+                                                    {% else %}
+                                                        --
+                                                    {% endif %}
+                                                </td>
                                                 <td>{{ item.quantity }}</td>
-                                                <td>${{ item.price }}</td>
-                                                <td class="text-right">${{ (item.price * item.quantity)|number_format(2) }}</td>
+                                                <td>{{ item.price }} TND</td>
+                                                <td class="text-right">{{ (item.price * item.quantity)|number_format(2) }} TND</td>
                                             </tr>
                                         {% else %}
                                             <tr>
-                                                <td colspan="5" class="text-center">No items found for this order</td>
+                                                <td colspan="5" class="text-center">Aucun article trouvé pour cette commande</td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <td colspan="4" class="text-right"><strong>Total:</strong></td>
-                                            <td class="text-right"><strong>${{ order.totalAmount }}</strong></td>
+                                            <td class="text-right"><strong>{{ order.totalAmount }} TND</strong></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -240,7 +252,7 @@
         });
         
         function updateOrderStatus(status) {
-            if (confirm('Are you sure you want to change the order status to ' + status + '?')) {
+            if (confirm('Êtes-vous sûr de vouloir changer le statut de la commande en ' + status + ' ?')) {
                 window.location.href = '{{ path('admin_orders_update_status', {'id': order.id, 'status': 'STATUS_PLACEHOLDER'}) }}'.replace('STATUS_PLACEHOLDER', status);
             }
         }

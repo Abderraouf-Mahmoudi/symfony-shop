@@ -45,9 +45,17 @@ class Product
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: OrderItem::class)]
     private $orderItems;
 
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductImage::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private $images;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductColor::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private $colors;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->colors = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -191,6 +199,82 @@ class Product
     {
         $this->isNew = $isNew;
         
+        return $this;
+    }
+    
+    /**
+     * @return Collection<int, ProductImage>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(ProductImage $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(ProductImage $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getProduct() === $this) {
+                $image->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+    
+    public function getPrimaryImage(): ?ProductImage
+    {
+        foreach ($this->images as $image) {
+            if ($image->getIsPrimary()) {
+                return $image;
+            }
+        }
+        
+        // If no primary image is set but images exist, return the first one
+        if ($this->images->count() > 0) {
+            return $this->images->first();
+        }
+        
+        return null;
+    }
+    
+    /**
+     * @return Collection<int, ProductColor>
+     */
+    public function getColors(): Collection
+    {
+        return $this->colors;
+    }
+
+    public function addColor(ProductColor $color): self
+    {
+        if (!$this->colors->contains($color)) {
+            $this->colors[] = $color;
+            $color->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeColor(ProductColor $color): self
+    {
+        if ($this->colors->removeElement($color)) {
+            // set the owning side to null (unless already changed)
+            if ($color->getProduct() === $this) {
+                $color->setProduct(null);
+            }
+        }
+
         return $this;
     }
 }

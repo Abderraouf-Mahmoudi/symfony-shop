@@ -1,11 +1,42 @@
 {% extends 'back/base.html.twig' %}
 
-{% block title %}Edit Product{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .image-preview-item {
+            position: relative;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .image-preview-item .badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        .image-item {
+            display: inline-block;
+            text-align: center;
+        }
+        .image-actions {
+            text-align: left;
+        }
+        input[type="color"] {
+            height: 38px;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Modifier le produit{% endblock %}
 
 {% block content %}
 <div class="page-inner">
     <div class="page-header">
-        <h4 class="page-title">Products Management</h4>
+        <h4 class="page-title">Gestion des produits</h4>
         <ul class="breadcrumbs">
             <li class="nav-home">
                 <a href="{{ path('admin_dashboard') }}">
@@ -16,13 +47,13 @@
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ path('admin_products') }}">Products</a>
+                <a href="{{ path('admin_products') }}">Produits</a>
             </li>
             <li class="separator">
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <span>Edit Product</span>
+                <span>Modifier le produit</span>
             </li>
         </ul>
     </div>
@@ -31,35 +62,36 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Edit Product: {{ product.name }}</div>
+                    <div class="card-title">Modifier le produit: {{ product.name }}</div>
                 </div>
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name">Product Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" placeholder="Enter product name" required>
+                                    <label for="name">Nom du produit</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" placeholder="Entrez le nom du produit" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="price">Price ($)</label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" value="{{ product.price }}" placeholder="Enter price" required>
+                                    <label for="price">Prix (TND)</label>
+                                    <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" value="{{ product.price }}" placeholder="Entrez le prix" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="stock">Stock Quantity</label>
-                                    <input type="number" min="0" class="form-control" id="stock" name="stock" value="{{ product.stock }}" placeholder="Enter stock quantity" required>
+                                    <label for="stock">Quantité en stock</label>
+                                    <input type="number" min="0" class="form-control" id="stock" name="stock" value="{{ product.stock }}" placeholder="Entrez la quantité en stock" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="category">Category</label>
+                                    <label for="category">Catégorie</label>
+
                                     <select class="form-control" id="category" name="category" required>
-                                        <option value="">Select a category</option>
-                                        <option value="men" {% if product.category == 'men' %}selected{% endif %}>Men</option>
-                                        <option value="women" {% if product.category == 'women' %}selected{% endif %}>Women</option>
-                                        <option value="kids" {% if product.category == 'kids' %}selected{% endif %}>Kids</option>
-                                        <option value="accessories" {% if product.category == 'accessories' %}selected{% endif %}>Accessories</option>
+                                        <option value="">Sélectionnez une catégorie</option>
+                                        <option value="men" {% if product.category == 'men' %}selected{% endif %}>Hommes</option>
+                                        <option value="women" {% if product.category == 'women' %}selected{% endif %}>Femmes</option>
+                                        <option value="kids" {% if product.category == 'kids' %}selected{% endif %}>Enfants</option>
+                                        <option value="accessories" {% if product.category == 'accessories' %}selected{% endif %}>Accessoires</option>
                                     </select>
                                 </div>
                             </div>
@@ -67,27 +99,103 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="Enter product description" required>{{ product.description }}</textarea>
+                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="Entrez la description du produit" required>{{ product.description }}</textarea>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="image">Product Image</label>
-                                    <div class="input-file input-file-image">
-                                        {% if product.imagePath %}
-                                            <img class="img-upload-preview" width="150" src="{{ asset('uploads/products/' ~ product.imagePath) }}" alt="{{ product.name }}">
-                                        {% else %}
-                                            <img class="img-upload-preview" width="150" src="{{ asset('back/img/placeholder.jpg') }}" alt="preview">
-                                        {% endif %}
-                                        <input type="file" class="form-control form-control-file" id="image" name="image" accept="image/*">
-                                        <label for="image" class="btn btn-primary btn-round btn-lg"><i class="fa fa-file-image"></i> Change Image</label>
+                                    <label for="images">Images du produit</label>
+                                    
+                                    {# Current images #}
+                                    <div class="current-images mb-3">
+                                        <h6>Images actuelles</h6>
+                                        <div class="d-flex flex-wrap">
+                                            {% if product.images|length > 0 %}
+                                                {% for image in product.images %}
+                                                    <div class="image-item position-relative m-2">
+                                                        <img src="{{ asset('uploads/products/' ~ image.imagePath) }}" alt="{{ product.name }}" class="img-thumbnail" width="150">
+                                                        <div class="image-actions mt-2">
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" id="primary_{{ image.id }}" name="primary_image" value="{{ image.id }}" class="custom-control-input" {% if image.isPrimary %}checked{% endif %}>
+                                                                <label class="custom-control-label" for="primary_{{ image.id }}">Principale</label>
+                                                            </div>
+                                                            <div class="custom-control custom-checkbox mt-1">
+                                                                <input type="checkbox" id="delete_{{ image.id }}" name="delete_images[]" value="{{ image.id }}" class="custom-control-input">
+                                                                <label class="custom-control-label text-danger" for="delete_{{ image.id }}">Supprimer</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <p class="text-muted">Aucune image téléversée.</p>
+                                            {% endif %}
+                                        </div>
                                     </div>
+                                    
+                                    {# Add new images #}
+                                    <h6>Ajouter de nouvelles images</h6>
+                                    <div class="input-file input-file-image">
+                                        <div class="image-preview-container" id="image-previews">
+                                            <div class="image-preview-item">
+                                                <img class="img-upload-preview" width="150" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview">
+                                            </div>
+                                        </div>
+                                        <input type="file" class="form-control form-control-file" id="images" name="images[]" accept="image/*" multiple>
+                                        <label for="images" class="btn btn-primary btn-round btn-lg"><i class="fa fa-file-image"></i> Ajouter des images</label>
+                                        <small class="form-text text-muted">Vous pouvez sélectionner plusieurs images à la fois.</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Couleurs du produit</label>
+                                    
+                                    {# Current colors #}
+                                    <div class="current-colors mb-3">
+                                        <h6>Couleurs actuelles</h6>
+                                        <div id="existing-color-container">
+                                            {% if product.colors|length > 0 %}
+                                                {% for color in product.colors %}
+                                                    <div class="row color-row mb-3">
+                                                        <div class="col-md-5">
+                                                            <input type="hidden" name="existing_color_ids[]" value="{{ color.id }}">
+                                                            <input type="text" class="form-control" name="existing_color_names[]" value="{{ color.name }}" placeholder="Color Name">
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="color" class="form-control" name="existing_color_codes[]" value="{{ color.code }}">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <button type="button" class="btn btn-danger btn-sm remove-existing-color" data-id="{{ color.id }}"><i class="fa fa-trash"></i></button>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <p class="text-muted">Aucune couleur ajoutée.</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    {# Add new colors #}
+                                    <h6>Ajouter de nouvelles couleurs</h6>
+                                    <div id="color-container">
+                                        <div class="row color-row mb-3">
+                                            <div class="col-md-5">
+                                                <input type="text" class="form-control" name="color_names[]" placeholder="Nom de couleur (ex: Rouge)">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="color" class="form-control" name="color_codes[]">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger btn-sm remove-color"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="add-color" class="btn btn-info btn-sm"><i class="fa fa-plus"></i> Ajouter une couleur</button>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="card-action">
-                            <button type="submit" class="btn btn-success">Update Product</button>
-                            <a href="{{ path('admin_products') }}" class="btn btn-danger">Cancel</a>
+                            <button type="submit" class="btn btn-success">Mettre à jour le produit</button>
+                            <a href="{{ path('admin_products') }}" class="btn btn-danger">Annuler</a>
                         </div>
                     </form>
                 </div>
@@ -100,14 +208,74 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Image preview
         $(document).ready(function() {
-            $('#image').change(function() {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                    $('.img-upload-preview').attr('src', e.target.result);
+            // Multiple images preview
+            $('#images').change(function() {
+                $('#image-previews').empty();
+                
+                const files = Array.from(this.files);
+                files.forEach((file, index) => {
+                    let reader = new FileReader();
+                    reader.onload = (e) => {
+                        $('#image-previews').append(`
+                            <div class="image-preview-item d-inline-block m-2">
+                                <img class="img-upload-preview" width="150" src="${e.target.result}" alt="preview">
+                            </div>
+                        `);
+                    };
+                    reader.readAsDataURL(file);
+                });
+                
+                // Show a message if no files were selected
+                if (files.length === 0) {
+                    $('#image-previews').append(`
+                        <div class="image-preview-item">
+                            <img class="img-upload-preview" width="150" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview">
+                        </div>
+                    `);
                 }
-                reader.readAsDataURL(this.files[0]);
+            });
+            
+            // Handle adding new colors
+            $('#add-color').click(function() {
+                const colorRow = `
+                    <div class="row color-row mb-3">
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="color_names[]" placeholder="Color Name (e.g. Red)">
+                        </div>
+                        <div class="col-md-5">
+                            <input type="color" class="form-control" name="color_codes[]">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger btn-sm remove-color"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+                
+                $('#color-container').append(colorRow);
+            });
+            
+            // Remove new color row
+            $(document).on('click', '.remove-color', function() {
+                $(this).closest('.color-row').remove();
+            });
+            
+            // Remove existing color row
+            $(document).on('click', '.remove-existing-color', function() {
+                const colorId = $(this).data('id');
+                $(this).closest('.color-row').remove();
+                $('form').append(`<input type="hidden" name="delete_colors[]" value="${colorId}">`);
+            });
+            
+            // Confirm before submitting if images to delete are selected
+            $('form').submit(function(e) {
+                const deleteImagesCount = $('input[name="delete_images[]"]:checked').length;
+                const totalImages = {{ product.images|length }} + $('#images')[0].files.length - deleteImagesCount;
+                
+                if (totalImages < 1) {
+                    e.preventDefault();
+                    alert('Product must have at least one image. Please add at least one image before submitting.');
+                }
             });
         });
     </script>

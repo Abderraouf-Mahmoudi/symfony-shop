@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Repository\OrderRepository;
+use App\Service\PdfService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,10 +15,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrderController extends AbstractController
 {
     #[Route('/', name: 'admin_orders_index', methods: ['GET'])]
-    public function index(OrderRepository $orderRepository): Response
+    public function index(Request $request, OrderRepository $orderRepository): Response
     {
+        $phone = $request->query->get('phone');
+        $orders = [];
+        
+        if ($phone) {
+            // Search orders by phone number
+            $orders = $orderRepository->findByPhone($phone);
+        } else {
+            // Get all orders sorted by creation date
+            $orders = $orderRepository->findBy([], ['createdAt' => 'DESC']);
+        }
+        
         return $this->render('back/orders/index.html.twig', [
-            'orders' => $orderRepository->findBy([], ['createdAt' => 'DESC']),
+            'orders' => $orders,
+            'search_phone' => $phone,
         ]);
     }
     
@@ -57,6 +70,12 @@ class OrderController extends AbstractController
                     
                     // Update income in dashboard settings
                     $incomeSetting->setValue((string)$newIncome);
+                } else {
+                    // Create new income setting if it doesn't exist
+                    $incomeSetting = new \App\Entity\Setting();
+                    $incomeSetting->setName('income');
+                    $incomeSetting->setValue($order->getTotalAmount());
+                    $entityManager->persist($incomeSetting);
                 }
             } catch (\Exception $e) {
                 // Log error but continue processing
@@ -81,5 +100,25 @@ class OrderController extends AbstractController
         }
         
         return $this->redirectToRoute('admin_orders_index');
+    }
+    
+    #[Route('/{id}/pdf', name: 'admin_orders_pdf', methods: ['GET'])]
+    public function generatePdf(Order $order, PdfService $pdfService): Response
+    {
+        $html = $this->renderView('back/orders/receipt_pdf.html.twig', [
+            'order' => $order,
+        ]);
+        
+        // Le nom du fichier sera "recu-commande-X.pdf" où X est l'ID de la commande
+        $filename = 'recu-commande-' . $order->getId() . '.pdf';
+        
+        // Génère le PDF et déclenche le téléchargement
+        return new Response(
+            $pdfService->generatePdf($html, $filename),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+            ]
+        );
     }
 }

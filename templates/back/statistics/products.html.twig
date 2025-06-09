@@ -1,0 +1,221 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Statistiques des produits{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Statistiques des produits</h4>
+        <ul class="breadcrumbs">
+            <li class="nav-home">
+                <a href="{{ path('admin_dashboard') }}">
+                    <i class="flaticon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('admin_statistics_index') }}">Statistiques</a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <span>Produits</span>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <h4 class="card-title">Produits les plus vendus</h4>
+                        <div class="ml-auto">
+                            <a href="{{ path('admin_statistics_index') }}" class="btn btn-primary btn-round">
+                                <i class="fa fa-arrow-left mr-2"></i> Retour aux statistiques
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="GET" action="{{ path('admin_statistics_products') }}" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="status">Filtrer par statut de commande:</label>
+                                    <select name="status" id="status" class="form-control">
+                                        <option value="" {% if selected_status is null %}selected{% endif %}>Tous les statuts</option>
+                                        <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>En attente</option>
+                                        <option value="done" {% if selected_status == 'done' %}selected{% endif %}>Terminée</option>
+                                        <option value="canceled" {% if selected_status == 'canceled' %}selected{% endif %}>Annulée</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="limit">Nombre de produits à afficher:</label>
+                                    <select name="limit" id="limit" class="form-control">
+                                        <option value="10" {% if limit == 10 %}selected{% endif %}>10</option>
+                                        <option value="20" {% if limit == 20 %}selected{% endif %}>20</option>
+                                        <option value="50" {% if limit == 50 %}selected{% endif %}>50</option>
+                                        <option value="100" {% if limit == 100 %}selected{% endif %}>100</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group pt-4 mt-1">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-filter mr-2"></i> Filtrer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="productsChart"></canvas>
+                    </div>
+                    
+                    <div class="table-responsive mt-4">
+                        <table class="table table-hover" id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>Position</th>
+                                    <th>ID</th>
+                                    <th>Produit</th>
+                                    <th>Nombre de commandes</th>
+                                    <th>Quantité totale</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in bestsellers %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ product.id }}</td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.order_count }}</td>
+                                        <td>{{ product.total_quantity }}</td>
+                                        <td>
+                                            <a href="{{ path('admin_products_edit', {'id': product.id}) }}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Voir le produit">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">Aucune donnée disponible</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration pour le graphique principal
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Quantité vendue'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Produits'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                return tooltipItems[0].label;
+                            },
+                            label: function(context) {
+                                return 'Quantité: ' + context.parsed.y;
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // Couleurs pour le graphique
+            const colors = [
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+                'rgba(255, 159, 64, 0.6)',
+                'rgba(255, 205, 86, 0.6)',
+                'rgba(201, 203, 207, 0.6)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(75, 192, 192, 0.8)'
+            ];
+            
+            // Création du graphique
+            const ctx = document.getElementById('productsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [{% for product in bestsellers %}'{{ product.name }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+                    datasets: [{
+                        label: 'Quantité vendue',
+                        data: [{% for product in bestsellers %}{{ product.total_quantity }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: function(context) {
+                            const index = context.dataIndex;
+                            return colors[index % colors.length];
+                        },
+                        borderColor: function(context) {
+                            const index = context.dataIndex;
+                            return colors[index % colors.length].replace('0.6', '1').replace('0.8', '1');
+                        },
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOptions
+            });
+            
+            // DataTable pour le tableau des produits
+            $('#products-table').DataTable({
+                "pageLength": 25,
+                "language": {
+                    "lengthMenu": "Afficher _MENU_ produits par page",
+                    "zeroRecords": "Aucun produit trouvé",
+                    "info": "Page _PAGE_ sur _PAGES_",
+                    "infoEmpty": "Aucun produit disponible",
+                    "infoFiltered": "(filtré sur _MAX_ produits au total)",
+                    "search": "Rechercher:",
+                    "paginate": {
+                        "first": "Premier",
+                        "last": "Dernier",
+                        "next": "Suivant",
+                        "previous": "Précédent"
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

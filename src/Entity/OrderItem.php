@@ -29,6 +29,15 @@ class OrderItem
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private $size;
+    
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $colorId;
+    
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $colorName;
+    
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $colorCode;
 
     public function getId(): ?int
     {
@@ -99,6 +108,42 @@ class OrderItem
     public function setSize(?string $size): self
     {
         $this->size = $size;
+
+        return $this;
+    }
+    
+    public function getColorId(): ?int
+    {
+        return $this->colorId;
+    }
+
+    public function setColorId(?int $colorId): self
+    {
+        $this->colorId = $colorId;
+
+        return $this;
+    }
+
+    public function getColorName(): ?string
+    {
+        return $this->colorName;
+    }
+
+    public function setColorName(?string $colorName): self
+    {
+        $this->colorName = $colorName;
+
+        return $this;
+    }
+
+    public function getColorCode(): ?string
+    {
+        return $this->colorCode;
+    }
+
+    public function setColorCode(?string $colorCode): self
+    {
+        $this->colorCode = $colorCode;
 
         return $this;
     }

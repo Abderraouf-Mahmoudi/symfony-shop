@@ -1,41 +1,77 @@
-# Symfony Clothing Shop
+# BAdiscount - Symfony Online Store
 
 <div align="center">
-  <h3>A modern e-commerce platform built with Symfony</h3>
+  <h3>A modern and high-performance e-commerce platform built with Symfony</h3>
+  <p><em>Admin interface fully localized in French</em></p>
 </div>
 
 ## 📋 Overview
 
-Symfony Clothing Shop is a full-featured e-commerce application for clothing stores. The platform provides an intuitive shopping experience for customers and a comprehensive management system for administrators.
+BAdiscount is a complete e-commerce application for clothing stores. The platform offers an intuitive shopping experience for customers and a comprehensive management system localized in French for administrators.
 
-### ✨ Live Demo
+Designed with a robust architecture using the Symfony framework, this solution ensures performance, security, and scalability for growing businesses.
 
-[View Live Demo](https://symfony-shop.example.com) (Coming Soon)
+### ✨ Online Demo
+
+[View the demo](https://badiscount.example.com) (Coming soon)
 
 ## 🚀 Features
 
-### Customer Features
-- 👕 Browse clothing products by category
-- 🔍 Search functionality
-- 🛒 Shopping cart management
-- 📱 Responsive design for mobile and desktop
-- 💳 Checkout process with order tracking
-- 👤 User account management
+### Customer Interface
+- 👕 Product navigation by category with advanced filters
+- 🔍 High-performance search with suggestions and spell correction
+- 🛒 Intuitive shopping cart management with real-time updates
+- 📱 Responsive design optimized for all devices
+- 💳 Secure payment process with order tracking
+- 👤 Complete user account management (history, favorites, preferences)
 
-### Admin Features
-- 📊 Dashboard with sales analytics
-- 📦 Product management (CRUD operations)
+### Admin Interface (Fully in French)
+- 📊 Analytical dashboard with key metrics and charts
+- 📈 Detailed sales statistics with period and status filtering
+  - Analysis of best-selling products
+  - Monthly sales evolution
+  - Graphical visualization of business performance
+- 📑 PDF receipt generation and download for each order
+- 📦 Complete product management (CRUD) with multi-image support
 - 🚚 Order processing workflow
-- 💰 Revenue tracking
-- 🔔 Status updates for orders (pending, done, canceled)
+- 💰 Revenue tracking and financial analysis
+- 🔔 Order status updates (Pending, Completed, Canceled)
 
 ## 🛠️ Technologies Used
 
-- **Backend:** Symfony 6.0+, PHP 8.0+
-- **Database:** MySQL 8.0
-- **Frontend:** Twig, JavaScript, Bootstrap 4
-- **Dependencies:** Composer, npm
-- **Additional Libraries:** DataTables, Font Awesome
+- **Backend:** 
+  - Symfony 6.3+
+  - PHP 8.1+
+  - Doctrine ORM
+  - Dependency injection services
+  - Migration system
+
+- **Database:** 
+  - MySQL 8.0
+  - Query optimizations for performance
+
+- **Frontend:** 
+  - Twig with template inheritance
+  - JavaScript ES6+
+  - Bootstrap 5
+  - Compiled SCSS
+  - Mobile-first responsive system
+
+- **Data Visualization:**
+  - Chart.js for interactive charts
+  - DataTables for dynamic tables
+
+- **PDF:**
+  - PDF generation system for order receipts
+
+- **Dependencies:** 
+  - Composer for PHP package management
+  - npm/Webpack for asset compilation
+
+- **Additional Libraries:** 
+  - DataTables with localization support
+  - Font Awesome
+  - Select2 for advanced dropdown lists
 
 ## 💻 Screenshots
 
@@ -118,64 +154,134 @@ Symfony Clothing Shop is a full-featured e-commerce application for clothing sto
 ## 📁 Project Structure
 
 ```
-symfony-shop/
-├── bin/                  # Symfony console commands
-├── config/               # Application configuration
-├── migrations/           # Database migrations
-├── public/               # Public assets and entry point
-│   ├── css/              # CSS files
-│   ├── js/               # JavaScript files
-│   └── img/              # Images
+badiscount/
+├── bin/                      # Symfony console commands
+├── config/                   # Application configuration
+│   ├── packages/             # Package configuration
+│   ├── routes/               # Route definitions
+│   └── services.yaml         # Services configuration
+├── migrations/               # Database migrations
+├── public/                   # Public assets and entry point
+│   ├── css/                  # Compiled CSS/SCSS files
+│   ├── js/                   # JavaScript files
+│   ├── img/                  # Images
+│   └── uploads/              # User uploads (products)
 ├── src/
-│   ├── Command/          # Custom commands
-│   ├── Controller/       # Controllers
-│   │   ├── BackController.php    # Admin dashboard
-│   │   ├── FrontController.php   # Customer interface
-│   │   └── OrderController.php   # Order management
-│   ├── Entity/           # Database entities
-│   ├── Form/             # Forms
-│   ├── Repository/       # Data repositories
-│   └── Security/         # Authentication
-├── templates/            # Twig templates
-│   ├── back/             # Admin templates
-│   ├── front/            # Customer templates
-│   └── base.html.twig    # Base template
+│   ├── Command/              # Custom commands
+│   ├── Controller/           # Controllers
+│   │   ├── BackController.php        # Admin dashboard
+│   │   ├── FrontController.php       # Customer interface
+│   │   ├── OrderController.php       # Order management
+│   │   └── StatisticsController.php  # Sales statistics
+│   ├── Entity/               # Database entities
+│   ├── Form/                 # Forms
+│   ├── Repository/           # Data repositories
+│   ├── Service/              # Business services
+│   │   ├── StatisticsService.php     # Statistics service
+│   │   └── PdfService.php            # PDF generation
+│   └── Security/             # Authentication and security
+├── templates/                # Twig templates
+│   ├── back/                 # Admin templates (French)
+│   │   ├── dashboard/        # Dashboard
+│   │   ├── products/         # Product management
+│   │   ├── orders/           # Order management
+│   │   └── statistics/       # Statistics pages
+│   ├── front/                # Customer templates
+│   ├── base.html.twig        # Base admin template
+│   └── base_front.html.twig  # Base customer template
 └── ...
 ```
 
 ## 🔐 Admin Features
 
-The admin interface provides comprehensive management capabilities:
+The admin interface, fully localized in French, offers comprehensive management capabilities:
 
-- **Dashboard**: View key metrics like pending orders, revenue, and product counts
-- **Product Management**: Add, edit, delete, and view products with image uploads
-- **Order Management**: Process orders with status updates (pending, done, canceled)
-- **Revenue Tracking**: Monitor income from completed orders
+- **Dashboard**: Visualization of key metrics such as pending orders, revenue, and number of products
+
+- **Product Management**: 
+  - Add, modify, delete and view products
+  - Multiple image management with main image selection
+  - Variant management (sizes, colors)
+  - Organization by categories and collections
+
+- **Order Management**: 
+  - Order processing with status updates (Pending, Completed, Canceled)
+  - Detailed view of customer orders
+  - Generation and download of PDF receipts for each order
+  - Advanced order filtering
+
+- **Sales Statistics**:
+  - Analysis of best-selling products with status filtering
+  - Monthly sales evolution in number of orders and revenue
+  - Interactive graphical visualizations with Chart.js
+  - Export of statistical data
+
+- **Revenue Tracking**: 
+  - Revenue tracking by period (daily, monthly, yearly)
+  - Summary dashboards
+  - Financial performance analysis
 
 ## 🔄 Workflow
 
-1. Customers browse products and add items to cart
-2. Checkout process collects shipping and payment information
-3. Order is created with "pending" status
-4. Admin reviews orders and updates status as appropriate
-5. When marked as "done", orders contribute to total revenue
+1. **Customer Journey**:
+   - Navigation and product search by category/filters
+   - Adding items to cart with variant selection (size, color)
+   - Cart management (quantity, removal)
 
-## 🤝 Contributing
+2. **Order Process**:
+   - Order form collecting shipping and payment information
+   - Order validation and confirmation
+   - Creation of order with "Pending" status
+   - Automatic confirmation email
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+3. **Administrative Management**:
+   - Administrator views new orders via the dashboard
+   - Processing and updating order status
+   - Generation of PDF receipts for validated orders
+   - Orders marked as "Completed" contribute to total revenue
+
+4. **Analysis and Optimization**:
+   - Regular review of sales statistics
+   - Identification of top-performing products
+   - Adjustment of inventory and business strategies
+   - Tracking of monthly sales evolution
+
+## 🤝 Contribution
+
+Contributions are welcome! Feel free to submit a Pull Request.
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create your feature branch (`git checkout -b feature/awesome-feature`)
+3. Commit your changes with descriptive messages (`git commit -m 'Add awesome feature'`)
+4. Push to the branch (`git push origin feature/awesome-feature`)
+5. Open a Pull Request with a detailed description of your changes
 
-## 📄 License
+### Contribution Guidelines
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- Follow PSR-12 coding standards
+- Make sure all tests pass before submitting your PR
+- Clearly document new features
+- For major features, discuss via an Issue first
+
+## ⚙️ Technical Requirements
+
+- PHP 8.1 or higher
+- MySQL 8.0 or MariaDB 10.5+
+- Composer 2.0+
+- Node.js 14+ and npm for asset compilation
+- PHP Extensions: intl, mbstring, xml, mysql, gd
+- Compatible web server (Apache, Nginx)
 
 ## 📞 Contact
 
-For questions or feedback, please reach out to:
+For any questions or feedback, please feel free to contact us:
 - Email: abderraouf.mahmoudi2001@gmail.com
 - GitHub: [Abderraouf Mahmoudi](https://github.com/Abderraouf-Mahmoudi)
+- LinkedIn: [Abderraouf Mahmoudi](https://www.linkedin.com/in/abderraouf-mahmoudi-83b76321b/)
+
+---
+
+<div align="center">
+  <p>BAdiscount - Professional e-commerce solution developed with Symfony</p>
+  <p>© 2025 Abderraouf Mahmoudi. All rights reserved.</p>
+</div>

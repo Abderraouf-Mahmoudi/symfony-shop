@@ -1,7 +1,7 @@
 
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Home 03{% endblock %}
+{% block title %}BAdiscount{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -19,6 +19,36 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('front/vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('front/css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('front/css/main.css') }}">
+    <style>
+        /* Fix for product card alignment */
+        .block2 {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .block2-pic {
+            height: 300px; /* Fixed height for all product images */
+            overflow: hidden;
+            position: relative;
+        }
+        .block2-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Maintain aspect ratio while filling container */
+            object-position: center;
+        }
+        .block2-txt {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .isotope-grid .col-sm-6,
+        .isotope-grid .col-md-4,
+        .isotope-grid .col-lg-3 {
+            display: flex;
+            margin-bottom: 15px;
+        }
+    </style>
 {% endblock stylesheets %}
 
 {% block body %}
@@ -31,7 +61,7 @@
 
 			<form class="container-search-header">
 				<div class="wrap-search-header">
-					<input class="plh0" type="text" name="search" placeholder="Search...">
+					<input class="plh0" type="text" name="search" placeholder="Recherche...">
 
 					<button class="flex-c-m trans-04">
 						<i class="zmdi zmdi-search"></i>
@@ -156,11 +186,11 @@
 
 				<div class="sidebar-gallery w-full">
 					<span class="mtext-101 cl5">
-						About Us
+						À Propos
 					</span>
 
 					<p class="stext-108 cl6 p-t-27">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur maximus vulputate hendrerit. Praesent faucibus erat vitae rutrum gravida. Vestibulum tempus mi enim, in molestie sem fermentum quis. 
+						BAdiscount est une boutique en ligne tunisienne spécialisée dans les vêtements à prix abordables. Nous proposons une large sélection de vêtements pour hommes et femmes avec livraison dans toute la Tunisie.
 					</p>
 				</div>
 			</div>
@@ -181,19 +211,19 @@
 						<div class="flex-col-c-m h-full p-t-100 p-b-60 respon5">
 							<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
 								<span class="ltext-202 txt-center cl0 respon2">
-									Women Collection 2018
+									Collection Femmes 2023
 								</span>
 							</div>
 								
 							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
 								<h2 class="ltext-104 txt-center cl0 p-t-22 p-b-40 respon1">
-									New arrivals
+									Nouvelles arrivées
 								</h2>
 							</div>
 								
 							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
 								<a href="{{ path('front_product') }}" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-									Shop Now
+									Acheter maintenant
 								</a>
 							</div>
 						</div>
@@ -205,19 +235,19 @@
 						<div class="flex-col-c-m h-full p-t-100 p-b-60 respon5">
 							<div class="layer-slick1 animated visible-false" data-appear="rollIn" data-delay="0">
 								<span class="ltext-202 txt-center cl0 respon2">
-									Men New-Season
+									Nouvelle saison Hommes
 								</span>
 							</div>
 								
 							<div class="layer-slick1 animated visible-false" data-appear="lightSpeedIn" data-delay="800">
 								<h2 class="ltext-104 txt-center cl0 p-t-22 p-b-40 respon1">
-									Jackets & Coats
+									Vestes et Manteaux
 								</h2>
 							</div>
 								
 							<div class="layer-slick1 animated visible-false" data-appear="slideInUp" data-delay="1600">
 								<a href="{{ path('front_product') }}" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-									Shop Now
+									Acheter maintenant
 								</a>
 							</div>
 						</div>
@@ -229,19 +259,19 @@
 						<div class="flex-col-c-m h-full p-t-100 p-b-60 respon5">
 							<div class="layer-slick1 animated visible-false" data-appear="rotateInDownLeft" data-delay="0">
 								<span class="ltext-202 txt-center cl0 respon2">
-									Men Collection 2018
+									Collection Hommes 2023
 								</span>
 							</div>
 								
 							<div class="layer-slick1 animated visible-false" data-appear="rotateInUpRight" data-delay="800">
 								<h2 class="ltext-104 txt-center cl0 p-t-22 p-b-40 respon1">
-									NEW SEASON
+									NOUVELLE SAISON
 								</h2>
 							</div>
 								
 							<div class="layer-slick1 animated visible-false" data-appear="rotateIn" data-delay="1600">
 								<a href="{{ path('front_product') }}" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-									Shop Now
+									Acheter maintenant
 								</a>
 							</div>
 						</div>
@@ -266,17 +296,17 @@
 						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
 							<div class="block1-txt-child1 flex-col-l">
 								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Women
+									Femmes
 								</span>
 
 								<span class="block1-info stext-102 trans-04">
-									New Trend
+									Nouvelle Tendance
 								</span>
 							</div>
 
 							<div class="block1-txt-child2 p-b-4 trans-05">
 								<div class="block1-link stext-101 cl0 trans-09">
-									Shop Now
+									Acheter maintenant
 								</div>
 							</div>
 						</a>
@@ -291,17 +321,17 @@
 						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
 							<div class="block1-txt-child1 flex-col-l">
 								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Men
+									Hommes
 								</span>
 
 								<span class="block1-info stext-102 trans-04">
-									New Trend
+									Nouvelle Tendance
 								</span>
 							</div>
 
 							<div class="block1-txt-child2 p-b-4 trans-05">
 								<div class="block1-link stext-101 cl0 trans-09">
-									Shop Now
+									Acheter maintenant
 								</div>
 							</div>
 						</a>
@@ -316,17 +346,17 @@
 						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
 							<div class="block1-txt-child1 flex-col-l">
 								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Watches
+									Montres
 								</span>
 
 								<span class="block1-info stext-102 trans-04">
-									Spring 2018
+									Printemps 2023
 								</span>
 							</div>
 
 							<div class="block1-txt-child2 p-b-4 trans-05">
 								<div class="block1-link stext-101 cl0 trans-09">
-									Shop Now
+									Acheter maintenant
 								</div>
 							</div>
 						</a>
@@ -341,17 +371,17 @@
 						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
 							<div class="block1-txt-child1 flex-col-l">
 								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Bags
+									Sacs
 								</span>
 
 								<span class="block1-info stext-102 trans-04">
-									Spring 2018
+									Printemps 2023
 								</span>
 							</div>
 
 							<div class="block1-txt-child2 p-b-4 trans-05">
 								<div class="block1-link stext-101 cl0 trans-09">
-									Shop Now
+									Acheter maintenant
 								</div>
 							</div>
 						</a>
@@ -366,17 +396,17 @@
 						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
 							<div class="block1-txt-child1 flex-col-l">
 								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Accessories
+									Accessoires
 								</span>
 
 								<span class="block1-info stext-102 trans-04">
-									Spring 2018
+									Printemps 2023
 								</span>
 							</div>
 
 							<div class="block1-txt-child2 p-b-4 trans-05">
 								<div class="block1-link stext-101 cl0 trans-09">
-									Shop Now
+									Acheter maintenant
 								</div>
 							</div>
 						</a>
@@ -392,38 +422,38 @@
 		<div class="container">
 			<div class="p-b-10">
 				<h3 class="ltext-103 cl5">
-					Product Overview
+					Aperçu des Produits
 				</h3>
 			</div>
 
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
-						All Products
+						Tous les Produits
 					</button>
 
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-						Women
+						Femmes
 					</button>
 
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-						Men
+						Hommes
 					</button>
 
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".kids">
-						Kids
+						Enfants
 					</button>
 
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-						Bag
+						Sacs
 					</button>
 
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-						Shoes
+						Chaussures
 					</button>
 
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-						Watches
+						Montres
 					</button>
 				</div>
 
@@ -431,13 +461,13 @@
 					<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
 						<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
 						<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						 Filter
+						 Filtre
 					</div>
 
 					<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
 						<i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
 						<i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						Search
+						Recherche
 					</div>
 				</div>
 				
@@ -448,7 +478,7 @@
 							<i class="zmdi zmdi-search"></i>
 						</button>
 
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
+						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Recherche">
 					</div>	
 				</div>
 
@@ -656,14 +686,14 @@
                             <!-- Block2 -->
                             <div class="block2">
                                 <div class="block2-pic hov-img0{% if product.isNew %} label-new" data-label="New"{% else %}"{% endif %}">
-                                    {% if product.imagePath %}
-                                        <img src="{{ asset('uploads/products/' ~ product.imagePath) }}" alt="{{ product.name }}">
+                                    {% if product.primaryImage %}
+                                        <img src="{{ asset('uploads/products/' ~ product.primaryImage.imagePath) }}" alt="{{ product.name }}">
                                     {% else %}
                                         <img src="{{ asset('front/images/product-placeholder.jpg') }}" alt="No Image">
                                     {% endif %}
 
                                     <a href="{{ path('front_product_detail', {'id': product.id}) }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-                                        Quick View
+                                        Aperçu rapide
                                     </a>
                                 </div>
 
@@ -674,7 +704,7 @@
                                         </a>
 
                                         <span class="stext-105 cl3">
-                                            ${{ product.price }}
+                                            {{ product.price }} TND
                                         </span>
                                     </div>
 
@@ -711,37 +741,37 @@
 			<div class="row">
 				<div class="col-sm-6 col-lg-3 p-b-50">
 					<h4 class="stext-301 cl0 p-b-30">
-						Categories
+						Catégories
 					</h4>
 
 					<ul>
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Women
+								Femmes
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Men
+								Hommes
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Kids
+								Enfants
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Shoes
+								Chaussures
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Watches
+								Montres
 							</a>
 						</li>
 					</ul>
@@ -749,31 +779,31 @@
 
 				<div class="col-sm-6 col-lg-3 p-b-50">
 					<h4 class="stext-301 cl0 p-b-30">
-						Help
+						Aide
 					</h4>
 
 					<ul>
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Track Order
+								Suivi de commande
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Returns 
+								Retours
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Shipping
+								Livraison
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								FAQs
+								FAQ
 							</a>
 						</li>
 					</ul>
@@ -781,11 +811,11 @@
 
 				<div class="col-sm-6 col-lg-3 p-b-50">
 					<h4 class="stext-301 cl0 p-b-30">
-						GET IN TOUCH
+						CONTACTEZ-NOUS
 					</h4>
 
 					<p class="stext-107 cl7 size-201">
-						Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
+						Des questions? Contactez-nous à notre boutique à Tunis, Tunisie ou appelez-nous au (+216) 55 123 456
 					</p>
 
 					<div class="p-t-27">
@@ -816,7 +846,7 @@
 
 						<div class="p-t-18">
 							<button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-								Subscribe
+								S'abonner
 							</button>
 						</div>
 					</form>
@@ -848,7 +878,7 @@
 
 				<p class="stext-107 cl6 txt-center">
 					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> BAdiscount Tunisie | Tous droits réservés | Template par <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 
 				</p>

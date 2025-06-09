@@ -17,7 +17,7 @@ class FrontController extends AbstractController
     #[Route('/', name: 'front_home')]
     public function home(ProductRepository $productRepository): Response
     {
-        $products = $productRepository->findAll();
+        $products = $productRepository->findAllWithImages();
         return $this->render('front/home.html.twig', [
             'products' => $products
         ]);
@@ -50,15 +50,17 @@ class FrontController extends AbstractController
     #[Route('/product', name: 'front_product')]
     public function product(ProductRepository $productRepository): Response
     {
-        $products = $productRepository->findAll();
+        $products = $productRepository->findAllWithImages();
         return $this->render('front/product.html.twig', [
             'products' => $products
         ]);
     }
 
     #[Route('/product-detail/{id}', name: 'front_product_detail')]
-    public function productDetail(Product $product = null): Response
+    public function productDetail(int $id, ProductRepository $productRepository): Response
     {
+        $product = $productRepository->findWithImages($id);
+        
         if (!$product) {
             return $this->redirectToRoute('front_product');
         }
@@ -89,11 +91,30 @@ class FrontController extends AbstractController
                     continue;
                 }
 
-                $cartWithData[] = [
+                // Debug information
+                error_log("Cart Key: " . $cartKey);
+                error_log("Cart Item: " . print_r($cartItem, true));
+                
+                $itemData = [
                     'product' => $product,
                     'quantity' => $cartItem['quantity'],
                     'size' => $cartItem['size']
                 ];
+                
+                // Add color info if available
+                if (isset($cartItem['color_id'])) {
+                    $itemData['color_id'] = $cartItem['color_id'];
+                }
+                
+                if (isset($cartItem['color_name'])) {
+                    $itemData['color_name'] = $cartItem['color_name'];
+                }
+                
+                if (isset($cartItem['color_code'])) {
+                    $itemData['color_code'] = $cartItem['color_code'];
+                }
+                
+                $cartWithData[] = $itemData;
             }
         }
         
@@ -120,20 +141,37 @@ class FrontController extends AbstractController
             return $this->redirectToRoute('front_home');
         }
         
-        // Get size and quantity from request
+        // Get size, quantity and color from request
         $size = $request->request->get('size', 'default');
         $quantity = (int)$request->request->get('quantity', 1);
-
-        // Debugging: Log size and quantity
-        error_log("Size: " . $size);
-        error_log("Quantity: " . $quantity);
-
-        // Use a composite key for cart items
-        $cartKey = $id . '-' . $size;
-
-        // Ensure cart item is an array
+        $colorId = $request->request->get('color_id');
+        
+        // Add color to the cartKey if it exists
+        $colorKey = $colorId ? '-' . $colorId : '';
+        $cartKey = $id . '-' . $size . $colorKey;
+        
+        // Prepare cart item data
+        $cartItemData = [
+            'quantity' => 0,
+            'size' => $size
+        ];
+        
+        // Add color info if available
+        if ($colorId) {
+            // Find the color in the product's colors collection
+            foreach ($product->getColors() as $color) {
+                if ($color->getId() == $colorId) {
+                    $cartItemData['color_id'] = $colorId;
+                    $cartItemData['color_name'] = $color->getName();
+                    $cartItemData['color_code'] = $color->getCode();
+                    break;
+                }
+            }
+        }
+        
+        // Ensure cart item is an array with all needed data
         if (!isset($cart[$cartKey]) || !is_array($cart[$cartKey])) {
-            $cart[$cartKey] = ['quantity' => 0, 'size' => $size];
+            $cart[$cartKey] = $cartItemData;
         }
 
         // Update quantity
@@ -150,13 +188,52 @@ class FrontController extends AbstractController
         $session = $request->getSession();
         $cart = $session->get('cart', []);
         
-        // Use a composite key for cart items
-        $cartKey = $id . '-' . $size;
-
-        if (!empty($cart[$cartKey])) {
+        // Get color_id from query parameter
+        $color_id = $request->query->get('color_id');
+        
+        // Add color to the cartKey if it exists
+        $colorKey = $color_id ? '-' . $color_id : '';
+        $cartKey = $id . '-' . $size . $colorKey;
+        
+        // Debug logging
+        error_log("Removing item with key: " . $cartKey);
+        error_log("Cart before removal: " . print_r(array_keys($cart), true));
+        
+        error_log("Attempting to remove item with key: '{$cartKey}'.");
+        error_log("Current cart keys: " . implode(", ", array_keys($cart)));
+        
+        // Check if the exact key exists
+        if (isset($cart[$cartKey])) {
+            error_log("Exact key match found, removing item.");
             unset($cart[$cartKey]);
+        } else {
+            // Try to find a matching key with a different format
+            error_log("Exact key match not found, searching for similar keys");
+            foreach (array_keys($cart) as $existingKey) {
+                error_log("Comparing with existing key: '{$existingKey}'");
+                
+                // Parse the existing key components
+                $keyParts = explode('-', $existingKey);
+                $existingId = $keyParts[0] ?? null;
+                $existingSize = $keyParts[1] ?? null;
+                $existingColorId = $keyParts[2] ?? null;
+                
+                error_log("Parsed key parts - ID: {$existingId}, Size: {$existingSize}, ColorID: {$existingColorId}");
+                
+                // Compare with requested removal
+                if ($existingId == $id && $existingSize == $size) {
+                    // If color_id is null but the item has color, or vice versa
+                    if (($color_id === null && $existingColorId !== null) ||
+                        ($color_id !== null && $existingColorId == $color_id)) {
+                        error_log("Found matching item with key '{$existingKey}', removing");
+                        unset($cart[$existingKey]);
+                        break;
+                    }
+                }
+            }
         }
         
+        error_log("Cart after removal: " . print_r(array_keys($cart), true));
         $session->set('cart', $cart);
         
         return $this->redirectToRoute('front_cart');
@@ -200,18 +277,41 @@ class FrontController extends AbstractController
         
         foreach ($quantities as $cartKey => $quantity) {
             // Verify product exists
-            $id = explode('-', $cartKey)[0];
+            $parts = explode('-', $cartKey);
+            $id = $parts[0];
             $product = $productRepository->find($id);
+            
             if ($product) {
-                // Ensure cart item is an array
-                if (!isset($cart[$cartKey]) || !is_array($cart[$cartKey])) {
-                    $cart[$cartKey] = ['quantity' => 0, 'size' => explode('-', $cartKey)[1]];
-                }
-
-                if ($quantity > 0) {
-                    $cart[$cartKey]['quantity'] = (int)$quantity;
+                // Ensure cart item exists
+                if (isset($cart[$cartKey]) && is_array($cart[$cartKey])) {
+                    if ($quantity > 0) {
+                        $cart[$cartKey]['quantity'] = (int)$quantity;
+                    } else {
+                        unset($cart[$cartKey]);
+                    }
                 } else {
-                    unset($cart[$cartKey]);
+                    // Cart key might have changed (added color), let's try to reconstruct it
+                    $size = $parts[1];
+                    $colorId = count($parts) > 2 ? $parts[2] : null;
+                    
+                    // Create a basic cart item
+                    $cartItem = ['quantity' => (int)$quantity, 'size' => $size];
+                    
+                    // Add color info if available
+                    if ($colorId) {
+                        foreach ($product->getColors() as $color) {
+                            if ($color->getId() == $colorId) {
+                                $cartItem['color_id'] = $colorId;
+                                $cartItem['color_name'] = $color->getName();
+                                $cartItem['color_code'] = $color->getCode();
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if ($quantity > 0) {
+                        $cart[$cartKey] = $cartItem;
+                    }
                 }
             }
         }
@@ -222,8 +322,8 @@ class FrontController extends AbstractController
         return $this->redirectToRoute('front_cart');
     }
 
-    #[Route('/update-cart-quantity/{id}/{size}/{action}', name: 'update_cart_item_quantity')]
-    public function updateCartItemQuantity($id, $size, $action, Request $request, ProductRepository $productRepository): Response
+    #[Route('/update-cart-quantity/{id}/{size}/{action}/{color_id}', name: 'update_cart_item_quantity', defaults: ['color_id' => null])]
+    public function updateCartItemQuantity($id, $size, $action, $color_id, Request $request, ProductRepository $productRepository): Response
     {
         $session = $request->getSession();
         $cart = $session->get('cart', []);
@@ -235,12 +335,27 @@ class FrontController extends AbstractController
             return $this->redirectToRoute('front_cart');
         }
         
-        // Use a composite key for cart items
-        $cartKey = $id . '-' . $size;
+        // Add color to the cartKey if it exists
+        $colorKey = $color_id ? '-' . $color_id : '';
+        $cartKey = $id . '-' . $size . $colorKey;
 
         // Ensure cart item is an array
         if (!isset($cart[$cartKey]) || !is_array($cart[$cartKey])) {
-            $cart[$cartKey] = ['quantity' => 0, 'size' => $size];
+            $cartItemData = ['quantity' => 0, 'size' => $size];
+            
+            // Add color info if available
+            if ($color_id) {
+                foreach ($product->getColors() as $color) {
+                    if ($color->getId() == $color_id) {
+                        $cartItemData['color_id'] = $color_id;
+                        $cartItemData['color_name'] = $color->getName();
+                        $cartItemData['color_code'] = $color->getCode();
+                        break;
+                    }
+                }
+            }
+            
+            $cart[$cartKey] = $cartItemData;
         }
 
         if ($action === 'increase') {
@@ -343,6 +458,13 @@ class FrontController extends AbstractController
                 
                 // Store size information temporarily for later update
                 $orderItem->tempSize = $size; // This won't be persisted but will be accessible later
+                
+                // Store color information if available
+                if (isset($cartItem['color_id']) && isset($cartItem['color_name']) && isset($cartItem['color_code'])) {
+                    $orderItem->tempColorId = $cartItem['color_id'];
+                    $orderItem->tempColorName = $cartItem['color_name'];
+                    $orderItem->tempColorCode = $cartItem['color_code'];
+                }
                 $order->addItem($orderItem);
                 
                 $total += $product->getPrice() * $quantity;
@@ -358,12 +480,42 @@ class FrontController extends AbstractController
             // After flush, get connection for direct SQL updates
             $connection = $entityManager->getConnection();
             
-            // Update sizes directly in the database
+            // Update sizes and colors directly in the database
             foreach ($order->getItems() as $item) {
+                $params = [];
+                $setClause = [];
+                
+                // Add size if available
                 if (isset($item->tempSize) && !empty($item->tempSize)) {
-                    $sql = 'UPDATE order_item SET size = :size WHERE id = :id';
+                    $setClause[] = 'size = :size';
+                    $params['size'] = $item->tempSize;
+                }
+                
+                // Add color info if available
+                if (isset($item->tempColorId)) {
+                    $setClause[] = 'color_id = :color_id';
+                    $params['color_id'] = $item->tempColorId;
+                }
+                
+                if (isset($item->tempColorName)) {
+                    $setClause[] = 'color_name = :color_name';
+                    $params['color_name'] = $item->tempColorName;
+                }
+                
+                if (isset($item->tempColorCode)) {
+                    $setClause[] = 'color_code = :color_code';
+                    $params['color_code'] = $item->tempColorCode;
+                }
+                
+                // Only update if we have something to update
+                if (!empty($setClause)) {
+                    $sql = 'UPDATE order_item SET ' . implode(', ', $setClause) . ' WHERE id = :id';
                     $stmt = $connection->prepare($sql);
-                    $stmt->bindValue('size', $item->tempSize);
+                    
+                    foreach ($params as $key => $value) {
+                        $stmt->bindValue($key, $value);
+                    }
+                    
                     $stmt->bindValue('id', $item->getId());
                     $stmt->executeStatement();
                 }

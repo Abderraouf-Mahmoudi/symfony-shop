@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu de commande #{{ order.id }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .order-info {
+            margin-bottom: 20px;
+        }
+        .order-id {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .date {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+        .status-pending {
+            background-color: #ffeeba;
+            color: #856404;
+        }
+        .status-done {
+            background-color: #c3e6cb;
+            color: #155724;
+        }
+        .status-canceled {
+            background-color: #f5c6cb;
+            color: #721c24;
+        }
+        .customer-info, .shipping-info {
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 16px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        .info-block {
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        table th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #f8f9fa;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">BAdiscount</div>
+        <div>Boutique en ligne</div>
+    </div>
+    
+    <div class="order-info">
+        <div class="order-id">Reçu de commande #{{ order.id }}</div>
+        <div class="date">Date de commande: {{ order.createdAt|date('d/m/Y H:i') }}</div>
+        <div>
+            Statut: 
+            {% if order.status == 'pending' %}
+                <span class="status status-pending">En attente</span>
+            {% elseif order.status == 'done' %}
+                <span class="status status-done">Terminée</span>
+            {% elseif order.status == 'canceled' %}
+                <span class="status status-canceled">Annulée</span>
+            {% else %}
+                <span class="status">{{ order.status|capitalize }}</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="customer-info">
+        <h2>Informations client</h2>
+        <div class="info-block"><strong>Nom:</strong> {{ order.customerName }}</div>
+        <div class="info-block"><strong>Email:</strong> {{ order.customerEmail }}</div>
+        <div class="info-block"><strong>Téléphone:</strong> {{ order.phone }}</div>
+    </div>
+    
+    <div class="shipping-info">
+        <h2>Adresse de livraison</h2>
+        <div class="info-block">{{ order.shippingAddress }}</div>
+        <div class="info-block"><strong>Ville:</strong> {{ order.city }}</div>
+        <div class="info-block"><strong>Code postal:</strong> {{ order.postalCode }}</div>
+    </div>
+    
+    <div class="billing-info">
+        <h2>Adresse de facturation</h2>
+        <div class="info-block">{{ order.billingAddress ? order.billingAddress : order.shippingAddress }}</div>
+    </div>
+    
+    <h2>Articles commandés</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Taille</th>
+                <th>Couleur</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th class="text-right">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.size }}</td>
+                    <td>
+                        {% if item.colorName is defined and item.colorName %}
+                            {{ item.colorName }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }} TND</td>
+                    <td class="text-right">{{ (item.price * item.quantity)|number_format(2) }} TND</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">Aucun article trouvé pour cette commande</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="5" class="text-right"><strong>Total:</strong></td>
+                <td class="text-right"><strong>{{ order.totalAmount }} TND</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <div class="footer">
+        <p>Merci pour votre commande!</p>
+        <p>BAdiscount - Boutique de vêtements en ligne</p>
+        <p>Contact: info@badiscount.tn | Tel: +216 XX XXX XXX</p>
+    </div>
+</body>
+</html>

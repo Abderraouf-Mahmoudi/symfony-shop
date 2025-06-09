@@ -1,11 +1,11 @@
 {% extends 'back/base.html.twig' %}
 
-{% block title %}Create New Product{% endblock %}
+{% block title %}Créer un nouveau produit{% endblock %}
 
 {% block content %}
 <div class="page-inner">
     <div class="page-header">
-        <h4 class="page-title">Products Management</h4>
+        <h4 class="page-title">Gestion des produits</h4>
         <ul class="breadcrumbs">
             <li class="nav-home">
                 <a href="{{ path('admin_dashboard') }}">
@@ -16,13 +16,13 @@
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ path('admin_products') }}">Products</a>
+                <a href="{{ path('admin_products') }}">Produits</a>
             </li>
             <li class="separator">
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <span>New Product</span>
+                <span>Nouveau produit</span>
             </li>
         </ul>
     </div>
@@ -31,35 +31,35 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Create New Product</div>
+                    <div class="card-title">Créer un nouveau produit</div>
                 </div>
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name">Product Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter product name" required>
+                                    <label for="name">Nom du produit</label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Entrez le nom du produit" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="price">Price ($)</label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" placeholder="Enter price" required>
+                                    <label for="price">Prix (TND)</label>
+                                    <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" placeholder="Entrez le prix" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="stock">Stock Quantity</label>
-                                    <input type="number" min="0" class="form-control" id="stock" name="stock" placeholder="Enter stock quantity" required>
+                                    <label for="stock">Quantité en stock</label>
+                                    <input type="number" min="0" class="form-control" id="stock" name="stock" placeholder="Entrez la quantité en stock" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="category">Category</label>
+                                    <label for="category">Catégorie</label>
                                     <select class="form-control" id="category" name="category" required>
-                                        <option value="">Select a category</option>
-                                        <option value="men">Men</option>
-                                        <option value="women">Women</option>
-                                        <option value="kids">Kids</option>
-                                        <option value="accessories">Accessories</option>
+                                        <option value="">Sélectionnez une catégorie</option>
+                                        <option value="men">Hommes</option>
+                                        <option value="women">Femmes</option>
+                                        <option value="kids">Enfants</option>
+                                        <option value="accessories">Accessoires</option>
                                     </select>
                                 </div>
                             </div>
@@ -67,23 +67,46 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="Enter product description" required></textarea>
+                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="Entrez la description du produit" required></textarea>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="image">Product Image</label>
+                                    <label for="images">Images du produit (minimum 1 requise)</label>
                                     <div class="input-file input-file-image">
-                                        <img class="img-upload-preview" width="150" src="{{ asset('back/img/placeholder.jpg') }}" alt="preview">
-                                        <input type="file" class="form-control form-control-file" id="image" name="image" accept="image/*">
-                                        <label for="image" class="btn btn-primary btn-round btn-lg"><i class="fa fa-file-image"></i> Upload an Image</label>
+                                        <div class="image-preview-container" id="image-previews">
+                                            <div class="image-preview-item">
+                                                <img class="img-upload-preview" width="150" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview">
+                                            </div>
+                                        </div>
+                                        <input type="file" class="form-control form-control-file" id="images" name="images[]" accept="image/*" multiple required>
+                                        <label for="images" class="btn btn-primary btn-round btn-lg"><i class="fa fa-file-image"></i> Sélectionner des images</label>
+                                        <small class="form-text text-muted">La première image sera définie comme l'image principale. Vous pourrez la modifier ultérieurement.</small>
                                     </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Couleurs du produit</label>
+                                    <div id="color-container">
+                                        <div class="row color-row mb-3">
+                                            <div class="col-md-5">
+                                                <input type="text" class="form-control" name="color_names[]" placeholder="Nom de couleur (ex: Rouge)">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="color" class="form-control" name="color_codes[]">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger btn-sm remove-color"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="add-color" class="btn btn-info btn-sm"><i class="fa fa-plus"></i> Ajouter une couleur</button>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="card-action">
-                            <button type="submit" class="btn btn-success">Create Product</button>
-                            <a href="{{ path('admin_products') }}" class="btn btn-danger">Cancel</a>
+                            <button type="submit" class="btn btn-success">Créer le produit</button>
+                            <a href="{{ path('admin_products') }}" class="btn btn-danger">Annuler</a>
                         </div>
                     </form>
                 </div>
@@ -96,14 +119,58 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Image preview
+        // Multiple images preview
         $(document).ready(function() {
-            $('#image').change(function() {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                    $('.img-upload-preview').attr('src', e.target.result);
+            // Handle image upload preview
+            $('#images').change(function() {
+                $('#image-previews').empty();
+                
+                const files = Array.from(this.files);
+                files.forEach((file, index) => {
+                    let reader = new FileReader();
+                    reader.onload = (e) => {
+                        $('#image-previews').append(`
+                            <div class="image-preview-item d-inline-block m-2">
+                                <img class="img-upload-preview" width="150" src="${e.target.result}" alt="preview">
+                                ${index === 0 ? '<span class="badge badge-primary">Principale</span>' : ''}
+                            </div>
+                        `);
+                    };
+                    reader.readAsDataURL(file);
+                });
+                
+                // Show a message if no files were selected
+                if (files.length === 0) {
+                    $('#image-previews').append(`
+                        <div class="image-preview-item">
+                            <img class="img-upload-preview" width="150" src="{{ asset('back/img/placeholder.jpg') }}" alt="preview">
+                        </div>
+                    `);
                 }
-                reader.readAsDataURL(this.files[0]);
+            });
+            
+            // Handle color management
+            $('#add-color').click(function() {
+                const colorRow = `
+                    <div class="row color-row mb-3">
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="color_names[]" placeholder="Color Name (e.g. Red)">
+                        </div>
+                        <div class="col-md-5">
+                            <input type="color" class="form-control" name="color_codes[]">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger btn-sm remove-color"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+                
+                $('#color-container').append(colorRow);
+            });
+            
+            // Remove color row
+            $(document).on('click', '.remove-color', function() {
+                $(this).closest('.color-row').remove();
             });
         });
     </script>

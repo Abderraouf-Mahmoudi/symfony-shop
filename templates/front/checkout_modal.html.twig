@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title mtext-105" id="checkoutModalLabel">Checkout Information</h5>
+                <h5 class="modal-title mtext-105" id="checkoutModalLabel">Informations de commande</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -13,39 +13,39 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="fullname">Full Name</label>
+                                <label for="fullname">Nom complet</label>
                                 <input type="text" class="form-control" id="fullname" name="fullname" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="phone">Phone Number</label>
+                                <label for="phone">Numéro de téléphone</label>
                                 <input type="text" class="form-control" id="phone" name="phone" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="address">Delivery Address</label>
-                        <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                        <label for="address">Adresse de livraison (Optionnel)</label>
+                        <textarea class="form-control" id="address" name="address" rows="3"></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="city">City</label>
-                                <input type="text" class="form-control" id="city" name="city" required>
+                                <label for="city">Ville (Optionnel)</label>
+                                <input type="text" class="form-control" id="city" name="city">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="postalCode">Postal Code</label>
-                                <input type="text" class="form-control" id="postalCode" name="postalCode" required>
+                                <label for="postalCode">Code postal (Optionnel)</label>
+                                <input type="text" class="form-control" id="postalCode" name="postalCode">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="size">Size</label>
-                                <select class="form-control" id="size" name="size" required>
-                                    <option value="">Select Size</option>
+                                <label for="size">Taille (Optionnel)</label>
+                                <select class="form-control" id="size" name="size">
+                                    <option value="">Choisir une taille</option>
                                     <option value="XS">XS</option>
                                     <option value="S">S</option>
                                     <option value="M">M</option>
@@ -58,28 +58,28 @@
                         </div>
                     </div>
                     <div class="form-group mt-3">
-                        <label for="notes">Additional Notes</label>
+                        <label for="notes">Notes supplémentaires</label>
                         <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
                     </div>
                     <div class="order-summary mt-4">
-                        <h4 class="mtext-105 mb-3">Order Summary</h4>
+                        <h4 class="mtext-105 mb-3">Récapitulatif de commande</h4>
                         <ul class="list-group mb-3">
                             {% for item in items %}
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>{{ item.product.name }} (x{{ item.quantity }})</span>
-                                <strong>${{ (item.product.price * item.quantity)|number_format(2) }}</strong>
+                                <strong>{{ (item.product.price * item.quantity)|number_format(2) }} TND</strong>
                             </li>
                             {% endfor %}
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>Total</span>
-                                <strong>${{ total|number_format(2) }}</strong>
+                                <strong>{{ total|number_format(2) }} TND</strong>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Confirm Order</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Confirmer la commande</button>
                 </div>
             </form>
         </div>

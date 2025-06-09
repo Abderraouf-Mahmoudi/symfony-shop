@@ -1,10 +1,10 @@
 {# Base template for front (client) pages #}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Clothing Shop{% endblock %}</title>
+    <title>{% block title %}BAdiscount - Boutique en ligne{% endblock %}</title>
     <link rel="icon" type="image/png" href="{{ asset('front/images/icons/favicon.png') }}"/>
     {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('front/vendor/bootstrap/css/bootstrap.min.css') }}">
@@ -22,6 +22,24 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('front/css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('front/css/main.css') }}">
     {% endblock %}
+    <style>
+        .header-cart-color {
+            display: block;
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 2px;
+        }
+        
+        .mini-color-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 4px;
+            border: 1px solid #ddd;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body class="animsition">
     <!-- Cart Popup -->
@@ -31,7 +49,7 @@
         <div class="header-cart flex-col-l p-l-65 p-r-25">
             <div class="header-cart-title flex-w flex-sb-m p-b-8">
                 <span class="mtext-103 cl2">
-                    YOUR CART
+                    VOTRE PANIER
                 </span>
 
                 <div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
@@ -45,16 +63,26 @@
                         {% for item in cart_data.items %}
                             <li class="header-cart-item flex-w flex-t m-b-12">
                                 <div class="header-cart-item-img">
-                                    <img src="{{ asset('uploads/products/' ~ item.product.imagePath) }}" alt="{{ item.product.name }}">
+                                    {% if item.product.primaryImage %}
+                                        <img src="{{ asset('uploads/products/' ~ item.product.primaryImage.imagePath) }}" alt="{{ item.product.name }}">
+                                    {% else %}
+                                        <img src="{{ asset('front/images/product-placeholder.jpg') }}" alt="{{ item.product.name }}">
+                                    {% endif %}
                                 </div>
 
                                 <div class="header-cart-item-txt p-t-8">
                                     <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
                                         {{ item.product.name }}
+                                        {% if item.color_name is defined %}
+                                            <span class="header-cart-color">
+                                                <span class="mini-color-dot" style="background-color: {{ item.color_code }}"></span>
+                                                {{ item.color_name }}
+                                            </span>
+                                        {% endif %}
                                     </a>
 
                                     <span class="header-cart-item-info">
-                                        {{ item.quantity }} x ${{ item.product.price|number_format(2) }}
+                                        {{ item.quantity }} x {{ item.product.price|number_format(2) }} TND
                                     </span>
                                 </div>
                             </li>
@@ -63,7 +91,7 @@
                         <li class="header-cart-item flex-w flex-t m-b-12">
                             <div class="header-cart-item-txt p-t-8">
                                 <span class="header-cart-item-info">
-                                    Your cart is empty
+                                    Votre panier est vide
                                 </span>
                             </div>
                         </li>
@@ -72,16 +100,16 @@
                 
                 <div class="w-full">
                     <div class="header-cart-total w-full p-tb-40">
-                        Total: ${{ cart_data.total|default(0)|number_format(2) }}
+                        Total: {{ cart_data.total|default(0)|number_format(2) }} TND
                     </div>
 
                     <div class="header-cart-buttons flex-w w-full">
                         <a href="{{ path('front_cart') }}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
-                            View Cart
+                            Voir Panier
                         </a>
 
                         <a href="{{ path('front_cart') }}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
-                            Check Out
+                            Commander
                         </a>
                     </div>
                 </div>
@@ -97,37 +125,22 @@
 					
 					<!-- Logo desktop -->		
 					<a href="{{ path('front_home') }}" class="logo">
-						<img src="{{ asset('front/images/icons/logo-02.png') }}" alt="IMG-LOGO">
+						<img src="{{ asset('front/images/icons/logo-02.png') }}" alt="BAdiscount">
 					</a>
 
 					<!-- Menu desktop -->
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li>
-								<a href="{{ path('front_home') }}">Home</a>
-								<ul class="sub-menu">
-									<li><a href="{{ path('front_home') }}">Homepage</a></li>
-								</ul>
+								<a href="{{ path('front_home') }}">Accueil</a>
 							</li>
 
 							<li>
-								<a href="{{ path('front_product') }}">Shop</a>
+								<a href="{{ path('front_product') }}">Boutique</a>
 							</li>
 
 							<li class="label1" data-label1="hot">
-								<a href="{{ path('front_cart') }}">Cart</a>
-							</li>
-
-							<li>
-								<a href="{{ path('front_blog') }}">Blog</a>
-							</li>
-
-							<li>
-								<a href="{{ path('front_about') }}">About</a>
-							</li>
-
-							<li>
-								<a href="{{ path('front_contact') }}">Contact</a>
+								<a href="{{ path('front_cart') }}">Panier</a>
 							</li>
 						</ul>
 					</div>	
@@ -179,33 +192,15 @@
 		<div class="menu-mobile">
 			<ul class="main-menu-m">
 				<li>
-					<a href="{{ path('front_home') }}">Home</a>
-					<ul class="sub-menu-m">
-						<li><a href="{{ path('front_home') }}">Homepage</a></li>
-					</ul>
-					<span class="arrow-main-menu-m">
-						<i class="fa fa-angle-right" aria-hidden="true"></i>
-					</span>
+					<a href="{{ path('front_home') }}">Accueil</a>
 				</li>
 
 				<li>
-					<a href="{{ path('front_product') }}">Shop</a>
+					<a href="{{ path('front_product') }}">Boutique</a>
 				</li>
 
 				<li>
-					<a href="{{ path('front_cart') }}" class="label1 rs1" data-label1="hot">Cart</a>
-				</li>
-
-				<li>
-					<a href="{{ path('front_blog') }}">Blog</a>
-				</li>
-
-				<li>
-					<a href="{{ path('front_about') }}">About</a>
-				</li>
-
-				<li>
-					<a href="{{ path('front_contact') }}">Contact</a>
+					<a href="{{ path('front_cart') }}" class="label1 rs1" data-label1="hot">Panier</a>
 				</li>
 			</ul>
 		</div>
@@ -256,7 +251,7 @@
         $('.js-addwish-b2').each(function(){
             var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
             $(this).on('click', function(){
-                swal(nameProduct, "is added to wishlist !", "success");
+                swal(nameProduct, "a été ajouté aux favoris !", "success");
                 $(this).addClass('js-addedwish-b2');
                 $(this).off('click');
             });
@@ -265,7 +260,7 @@
         $('.js-addwish-detail').each(function(){
             var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
             $(this).on('click', function(){
-                swal(nameProduct, "is added to wishlist !", "success");
+                swal(nameProduct, "a été ajouté aux favoris !", "success");
                 $(this).addClass('js-addedwish-detail');
                 $(this).off('click');
             });
@@ -275,7 +270,7 @@
         $('.js-addcart-detail').each(function(){
             var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
             $(this).on('click', function(){
-                swal(nameProduct, "is added to cart !", "success");
+                swal(nameProduct, "a été ajouté au panier !", "success");
             });
         });
     </script>

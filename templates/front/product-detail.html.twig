@@ -3,117 +3,423 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block body %}
-    <!-- Title page -->
-    <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('{{ asset('front/images/bg-02.jpg') }}');">
-        <h2 class="ltext-105 cl0 txt-center">
-            {{ product.name }}
-        </h2>
-    </section>
+    <!-- Banner Title Section -->
+    <div class="page-heading-banner bg-img1" style="background-image: url('{{ asset('front/images/bg-02.jpg') }}');">
+        <div class="container">
+            <div class="page-title-text text-center">
+                <h2>{{ product.name }}</h2>
+            </div>
+        </div>
+    </div>
+    
     <!-- Content page -->
-    <section class="sec-product-detail bg0 p-t-65 p-b-60">
+    <section class="sec-product-detail bg0 p-b-60">
         <div class="container">
             <div class="row">
+                <!-- Product Image -->
                 <div class="col-md-6 col-lg-7 p-b-30">
-                    <div class="p-l-25 p-r-30 p-lr-0-lg">
+                    <div class="p-lr-0-lg product-image-container">
                         <div class="wrap-slick3 flex-sb flex-w">
                             <div class="wrap-slick3-dots"></div>
                             <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
-                            <div class="slick3 gallery-lb">
-                                <div class="item-slick3" data-thumb="{% if product.imagePath %}{{ asset('uploads/products/' ~ product.imagePath) }}{% else %}{{ asset('back/img/placeholder.jpg') }}{% endif %}">
+                            <div class="slick3 gallery-lb product-main-image">
+                                {% if product.primaryImage %}
+                                <!-- Show primary image first -->
+                                <div class="item-slick3" data-thumb="{{ asset('uploads/products/' ~ product.primaryImage.imagePath) }}">
                                     <div class="wrap-pic-w pos-relative">
-                                        {% if product.imagePath %}
-                                            <img src="{{ asset('uploads/products/' ~ product.imagePath) }}" alt="{{ product.name }}">
-                                        {% else %}
-                                            <img src="{{ asset('back/img/placeholder.jpg') }}" alt="{{ product.name }}">
-                                        {% endif %}
+                                        <img src="{{ asset('uploads/products/' ~ product.primaryImage.imagePath) }}" alt="{{ product.name }} - Primary Image">
                                     </div>
                                 </div>
+                                {% endif %}
+                                
+                                {% if product.images|length > 0 %}
+                                    {% for image in product.images %}
+                                        {% if not (product.primaryImage and image.id == product.primaryImage.id) %}
+                                        <div class="item-slick3" data-thumb="{{ asset('uploads/products/' ~ image.imagePath) }}">
+                                            <div class="wrap-pic-w pos-relative">
+                                                <img src="{{ asset('uploads/products/' ~ image.imagePath) }}" alt="{{ product.name }} - Image {{ loop.index }}">
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                {% if not product.primaryImage and product.images|length == 0 %}
+                                <div class="item-slick3" data-thumb="{{ asset('back/img/placeholder.jpg') }}">
+                                    <div class="wrap-pic-w pos-relative">
+                                        <img src="{{ asset('back/img/placeholder.jpg') }}" alt="{{ product.name }} - No Image">
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Product Information -->                
                 <div class="col-md-6 col-lg-5 p-b-30">
-                    <div class="p-r-50 p-t-5 p-lr-0-lg">
-                        <h4 class="mtext-105 cl2 js-name-detail p-b-14">{{ product.name }}</h4>
-                        <span class="mtext-106 cl2">${{ product.price|number_format(2, '.', ',') }}</span>
-                        <p class="stext-102 cl3 p-t-23">{{ product.description }}</p>
+                    <div class="product-info p-4">
+                        <!-- Product Name and Price -->                    
+                        <h1 class="product-title mb-3">{{ product.name }}</h1>
+                        <div class="price-container mb-4">
+                            <span class="product-price">{{ product.price|number_format(2, '.', ',') }} TND</span>
+                        </div>
                         
-                        <div class="p-t-33">
-                            <div class="flex-w flex-r-m p-b-10">
-                                <div class="size-203 flex-c-m respon6">
-                                    Category
+                        <!-- Rating Stars -->                        
+                        <div class="ratings mb-4">
+                            <span class="stars">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-o"></i>
+                            </span>
+                            <span class="rating-count">(4.5/5)</span>
+                        </div>
+                        
+                        <!-- Product Description -->                        
+                        <div class="product-description mb-4">
+                            <p>{{ product.description }}</p>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <!-- Product Details -->                        
+                        <div class="product-details mb-4">
+                            <!-- Category -->                            
+                            <div class="detail-row d-flex align-items-center mb-3">
+                                <div class="detail-label">Catégorie:</div>
+                                <div class="detail-value">{{ product.category }}</div>
+                            </div>
+                            
+                            <!-- Availability -->                            
+                            <div class="detail-row d-flex align-items-center mb-3">
+                                <div class="detail-label">Disponibilité:</div>
+                                <div class="detail-value"><span class="text-success">En stock</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Color Selection -->                        
+                        <div class="color-selection mb-4">
+                            <h5 class="option-title">Couleur</h5>
+                            <div class="color-options">
+                                {% if product.colors|length > 0 %}
+                                    {% for color in product.colors %}
+                                        <input type="radio" id="color-{{ color.id }}" name="color" value="{{ color.id }}" class="color-radio" {% if loop.first %}checked{% endif %}>
+                                        <label for="color-{{ color.id }}" class="color-btn" style="background-color: {{ color.code }}" title="{{ color.name }}"></label>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="text-muted">Pas d'options de couleur disponibles</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Size Selection -->                        
+                        <div class="size-selection mb-4">
+                            <h5 class="option-title">Taille</h5>
+                            <div class="size-options">
+                                <input type="radio" id="size-s" name="size" value="S" class="size-radio" checked>
+                                <label for="size-s" class="size-btn">S</label>
+
+                                <input type="radio" id="size-m" name="size" value="M" class="size-radio">
+                                <label for="size-m" class="size-btn">M</label>
+
+                                <input type="radio" id="size-l" name="size" value="L" class="size-radio">
+                                <label for="size-l" class="size-btn">L</label>
+
+                                <input type="radio" id="size-xl" name="size" value="XL" class="size-radio">
+                                <label for="size-xl" class="size-btn">XL</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Quantity Selection -->                        
+                        <div class="quantity-container mb-4">
+                            <h5 class="option-title">Quantité</h5>
+                            <div class="quantity-selector d-flex align-items-center">
+                                <div class="btn-num-product-down qty-btn">
+                                    <i class="fa fa-minus"></i>
                                 </div>
-                                <div class="size-204 respon6-next">
-                                    <div class="rs1-select2 bor8 bg0">
-                                        <span class="stext-102 cl3">{{ product.category }}</span>
-                                    </div>
+
+                                <input class="qty-input" type="number" name="num-product" value="1" min="1">
+
+                                <div class="btn-num-product-up qty-btn">
+                                    <i class="fa fa-plus"></i>
                                 </div>
                             </div>
-
-                            <!-- Size Selection -->
-                            <div class="flex-w flex-r-m p-b-10">
-                                <div class="size-203 flex-c-m respon6">
-                                    Size
+                        </div>
+                        
+                        <!-- Add to Cart Button -->                        
+                        <div class="cart-actions">
+                            <form action="{{ path('add_to_cart', {'id': product.id}) }}" method="post" class="w-100">
+                                <input type="hidden" name="size" id="selected-size" value="S">
+                                <input type="hidden" name="quantity" id="selected-quantity" value="1">
+                                {% if product.colors|length > 0 %}
+                                <input type="hidden" name="color_id" id="selected-color" value="{{ product.colors|first.id }}">
+                                {% endif %}
+                                
+                                <div class="d-flex mb-3">
+                                    <button type="submit" class="add-to-cart-btn">
+                                        <i class="fa fa-shopping-cart mr-2"></i> Ajouter au panier
+                                    </button>
+                                    <button type="button" class="wishlist-btn ml-3">
+                                        <i class="fa fa-heart"></i>
+                                    </button>
                                 </div>
-                                <div class="size-204 respon6-next">
-                                    <div class="flex-w">
-                                        <div class="flex-w flex-r-m p-b-10">
-                                            <div class="size-selector flex-w flex-r-m">
-                                                <input type="radio" id="size-s" name="size" value="S" class="size-radio" checked>
-                                                <label for="size-s" class="size-btn m-r-5">S</label>
-
-                                                <input type="radio" id="size-m" name="size" value="M" class="size-radio">
-                                                <label for="size-m" class="size-btn m-r-5">M</label>
-
-                                                <input type="radio" id="size-l" name="size" value="L" class="size-radio">
-                                                <label for="size-l" class="size-btn m-r-5">L</label>
-
-                                                <input type="radio" id="size-xl" name="size" value="XL" class="size-radio">
-                                                <label for="size-xl" class="size-btn">XL</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Quantity -->
-                            <div class="flex-w flex-r-m p-b-10">
-                                <div class="size-203 flex-c-m respon6">
-                                    Quantity
-                                </div>
-                                <div class="size-204 respon6-next">
-                                    <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-                                        <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-                                            <i class="fs-16 zmdi zmdi-minus"></i>
-                                        </div>
-
-                                        <input class="mtext-104 cl3 txt-center num-product" type="number" name="quantity" value="1" min="1">
-
-                                        <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-                                            <i class="fs-16 zmdi zmdi-plus"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Add to Cart button -->
-                            <div class="flex-w flex-r-m p-b-10 p-t-20">
-                                <div class="size-204 flex-w flex-m respon6-next">
-                                    <form action="{{ path('add_to_cart', {'id': product.id}) }}" method="post" class="w-100">
-                                        <input type="hidden" name="size" id="selected-size" value="S">
-                                        <input type="hidden" name="quantity" id="selected-quantity" value="1">
-                                        <button type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 w-100">
-                                            Add to cart
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Modern Product Detail Styling */
+    .product-image-container {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .product-main-image img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        max-height: 500px;
+        transition: transform 0.3s ease;
+    }
+    
+    .product-main-image:hover img {
+        transform: scale(1.02);
+    }
+    
+    .product-info {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        height: 100%;
+    }
+    
+    .product-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .product-price {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: #e63946;
+    }
+    
+    /* Rating stars styling */
+    .ratings .stars {
+        color: #ffc107;
+        margin-right: 10px;
+    }
+    
+    .rating-count {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    /* Product details styling */
+    .product-description {
+        color: #555;
+        line-height: 1.6;
+    }
+    
+    .detail-row {
+        margin-bottom: 8px;
+    }
+    
+    .detail-label {
+        font-weight: 500;
+        color: #333;
+        width: 120px;
+    }
+    
+    .detail-value {
+        color: #666;
+    }
+    
+    /* Color selection styling */
+    .color-selection {
+        margin-bottom: 1.5rem;
+    }
+    
+    .color-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .color-radio {
+        display: none;
+    }
+    
+    .color-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: inline-block;
+        border: 2px solid transparent;
+        box-shadow: 0 0 3px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+    
+    .color-radio:checked + .color-btn {
+        border: 2px solid #333;
+        transform: scale(1.1);
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+    
+    /* Size selection styling */
+    .option-title {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 12px;
+    }
+    
+    .size-radio {
+        display: none;
+    }
+    
+    .size-options {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .size-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .size-btn:hover, .size-btn.active-size {
+        background-color: #333;
+        color: white;
+        border-color: #333;
+    }
+    
+    /* Quantity selector styling */
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        height: 45px;
+        border-radius: 8px;
+        overflow: hidden;
+        width: fit-content;
+        border: 1px solid #ddd;
+    }
+    
+    .qty-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background-color: #f5f5f5;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .qty-btn:hover {
+        background-color: #eaeaea;
+    }
+    
+    .qty-input {
+        width: 60px;
+        height: 45px;
+        text-align: center;
+        border: none;
+        outline: none;
+        font-size: 1rem;
+    }
+    
+    /* Button styling */
+    .add-to-cart-btn {
+        padding: 12px 30px;
+        background-color: #e63946;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .add-to-cart-btn:hover {
+        background-color: #c1121f;
+        transform: translateY(-2px);
+    }
+    
+    .wishlist-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background-color: transparent;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .wishlist-btn:hover {
+        background-color: #f8f8f8;
+        color: #e63946;
+    }
+    
+    /* Banner styling */
+    .page-heading-banner {
+        position: relative;
+        padding: 100px 0;
+        background-size: cover;
+        background-position: center;
+        text-align: center;
+        margin-bottom: 30px;
+        color: white;
+        background-color: #333;
+    }
+    
+    .page-heading-banner:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    
+    .page-heading-banner .container {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .page-heading-banner h2 {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin: 0;
+        letter-spacing: 1px;
+    }
+</style>
 {% endblock %}
 
 {% block javascripts %}
@@ -142,8 +448,22 @@
         // Initialize first size as selected
         document.querySelector('label[for="size-s"]').classList.add('active-size');
         
+        // Handle color selection
+        const colorInputs = document.querySelectorAll('input[name="color"]');
+        const selectedColorInput = document.getElementById('selected-color');
+        
+        if (colorInputs.length > 0) {
+            colorInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    if(this.checked) {
+                        selectedColorInput.value = this.value;
+                    }
+                });
+            });
+        }
+        
         // Handle quantity changes
-        const quantityInput = document.querySelector('.num-product');
+        const quantityInput = document.querySelector('.qty-input');
         const selectedQuantityInput = document.getElementById('selected-quantity');
         const btnUp = document.querySelector('.btn-num-product-up');
         const btnDown = document.querySelector('.btn-num-product-down');
@@ -169,32 +489,14 @@
                 selectedQuantityInput.value = quantityInput.value;
             }
         });
+        
+        // Wishlist button toggle effect
+        const wishlistBtn = document.querySelector('.wishlist-btn');
+        if(wishlistBtn) {
+            wishlistBtn.addEventListener('click', function() {
+                this.classList.toggle('text-danger');
+            });
+        }
     });
 </script>
-
-<style>
-    /* Style for size selector */
-    .size-radio {
-        display: none;
-    }
-    
-    .size-btn {
-        display: inline-block;
-        min-width: 40px;
-        height: 40px;
-        line-height: 38px;
-        padding: 0 10px;
-        border: 1px solid #e6e6e6;
-        text-align: center;
-        cursor: pointer;
-        margin-right: 5px;
-        transition: all 0.3s;
-    }
-    
-    .size-btn:hover, .active-size {
-        background-color: #222;
-        color: white;
-        border-color: #222;
-    }
-</style>
 {% endblock %}

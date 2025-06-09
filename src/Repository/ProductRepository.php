@@ -44,4 +44,33 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
+    /**
+     * Find all products with their images eagerly loaded
+     */
+    public function findAllWithImages()
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.images', 'i')
+            ->addSelect('i')
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    /**
+     * Find a single product with its images eagerly loaded
+     */
+    public function findWithImages(int $id)
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.images', 'i')
+            ->addSelect('i')
+            ->leftJoin('p.colors', 'c')
+            ->addSelect('c')
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

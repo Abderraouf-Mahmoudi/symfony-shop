@@ -19,10 +19,10 @@ class Order
     #[ORM\Column(type: 'string', length: 255)]
     private $customerName;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $customerEmail;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $shippingAddress;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

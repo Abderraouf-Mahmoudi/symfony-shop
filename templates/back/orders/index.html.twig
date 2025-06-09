@@ -1,11 +1,11 @@
 {% extends 'back/base.html.twig' %}
 
-{% block title %}Orders Management{% endblock %}
+{% block title %}Gestion des commandes{% endblock %}
 
 {% block content %}
 <div class="page-inner">
     <div class="page-header">
-        <h4 class="page-title">Orders Management</h4>
+        <h4 class="page-title">Gestion des commandes</h4>
     </div>
     
     <div class="row">
@@ -13,7 +13,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Orders List</h4>
+                        <h4 class="card-title">Liste des commandes</h4>
                     </div>
                 </div>
                 <div class="card-body">
@@ -28,14 +28,33 @@
                         {% endfor %}
                     {% endfor %}
                     
+                    <!-- Formulaire de recherche par numéro de téléphone -->
+                    <div class="mb-4">
+                        <form method="GET" action="{{ path('admin_orders_index') }}" class="form-inline">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div>
+                                <input type="text" name="phone" class="form-control" placeholder="Rechercher par numéro de téléphone" value="{{ search_phone|default('') }}">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                                    {% if search_phone is defined and search_phone %}
+                                        <a href="{{ path('admin_orders_index') }}" class="btn btn-secondary">Effacer</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
                     <div class="table-responsive">
                         <table id="orders-table" class="display table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
+                                    <th>Client</th>
+                                    <th>Téléphone</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
                                     <th>Date</th>
                                     <th>Actions</th>
                                 </tr>
@@ -45,14 +64,15 @@
                                     <tr>
                                         <td>{{ order.id }}</td>
                                         <td>{{ order.customerName }}<br><small>{{ order.customerEmail }}</small></td>
-                                        <td>${{ order.totalAmount }}</td>
+                                        <td>{{ order.phone ? order.phone : 'N/A' }}</td>
+                                        <td>{{ order.totalAmount }} TND</td>
                                         <td>
                                             {% if order.status == 'pending' %}
-                                                <span class="badge badge-warning">Pending</span>
+                                                <span class="badge badge-warning">En attente</span>
                                             {% elseif order.status == 'done' %}
-                                                <span class="badge badge-success">Done</span>
+                                                <span class="badge badge-success">Terminée</span>
                                             {% elseif order.status == 'canceled' %}
-                                                <span class="badge badge-danger">Canceled</span>
+                                                <span class="badge badge-danger">Annulée</span>
                                             {% else %}
                                                 <span class="badge badge-secondary">{{ order.status|capitalize }}</span>
                                             {% endif %}
@@ -60,13 +80,17 @@
                                         <td>{{ order.createdAt|date('Y-m-d H:i') }}</td>
                                         <td>
                                             <div class="form-button-action d-flex justify-content-center">
-                                                <a href="{{ path('admin_orders_show', {'id': order.id}) }}" class="btn btn-info btn-sm rounded-circle shadow-sm mx-2" data-toggle="tooltip" title="View Order">
+                                                <a href="{{ path('admin_orders_show', {'id': order.id}) }}" class="btn btn-info btn-sm rounded-circle shadow-sm mx-2" data-toggle="tooltip" title="Voir la commande">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                                 
-                                                <form method="POST" action="{{ path('admin_orders_delete', {'id': order.id}) }}" onsubmit="return confirm('Are you sure you want to delete this order?');" class="mx-2">
+                                                <a href="{{ path('admin_orders_pdf', {'id': order.id}) }}" class="btn btn-secondary btn-sm rounded-circle shadow-sm mx-2" data-toggle="tooltip" title="Télécharger le reçu">
+                                                    <i class="fa fa-file-pdf"></i>
+                                                </a>
+                                                
+                                                <form method="POST" action="{{ path('admin_orders_delete', {'id': order.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette commande?');" class="mx-2">
                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ order.id) }}">
-                                                    <button type="submit" class="btn btn-danger btn-sm rounded-circle shadow-sm" data-toggle="tooltip" title="Delete Order">
+                                                    <button type="submit" class="btn btn-danger btn-sm rounded-circle shadow-sm" data-toggle="tooltip" title="Supprimer la commande">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
@@ -75,7 +99,7 @@
                                     </tr>
                                 {% else %}
                                     <tr>
-                                        <td colspan="6" class="text-center">No orders found</td>
+                                        <td colspan="7" class="text-center">Aucune commande trouvée</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -96,11 +120,18 @@
                 "pageLength": 10,
                 "order": [[0, "desc"]],
                 "language": {
-                    "lengthMenu": "Show _MENU_ orders per page",
-                    "zeroRecords": "No matching orders found",
-                    "info": "Showing page _PAGE_ of _PAGES_",
-                    "infoEmpty": "No orders available",
-                    "infoFiltered": "(filtered from _MAX_ total orders)"
+                    "lengthMenu": "Afficher _MENU_ commandes par page",
+                    "zeroRecords": "Aucune commande correspondante trouvée",
+                    "info": "Page _PAGE_ sur _PAGES_",
+                    "infoEmpty": "Aucune commande disponible",
+                    "infoFiltered": "(filtré sur _MAX_ commandes au total)",
+                    "search": "Rechercher:",
+                    "paginate": {
+                        "first": "Premier",
+                        "last": "Dernier",
+                        "next": "Suivant",
+                        "previous": "Précédent"
+                    }
                 }
             });
         });

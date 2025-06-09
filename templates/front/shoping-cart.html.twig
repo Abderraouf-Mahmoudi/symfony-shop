@@ -1,12 +1,32 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Shopping Cart{% endblock %}
+{% block title %}BAdiscount - Panier{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .item-color-info {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+    }
+    
+    .color-dot {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 5px;
+        border: 1px solid #ddd;
+    }
+</style>
+{% endblock %}
 
 {% block body %}
     <!-- Title page -->
     <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('{{ asset('front/images/bg-02.jpg') }}');">
         <h2 class="ltext-105 cl0 txt-center">
-            Shopping Cart
+            Panier
         </h2>
     </section>
     <!-- Content page -->
@@ -18,10 +38,10 @@
                         <div class="wrap-table-shopping-cart">
                             <table class="table-shopping-cart">
                                 <tr class="table_head">
-                                    <th class="column-1">Product</th>
+                                    <th class="column-1">Produit</th>
                                     <th class="column-2"></th>
-                                    <th class="column-3">Price</th>
-                                    <th class="column-4">Quantity</th>
+                                    <th class="column-3">Prix</th>
+                                    <th class="column-4">Quantité</th>
                                     <th class="column-5">Total</th>
                                     <th class="column-5">Action</th>
                                 </tr>
@@ -29,9 +49,11 @@
                                 {% if items is empty %}
                                     <tr class="table_row">
                                         <td colspan="6" class="text-center p-4">
-                                            <div class="alert alert-info">Your cart is empty</div>
+                                            Votre panier est vide.
+                                        </td>
+                                        <td>
                                             <a href="{{ path('front_home') }}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-tb-10">
-                                                Continue Shopping
+                                                Continuer vos achats
                                             </a>
                                         </td>
                                     </tr>
@@ -40,30 +62,59 @@
                                         <tr class="table_row">
                                             <td class="column-1">
                                                 <div class="how-itemcart1">
-                                                    {% if item.product.imagePath %}
-                                                        <img src="{{ asset('uploads/products/' ~ item.product.imagePath) }}" alt="{{ item.product.name }}">
+                                                    {% if item.product.getPrimaryImage() %}
+                                                        <img src="{{ asset('uploads/products/' ~ item.product.getPrimaryImage().imagePath) }}" alt="{{ item.product.name }}">
                                                     {% else %}
                                                         <img src="{{ asset('front/images/product-placeholder.jpg') }}" alt="{{ item.product.name }}">
                                                     {% endif %}
                                                 </div>
                                             </td>
-                                            <td class="column-2">{{ item.product.name }}</td>
-                                            <td class="column-3">${{ item.product.price|number_format(2) }}</td>
+                                            <td class="column-2">
+                                                {{ item.product.name }}
+                                                <div style="margin-top: 5px;">
+                                                    <!-- Display Size -->
+                                                    <div style="margin-bottom: 5px;">
+                                                        <small style="color: #888;">Taille: {{ item.size }}</small>
+                                                    </div>
+                                                    
+                                                    <!-- Display Color if available -->
+                                                    {% if item.color_name is defined and item.color_name %}
+                                                        <div class="item-color-info" style="display: flex; align-items: center;">
+                                                            <span class="color-dot" style="background-color: {{ item.color_code }}; display: inline-block; width: 15px; height: 15px; border-radius: 50%; margin-right: 5px; border: 1px solid #ddd;"></span>
+                                                            <small style="color: #888;">Couleur: {{ item.color_name }}</small>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td class="column-3">{{ item.product.price|number_format(2) }} TND</td>
                                             <td class="column-4">
                                                 <div class="wrap-num-product flex-w m-l-auto m-r-0">
-                                                    <a href="{{ path('update_cart_item_quantity', {'id': item.product.id, 'size': item.size, 'action': 'decrease'}) }}" class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                                    <a href="{{ path('update_cart_item_quantity', {
+                                                        'id': item.product.id, 
+                                                        'size': item.size, 
+                                                        'action': 'decrease',
+                                                        'color_id': item.color_id is defined ? item.color_id : null
+                                                    }) }}" class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
                                                         <i class="fs-16 zmdi zmdi-minus"></i>
                                                     </a>
-                                                    <input class="mtext-104 cl3 txt-center num-product" type="number" name="quantities[{{ item.product.id }}-{{ item.size }}]" value="{{ item.quantity }}">
-                                                    <a href="{{ path('update_cart_item_quantity', {'id': item.product.id, 'size': item.size, 'action': 'increase'}) }}" class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                                    <input class="mtext-104 cl3 txt-center num-product" type="number" name="quantities[{{ item.product.id }}-{{ item.size }}{% if item.color_id is defined %}-{{ item.color_id }}{% endif %}]" value="{{ item.quantity }}">
+                                                    <a href="{{ path('update_cart_item_quantity', {
+                                                        'id': item.product.id, 
+                                                        'size': item.size, 
+                                                        'action': 'increase',
+                                                        'color_id': item.color_id is defined ? item.color_id : null
+                                                    }) }}" class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                                         <i class="fs-16 zmdi zmdi-plus"></i>
                                                     </a>
                                                 </div>
                                             </td>
-                                            <td class="column-5">${{ (item.product.price * item.quantity)|number_format(2) }}</td>
+                                            <td class="column-5">{{ item.quantity * item.product.price|number_format(2) }} TND</td>
                                             <td class="column-6">
-                                                <a href="{{ path('remove_from_cart', {'id': item.product.id, 'size': item.size}) }}" class="btn-remove-cart" onclick="return confirm('Are you sure you want to remove this item?')">
-                                                    <i class="fs-16 zmdi zmdi-delete"></i>
+                                                <a href="{{ path('remove_from_cart', {
+                                                    'id': item.product.id, 
+                                                    'size': item.size
+                                                }) }}{% if item.color_id is defined and item.color_id %}?color_id={{ item.color_id }}{% endif %}" class="btn-remove-item">
+                                                    <i class="fa fa-times"></i> Supprimer
                                                 </a>
                                             </td>
                                         </tr>
@@ -87,7 +138,7 @@
                                 <span class="stext-110 cl2">Subtotal:</span>
                             </div>
                             <div class="size-209">
-                                <span class="mtext-110 cl2">${{ total|number_format(2) }}</span>
+                                <span class="mtext-110 cl2">{{ total|number_format(2) }} TND</span>
                             </div>
                         </div>
                         <div class="flex-w flex-t bor12 p-t-15 p-b-30">
@@ -95,7 +146,7 @@
                                 <span class="stext-110 cl2">Total:</span>
                             </div>
                             <div class="size-209">
-                                <span class="mtext-110 cl2">${{ total|number_format(2) }}</span>
+                                <span class="mtext-110 cl2">{{ total|number_format(2) }} TND</span>
                             </div>
                         </div>
                         <button type="button" class="flex-c-m stext-101 cl0 size-112 bg3 bor15 hov-btn3 p-lr-15 trans-04 pointer" data-toggle="modal" data-target="#checkoutModal">Proceed to Checkout</button>
@@ -132,20 +183,20 @@
                         </div>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="address">Delivery Address</label>
-                        <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                        <label for="address">Delivery Address (Optional)</label>
+                        <textarea class="form-control" id="address" name="address" rows="3"></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="city">City</label>
-                                <input type="text" class="form-control" id="city" name="city" required>
+                                <label for="city">City (Optional)</label>
+                                <input type="text" class="form-control" id="city" name="city">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="postalCode">Postal Code</label>
-                                <input type="text" class="form-control" id="postalCode" name="postalCode" required>
+                                <label for="postalCode">Postal Code (Optional)</label>
+                                <input type="text" class="form-control" id="postalCode" name="postalCode">
                             </div>
                         </div>
                     </div>
@@ -159,12 +210,12 @@
                             {% for item in items %}
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>{{ item.product.name }} (x{{ item.quantity }})</span>
-                                <strong>${{ (item.product.price * item.quantity)|number_format(2) }}</strong>
+                                <strong>{{ (item.product.price * item.quantity)|number_format(2) }} TND</strong>
                             </li>
                             {% endfor %}
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>Total</span>
-                                <strong>${{ total|number_format(2) }}</strong>
+                                <strong>{{ total|number_format(2) }} TND</strong>
                             </li>
                         </ul>
                     </div>

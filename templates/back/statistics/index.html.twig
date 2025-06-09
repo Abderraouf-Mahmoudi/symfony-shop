@@ -1,0 +1,231 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Statistiques des ventes{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Statistiques des ventes</h4>
+        <ul class="breadcrumbs">
+            <li class="nav-home">
+                <a href="{{ path('admin_dashboard') }}">
+                    <i class="flaticon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <span>Statistiques</span>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <h4 class="card-title">Produits les plus vendus (Toutes commandes)</h4>
+                        <div class="ml-auto">
+                            <a href="{{ path('admin_statistics_products') }}" class="btn btn-primary btn-round">
+                                <i class="fa fa-eye mr-2"></i> Voir plus de détails
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="bestsellersChart"></canvas>
+                    </div>
+                    
+                    <div class="table-responsive mt-4">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Produit</th>
+                                    <th>Nombre de commandes</th>
+                                    <th>Quantité totale</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in bestsellers_all %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.order_count }}</td>
+                                        <td>{{ product.total_quantity }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">Aucune donnée disponible</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Produits les plus vendus (Commandes terminées uniquement)</h4>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="bestsellersCompletedChart"></canvas>
+                    </div>
+                    
+                    <div class="table-responsive mt-4">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Produit</th>
+                                    <th>Nombre de commandes</th>
+                                    <th>Quantité totale</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in bestsellers_done %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.order_count }}</td>
+                                        <td>{{ product.total_quantity }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">Aucune donnée disponible</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Évolution des ventes mensuelles</h4>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="monthlySalesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration pour les graphiques
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            };
+            
+            // Graphique des produits les plus vendus (tous)
+            const bestsellersCtx = document.getElementById('bestsellersChart').getContext('2d');
+            new Chart(bestsellersCtx, {
+                type: 'bar',
+                data: {
+                    labels: [{% for product in bestsellers_all %}'{{ product.name }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+                    datasets: [{
+                        label: 'Quantité vendue',
+                        data: [{% for product in bestsellers_all %}{{ product.total_quantity }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOptions
+            });
+            
+            // Graphique des produits les plus vendus (commandes terminées)
+            const bestsellersCompletedCtx = document.getElementById('bestsellersCompletedChart').getContext('2d');
+            new Chart(bestsellersCompletedCtx, {
+                type: 'bar',
+                data: {
+                    labels: [{% for product in bestsellers_done %}'{{ product.name }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+                    datasets: [{
+                        label: 'Quantité vendue',
+                        data: [{% for product in bestsellers_done %}{{ product.total_quantity }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOptions
+            });
+            
+            // Graphique des ventes mensuelles
+            const monthlySalesCtx = document.getElementById('monthlySalesChart').getContext('2d');
+            new Chart(monthlySalesCtx, {
+                type: 'line',
+                data: {
+                    labels: [{% for sales in monthly_sales %}'{{ sales.period }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+                    datasets: [{
+                        label: 'Nombre de commandes',
+                        data: [{% for sales in monthly_sales %}{{ sales.order_count }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    }, {
+                        label: 'Montant total (TND)',
+                        data: [{% for sales in monthly_sales %}{{ sales.total_amount }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
