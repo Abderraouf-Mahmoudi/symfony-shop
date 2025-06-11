@@ -2,28 +2,85 @@
 
 {% block title %}Gestion des produits{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;
+            color: white;
+        }
+        .bg-gradient-info {
+            background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;
+        }
+        .bg-gradient-success {
+            background: linear-gradient(87deg, #2dce89 0, #2dcecc 100%) !important;
+        }
+        .bg-gradient-danger {
+            background: linear-gradient(87deg, #f5365c 0, #f56036 100%) !important;
+        }
+        .bg-gradient-light {
+            background: linear-gradient(87deg, #f8f9fa 0, #f4f4f4 100%) !important;
+        }
+        .card {
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+        .card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+        }
+        table.dataTable {
+            border-collapse: collapse !important;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        table.dataTable thead th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef !important;
+            color: #5e72e4;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(94, 114, 228, 0.075);
+        }
+        .product-img-container {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+        }
+        .product-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 <div class="page-inner">
-    <div class="page-header">
-        <h4 class="page-title">Gestion des produits</h4>
+    <div class="page-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title fw-bold">Gestion des produits</h2>
     </div>
     
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex align-items-center">
-                        <h4 class="card-title">Liste des produits</h4>
-                        <a href="{{ path('admin_products_new') }}" class="btn btn-primary btn-round ml-auto">
-                            <i class="fa fa-plus"></i>
-                            Ajouter un produit
-                        </a>
-                    </div>
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-gradient-light py-3 border-bottom-0 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="fa fa-box mr-2 text-primary"></i>Liste des produits</h5>
+                    <a href="{{ path('admin_products_new') }}" class="btn btn-primary rounded-pill shadow-sm">
+                        <i class="fa fa-plus mr-2"></i>
+                        Ajouter un produit
+                    </a>
                 </div>
                 <div class="card-body">
                     {% for label, messages in app.flashes %}
                         {% for message in messages %}
-                            <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                            <div class="alert alert-{{ label }} alert-dismissible fade show rounded-3 shadow-sm mb-3" role="alert">
+                                <i class="fa {% if label == 'success' %}fa-check-circle{% elseif label == 'danger' %}fa-exclamation-circle{% elseif label == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %} mr-2"></i>
                                 {{ message }}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -34,44 +91,66 @@
                     
                     <div class="table-responsive">
                         <table id="products-table" class="display table table-striped table-hover">
-                            <thead>
+                            <thead class="bg-light">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Image</th>
-                                    <th>Nom</th>
-                                    <th>Catégorie</th>
-                                    <th>Prix</th>
-                                    <th>Stock</th>
-                                    <th>Créé le</th>
-                                    <th>Actions</th>
+                                    <th class="fw-bold">ID</th>
+                                    <th class="fw-bold">Image</th>
+                                    <th class="fw-bold">Nom</th>
+                                    <th class="fw-bold">Catégorie</th>
+                                    <th class="fw-bold">Prix</th>
+                                    <th class="fw-bold">Stock</th>
+                                    <th class="fw-bold">Créé le</th>
+                                    <th class="fw-bold">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for product in products %}
                                     <tr>
-                                        <td>{{ product.id }}</td>
+                                        <td><span class="badge bg-light text-dark rounded-pill px-3">{{ product.id }}</span></td>
                                         <td>
+                                            <div class="product-img-container">
                                             {% if product.primaryImage %}
-                                                <img src="{{ asset('uploads/products/' ~ product.primaryImage.imagePath) }}" alt="{{ product.name }}" width="50">
+                                                <img src="{{ asset('uploads/products/' ~ product.primaryImage.imagePath) }}" alt="{{ product.name }}">
                                             {% else %}
-                                                <span class="badge badge-warning">Aucune image</span>
+                                                <i class="fa fa-image text-muted fa-lg"></i>
                                             {% endif %}
+                                            </div>
                                         </td>
                                         <td>{{ product.name }}</td>
-                                        <td>{{ product.category }}</td>
-                                        <td>{{ product.price }} TND</td>
-                                        <td>{{ product.stock }}</td>
-                                        <td>{{ product.createdAt|date('Y-m-d') }}</td>
                                         <td>
-                                            <div class="form-button-action">
-                                                <a href="{{ path('admin_products_edit', {'id': product.id}) }}" class="btn btn-link btn-primary btn-lg" data-toggle="tooltip" title="Modifier le produit">
-                                                    <i class="fa fa-edit"></i>
+                                            {% if product.category == 'men' %}
+                                                <span class="badge bg-primary text-white rounded-pill px-3 py-2">Hommes</span>
+                                            {% elseif product.category == 'women' %}
+                                                <span class="badge bg-info text-white rounded-pill px-3 py-2">Femmes</span>
+                                            {% elseif product.category == 'kids' %}
+                                                <span class="badge bg-success text-white rounded-pill px-3 py-2">Enfants</span>
+                                            {% elseif product.category == 'accessories' %}
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">Accessoires</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary text-white rounded-pill px-3 py-2">{{ product.category }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td><span class="fw-bold text-success">{{ product.price }} TND</span></td>
+                                        <td>
+                                            {% if product.stock > 10 %}
+                                                <span class="badge bg-success text-white rounded-pill px-3 py-2">{{ product.stock }}</span>
+                                            {% elseif product.stock > 0 %}
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">{{ product.stock }}</span>
+                                            {% else %}
+                                                <span class="badge bg-danger text-white rounded-pill px-3 py-2">Rupture</span>
+                                            {% endif %}
+                                        </td>
+                                        <td><small class="text-muted">{{ product.createdAt|date('d/m/Y') }}</small></td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ path('admin_products_edit', {'id': product.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill shadow-sm" data-toggle="tooltip" title="Modifier le produit">
+                                                    <i class="fa fa-edit mr-1"></i> Modifier
                                                 </a>
                                                 
                                                 <form method="POST" action="{{ path('admin_products_delete', {'id': product.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit?');" style="display: inline-block;">
                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
-                                                    <button type="submit" class="btn btn-link btn-danger" data-toggle="tooltip" title="Supprimer le produit">
-                                                        <i class="fa fa-times"></i>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill shadow-sm" data-toggle="tooltip" title="Supprimer le produit">
+                                                        <i class="fa fa-trash mr-1"></i> Supprimer
                                                     </button>
                                                 </form>
                                             </div>

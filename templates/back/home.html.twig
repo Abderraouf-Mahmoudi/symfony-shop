@@ -2,101 +2,168 @@
 
 {% block title %}Tableau de bord administrateur - BAdiscount{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;
+            color: white;
+        }
+        .bg-gradient-info {
+            background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;
+        }
+        .bg-gradient-success {
+            background: linear-gradient(87deg, #2dce89 0, #2dcecc 100%) !important;
+        }
+        .bg-gradient-danger {
+            background: linear-gradient(87deg, #f5365c 0, #f56036 100%) !important;
+        }
+        .bg-gradient-light {
+            background: linear-gradient(87deg, #f8f9fa 0, #f4f4f4 100%) !important;
+        }
+        .dashboard-card {
+            transform: translateY(0);
+            transition: transform 0.2s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        .dashboard-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, 30%);
+            z-index: 0;
+        }
+        .icon-shape {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        table.dataTable {
+            border-collapse: collapse !important;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        table.dataTable thead th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef !important;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(94, 114, 228, 0.075);
+        }
+        .card {
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+        .card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 <div class="page-inner">
-    <div class="page-header">
-        <h4 class="page-title">Tableau de bord</h4>
+    <div class="page-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title fw-bold text-primary"><i class="fa fa-tachometer-alt me-2"></i>Tableau de bord</h2>
     </div>
     
     <div class="row">
         <div class="col-sm-6 col-md-3">
-            <div class="card card-stats card-primary card-round">
+            <div class="card border-0 shadow-sm rounded-3 h-100 dashboard-card position-relative overflow-hidden bg-gradient-primary text-white">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-5">
-                            <div class="icon-big text-center">
-                                <i class="fas fa-tshirt"></i>
+                            <div class="icon-big text-center icon-shape rounded-circle shadow-lg bg-white bg-opacity-25 p-4">
+                                <i class="fa fa-tshirt"></i>
                             </div>
                         </div>
                         <div class="col-7 col-stats">
                             <div class="numbers">
-                                <p class="card-category">Produits</p>
-                                <h4 class="card-title">{{ product_count }}</h4>
+                                <p class="card-category text-white mb-1">Produits</p>
+                                <h4 class="card-title fw-bold fs-3 text-white">{{ product_count }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('admin_products') }}" class="card-link">Voir tous les produits <i class="fa fa-arrow-right ml-2"></i></a>
+                    <a href="{{ path('admin_products') }}" class="text-white text-decoration-none d-flex align-items-center justify-content-end">Voir tous les produits <i class="fa fa-arrow-right ml-2"></i></a>
                 </div>
             </div>
         </div>
         
         <div class="col-sm-6 col-md-3">
-            <div class="card card-stats card-info card-round">
+            <div class="card border-0 shadow-sm rounded-3 h-100 dashboard-card position-relative overflow-hidden bg-gradient-info text-white">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-5">
-                            <div class="icon-big text-center">
-                                <i class="fas fa-shopping-cart"></i>
+                            <div class="icon-big text-center icon-shape rounded-circle shadow-lg bg-white bg-opacity-25 p-4">
+                                <i class="fa fa-shopping-cart"></i>
                             </div>
                         </div>
                         <div class="col-7 col-stats">
                             <div class="numbers">
-                                <p class="card-category">Commandes en attente</p>
-                                <h4 class="card-title">{{ pending_order_count }}</h4>
+                                <div class="card-subtitle text-white opacity-75">Total</div>
+                                <p class="card-category text-white mb-1">Commandes en attente</p>
+                                <h4 class="card-title fw-bold fs-3 text-white">{{ pending_order_count }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('admin_orders_index') }}" class="card-link text-white">View all orders <i class="fa fa-arrow-right ml-2"></i></a>
+                    <a href="{{ path('admin_orders_index') }}" class="text-white text-decoration-none d-flex align-items-center justify-content-end">Voir toutes les commandes <i class="fa fa-arrow-right ml-2"></i></a>
                 </div>
             </div>
         </div>
         
         <div class="col-sm-6 col-md-3">
-            <div class="card card-stats card-success card-round">
+            <div class="card border-0 shadow-sm rounded-3 h-100 dashboard-card position-relative overflow-hidden bg-gradient-success text-white">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-5">
-                            <div class="icon-big text-center">
-                                <i class="fas fa-wallet"></i>
+                            <div class="icon-big text-center icon-shape rounded-circle shadow-lg bg-white bg-opacity-25 p-4">
+                                <i class="fa fa-wallet"></i>
                             </div>
                         </div>
                         <div class="col-7 col-stats">
                             <div class="numbers">
-                                <p class="card-category">Revenus</p>
-                                <h4 class="card-title">{{ revenue }} TND</h4>
+                                <p class="card-category text-white mb-1">Revenus</p>
+                                <h4 class="card-title fw-bold fs-3 text-white">{{ revenue }} TND</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="card-link">7 derniers jours <i class="fa fa-calendar ml-2"></i></div>
+                    <div class="card-link text-white text-decoration-none d-flex align-items-center justify-content-end">7 derniers jours <i class="fa fa-calendar ml-2"></i></div>
                 </div>
             </div>
         </div>
         
         <div class="col-sm-6 col-md-3">
-            <div class="card card-stats card-danger card-round">
+            <div class="card border-0 shadow-sm rounded-3 h-100 dashboard-card position-relative overflow-hidden bg-gradient-danger text-white">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-5">
-                            <div class="icon-big text-center">
-                                <i class="fas fa-times-circle"></i>
+                            <div class="icon-big text-center icon-shape rounded-circle shadow-lg bg-white bg-opacity-25 p-4">
+                                <i class="fa fa-times-circle"></i>
                             </div>
                         </div>
                         <div class="col-7 col-stats">
                             <div class="numbers">
-                                <p class="card-category">Commandes annulées</p>
-                                <h4 class="card-title">{{ canceled_order_count }}</h4>
+                                <div class="card-subtitle text-white opacity-75">Total</div>
+                                <p class="card-category text-white mb-1">Commandes annulées</p>
+                                <h4 class="card-title fw-bold fs-3 text-white">{{ canceled_order_count }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('admin_orders_index') }}" class="card-link text-white">View all orders <i class="fa fa-arrow-right ml-2"></i></a>
+                    <a href="{{ path('admin_orders_index') }}" class="text-white text-decoration-none d-flex align-items-center justify-content-end">Voir toutes les commandes <i class="fa fa-arrow-right ml-2"></i></a>
                 </div>
             </div>
         </div>
@@ -104,11 +171,9 @@
     
     <div class="row">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-head-row">
-                        <div class="card-title">Commandes récentes</div>
-                    </div>
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-gradient-light py-3 border-bottom-0">
+                    <h5 class="mb-0 fw-bold"><i class="fa fa-shopping-cart mr-2 text-primary"></i>Commandes récentes</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -131,18 +196,18 @@
                                         <td>{{ order.totalAmount }} TND</td>
                                         <td>
                                             {% if order.status == 'pending' %}
-                                                <span class="badge badge-warning">En attente</span>
+                                                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">En attente</span>
                                             {% elseif order.status == 'done' %}
-                                                <span class="badge badge-success">Terminée</span>
+                                                <span class="badge bg-success text-white px-3 py-2 rounded-pill">Terminée</span>
                                             {% elseif order.status == 'canceled' %}
-                                                <span class="badge badge-danger">Annulée</span>
+                                                <span class="badge bg-danger text-white px-3 py-2 rounded-pill">Annulée</span>
                                             {% else %}
-                                                <span class="badge badge-secondary">{{ order.status|capitalize }}</span>
+                                                <span class="badge bg-secondary text-white px-3 py-2 rounded-pill">{{ order.status|capitalize }}</span>
                                             {% endif %}
                                         </td>
                                         <td>{{ order.createdAt|date('Y-m-d') }}</td>
                                         <td>
-                                            <a href="{{ path('admin_orders_show', {'id': order.id}) }}" class="btn btn-link btn-info btn-sm"><i class="fa fa-eye"></i></a>
+                                            <a href="{{ path('admin_orders_show', {'id': order.id}) }}" class="btn btn-sm btn-outline-info rounded-pill shadow-sm"><i class="fa fa-eye mr-1"></i> Voir</a>
                                         </td>
                                     </tr>
                                 {% else %}
@@ -158,19 +223,24 @@
         </div>
         
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Actions rapides</div>
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-gradient-light py-3 border-bottom-0">
+                    <h5 class="mb-0 fw-bold"><i class="fa fa-bolt mr-2 text-primary"></i>Actions rapides</h5>
                 </div>
                 <div class="card-body pb-0">
-                    <div class="d-flex mb-3">
-                        <a href="{{ path('admin_products_new') }}" class="btn btn-primary btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-plus mr-2"></i> Ajouter un produit</a>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <a href="{{ path('admin_products') }}" class="btn btn-info btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-list mr-2"></i> Gérer les produits</a>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <a href="{{ path('admin_orders_index') }}" class="btn btn-warning btn-lg btn-block shadow-sm rounded-pill"><i class="fa fa-shopping-cart mr-2"></i> Gérer les commandes</a>
+                    <div class="d-flex flex-column gap-3">
+                        <a href="{{ path('admin_products_new') }}" class="btn btn-primary rounded-pill shadow-sm d-flex align-items-center justify-content-between p-3 text-white">
+                            <span><i class="fa fa-plus-circle mr-2"></i>Ajouter un produit</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ path('admin_products') }}" class="btn btn-info rounded-pill shadow-sm text-white d-flex align-items-center justify-content-between p-3">
+                            <span><i class="fa fa-box mr-2"></i>Gérer les produits</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ path('admin_orders_index') }}" class="btn btn-success rounded-pill shadow-sm d-flex align-items-center justify-content-between p-3 text-white">
+                            <span><i class="fa fa-shopping-bag mr-2"></i>Gérer les commandes</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>

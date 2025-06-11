@@ -87,14 +87,20 @@
                         <div class="product-details mb-4">
                             <!-- Category -->                            
                             <div class="detail-row d-flex align-items-center mb-3">
-                                <div class="detail-label">Catégorie:</div>
-                                <div class="detail-value">{{ product.category }}</div>
+                                <span class="detail-label">Catégorie:</span>
+                                <span class="detail-value">{{ product.category }}</span>
                             </div>
                             
-                            <!-- Availability -->                            
+                            <!-- Stock Status -->                            
                             <div class="detail-row d-flex align-items-center mb-3">
-                                <div class="detail-label">Disponibilité:</div>
-                                <div class="detail-value"><span class="text-success">En stock</span></div>
+                                <span class="detail-label">Disponibilité:</span>
+                                <span class="detail-value{% if product.stock == 0 %} text-danger{% else %} text-success{% endif %}">
+                                    {% if product.stock > 0 %}
+                                        <i class="fas fa-check-circle mr-1"></i> En Stock
+                                    {% else %}
+                                        <i class="fas fa-times-circle mr-1"></i> Rupture de stock
+                                    {% endif %}
+                                </span>
                             </div>
                         </div>
                         
@@ -176,24 +182,52 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    /* Modern Product Detail Styling */
+    /* Product image container */
     .product-image-container {
-        background-color: #f9f9f9;
+        background-color: #fff;
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .product-main-image img {
+    /* Fix for image sizing with consistent aspect ratio */
+    .wrap-pic-w {
         width: 100%;
-        height: auto;
-        object-fit: contain;
-        max-height: 500px;
+        position: relative;
+        overflow: hidden;
+        padding-top: 100%; /* Creates a 1:1 aspect ratio container */
+    }
+    
+    .wrap-pic-w img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* This ensures the image maintains aspect ratio */
         transition: transform 0.3s ease;
     }
     
-    .product-main-image:hover img {
-        transform: scale(1.02);
+    .product-main-image:hover .wrap-pic-w img {
+        transform: scale(1.05);
+    }
+    
+    /* Thumbnail styling */
+    .slick3-dots li {
+        display: inline-block;
+        margin: 5px;
+    }
+    
+    .slick3-dots li img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 2px solid transparent;
+    }
+    
+    .slick3-dots .slick-active img {
+        border-color: #e6292a;
     }
     
     .product-info {

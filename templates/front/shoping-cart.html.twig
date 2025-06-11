@@ -53,7 +53,7 @@
                                         </td>
                                         <td>
                                             <a href="{{ path('front_home') }}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-tb-10">
-                                                Continuer vos achats
+                                                Boutique
                                             </a>
                                         </td>
                                     </tr>
@@ -132,16 +132,8 @@
                 {% if items is not empty %}
                 <div class="col-lg-7 col-xl-5 m-lr-auto m-b-50">
                     <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-lr-0-xl p-lr-15-sm">
-                        <h4 class="mtext-109 cl2 p-b-30">Cart Totals</h4>
+                        <h4 class="mtext-109 cl2 p-b-30">Totale</h4>
                         <div class="flex-w flex-t bor12 p-b-13">
-                            <div class="size-208">
-                                <span class="stext-110 cl2">Subtotal:</span>
-                            </div>
-                            <div class="size-209">
-                                <span class="mtext-110 cl2">{{ total|number_format(2) }} TND</span>
-                            </div>
-                        </div>
-                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
                             <div class="size-208">
                                 <span class="stext-110 cl2">Total:</span>
                             </div>
@@ -149,7 +141,15 @@
                                 <span class="mtext-110 cl2">{{ total|number_format(2) }} TND</span>
                             </div>
                         </div>
-                        <button type="button" class="flex-c-m stext-101 cl0 size-112 bg3 bor15 hov-btn3 p-lr-15 trans-04 pointer" data-toggle="modal" data-target="#checkoutModal">Proceed to Checkout</button>
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                            <div class="size-208">
+                                <span class="stext-110 cl2">Totale:</span>
+                            </div>
+                            <div class="size-209">
+                                <span class="mtext-110 cl2">{{ total|number_format(2) }} TND</span>
+                            </div>
+                        </div>
+                        <button type="button" class="flex-c-m stext-101 cl0 size-112 bg3 bor15 hov-btn3 p-lr-15 trans-04 pointer" data-toggle="modal" data-target="#checkoutModal">Passer au paiement</button>
                     </div>
                 </div>
                 {% endif %}

@@ -14,6 +14,39 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/admin/orders')]
 class OrderController extends AbstractController
 {
+    #[Route('/{id}/update-stock', name: 'admin_orders_update_stock', methods: ['GET'])]
+    public function updateStock(Order $order, EntityManagerInterface $entityManager): Response
+    {
+        // Process all items in the order and update stock regardless of order status
+        foreach ($order->getItems() as $orderItem) {
+            $product = $orderItem->getProduct();
+            $quantity = $orderItem->getQuantity();
+            
+            if ($product) {
+                // Decrease stock by the ordered quantity
+                $currentStock = $product->getStock();
+                $newStock = max(0, $currentStock - $quantity); // Ensure stock doesn't go below 0
+                $product->setStock($newStock);
+                
+                // Add debug information
+                $this->addFlash(
+                    'success', 
+                    sprintf(
+                        'Product #%d (%s): Stock updated from %d to %d (-%d units)', 
+                        $product->getId(),
+                        $product->getName(),
+                        $currentStock, 
+                        $newStock, 
+                        $quantity
+                    )
+                );
+            }
+        }
+        
+        $entityManager->flush();
+        
+        return $this->redirectToRoute('admin_orders_show', ['id' => $order->getId()]);
+    }
     #[Route('/', name: 'admin_orders_index', methods: ['GET'])]
     public function index(Request $request, OrderRepository $orderRepository): Response
     {
@@ -56,11 +89,11 @@ class OrderController extends AbstractController
         $order->setStatus($status);
         $order->setUpdatedAt(new \DateTimeImmutable());
         
-        // Update income if status changes from pending to done
+        // Update income and decrease stock if status changes to done
         if ($oldStatus !== 'done' && $status === 'done') {
             try {
                 // Get current income from dashboard settings
-                $settingRepository = $entityManager->getRepository('App\\Entity\\Setting');
+                $settingRepository = $entityManager->getRepository('App\Entity\Setting');
                 $incomeSetting = $settingRepository->findOneBy(['name' => 'income']);
                 
                 if ($incomeSetting) {
@@ -77,9 +110,39 @@ class OrderController extends AbstractController
                     $incomeSetting->setValue($order->getTotalAmount());
                     $entityManager->persist($incomeSetting);
                 }
+                
+                // Debug information to track order processing
+                $this->addFlash('info', 'Processing order #' . $order->getId() . ' with ' . count($order->getItems()) . ' items');
+                
+                // Update product stock for each order item
+                foreach ($order->getItems() as $orderItem) {
+                    $product = $orderItem->getProduct();
+                    $quantity = $orderItem->getQuantity();
+                    
+                    if ($product) {
+                        // Decrease stock by the ordered quantity
+                        $currentStock = $product->getStock();
+                        $newStock = max(0, $currentStock - $quantity); // Ensure stock doesn't go below 0
+                        $product->setStock($newStock);
+                        
+                        // Add debug information
+                        $this->addFlash(
+                            'info', 
+                            sprintf(
+                                'Product #%d: Stock updated from %d to %d (-%d units)', 
+                                $product->getId(), 
+                                $currentStock, 
+                                $newStock, 
+                                $quantity
+                            )
+                        );
+                    } else {
+                        $this->addFlash('warning', 'Order item found with no associated product');
+                    }
+                }
             } catch (\Exception $e) {
                 // Log error but continue processing
-                $this->addFlash('warning', 'Order status updated, but income tracking failed');
+                $this->addFlash('warning', 'Order status updated, but income tracking or stock update failed');
             }
         }
         

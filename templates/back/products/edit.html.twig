@@ -35,34 +35,24 @@
 
 {% block content %}
 <div class="page-inner">
-    <div class="page-header">
-        <h4 class="page-title">Gestion des produits</h4>
-        <ul class="breadcrumbs">
-            <li class="nav-home">
-                <a href="{{ path('admin_dashboard') }}">
-                    <i class="flaticon-home"></i>
-                </a>
-            </li>
-            <li class="separator">
-                <i class="flaticon-right-arrow"></i>
-            </li>
-            <li class="nav-item">
-                <a href="{{ path('admin_products') }}">Produits</a>
-            </li>
-            <li class="separator">
-                <i class="flaticon-right-arrow"></i>
-            </li>
-            <li class="nav-item">
-                <span>Modifier le produit</span>
-            </li>
-        </ul>
+    <div class="page-header d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-title fw-bold">Modifier le produit</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}"><i class="fa fa-home mr-2"></i>Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('admin_products') }}">Produits</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Modifier</li>
+                </ol>
+            </nav>
+        </div>
     </div>
     
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Modifier le produit: {{ product.name }}</div>
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-light py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fa fa-edit mr-2 text-primary"></i>Modifier le produit: {{ product.name }}</h5>
                 </div>
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data">
@@ -107,7 +97,7 @@
                                     
                                     {# Current images #}
                                     <div class="current-images mb-3">
-                                        <h6>Images actuelles</h6>
+                                        <h6 class="fw-bold mb-3">Images actuelles</h6>
                                         <div class="d-flex flex-wrap">
                                             {% if product.images|length > 0 %}
                                                 {% for image in product.images %}
@@ -140,7 +130,7 @@
                                             </div>
                                         </div>
                                         <input type="file" class="form-control form-control-file" id="images" name="images[]" accept="image/*" multiple>
-                                        <label for="images" class="btn btn-primary btn-round btn-lg"><i class="fa fa-file-image"></i> Ajouter des images</label>
+                                        <label for="images" class="btn btn-primary rounded-pill shadow-sm"><i class="fa fa-file-image mr-2"></i> Ajouter des images</label>
                                         <small class="form-text text-muted">Vous pouvez sélectionner plusieurs images à la fois.</small>
                                     </div>
                                 </div>
@@ -184,18 +174,22 @@
                                                 <input type="color" class="form-control" name="color_codes[]">
                                             </div>
                                             <div class="col-md-2">
-                                                <button type="button" class="btn btn-danger btn-sm remove-color"><i class="fa fa-trash"></i></button>
+                                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill shadow-sm remove-color"><i class="fa fa-trash mr-1"></i></button>
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" id="add-color" class="btn btn-info btn-sm"><i class="fa fa-plus"></i> Ajouter une couleur</button>
+                                    <button type="button" id="add-color" class="btn btn-outline-info btn-sm rounded-pill shadow-sm"><i class="fa fa-plus mr-1"></i> Ajouter une couleur</button>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="card-action">
-                            <button type="submit" class="btn btn-success">Mettre à jour le produit</button>
-                            <a href="{{ path('admin_products') }}" class="btn btn-danger">Annuler</a>
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" class="btn btn-success rounded-pill shadow-sm">
+                                <i class="fa fa-save mr-2"></i>Mettre à jour le produit
+                            </button>
+                            <a href="{{ path('admin_products') }}" class="btn btn-outline-danger rounded-pill shadow-sm">
+                                <i class="fa fa-times mr-2"></i>Annuler
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -247,7 +241,7 @@
                             <input type="color" class="form-control" name="color_codes[]">
                         </div>
                         <div class="col-md-2">
-                            <button type="button" class="btn btn-danger btn-sm remove-color"><i class="fa fa-trash"></i></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill shadow-sm remove-color"><i class="fa fa-trash mr-1"></i></button>
                         </div>
                     </div>
                 `;
