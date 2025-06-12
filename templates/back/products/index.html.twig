@@ -5,74 +5,266 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
+        /* Gradient backgrounds */
         .bg-gradient-primary {
-            background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;
+            background: linear-gradient(135deg, #5e72e4 0, #825ee4 100%) !important;
             color: white;
         }
         .bg-gradient-info {
-            background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;
+            background: linear-gradient(135deg, #11cdef 0, #1171ef 100%) !important;
         }
         .bg-gradient-success {
-            background: linear-gradient(87deg, #2dce89 0, #2dcecc 100%) !important;
+            background: linear-gradient(135deg, #2dce89 0, #2dcecc 100%) !important;
         }
         .bg-gradient-danger {
-            background: linear-gradient(87deg, #f5365c 0, #f56036 100%) !important;
+            background: linear-gradient(135deg, #f5365c 0, #f56036 100%) !important;
+        }
+        .bg-gradient-warning {
+            background: linear-gradient(135deg, #fb6340 0, #fbb140 100%) !important;
         }
         .bg-gradient-light {
-            background: linear-gradient(87deg, #f8f9fa 0, #f4f4f4 100%) !important;
+            background: linear-gradient(135deg, #f8f9fa 0, #f4f4f4 100%) !important;
         }
+        
+        /* Card styling */
         .card {
-            transition: box-shadow 0.3s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            border: none;
         }
         .card:hover {
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+            box-shadow: 0 15px 30px rgba(94, 114, 228, 0.1) !important;
+            transform: translateY(-5px);
+        }
+        .card-header {
+            border-bottom: none;
+            padding: 1.5rem 1.5rem 1rem;
+        }
+        
+        /* Table styling */
+        .table-container {
+            padding: 0.5rem;
+            border-radius: 10px;
         }
         table.dataTable {
-            border-collapse: collapse !important;
-            border-radius: 0.5rem;
+            border-collapse: separate !important;
+            border-spacing: 0;
+            border-radius: 8px;
             overflow: hidden;
+            margin-top: 1rem !important;
+            box-shadow: 0 0 20px rgba(0,0,0,0.02);
         }
         table.dataTable thead th {
             background-color: #f8f9fa;
             font-weight: 600;
             border-bottom: 2px solid #e9ecef !important;
             color: #5e72e4;
+            padding: 15px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.03em;
+        }
+        .table-hover tbody tr {
+            transition: all 0.2s ease;
+            vertical-align: middle;
         }
         .table-hover tbody tr:hover {
-            background-color: rgba(94, 114, 228, 0.075);
+            background-color: rgba(94, 114, 228, 0.05);
+            transform: scale(1.01);
         }
+        .table td {
+            padding: 1rem 0.75rem;
+            vertical-align: middle;
+        }
+        
+        /* Product image styling */
         .product-img-container {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
+            width: 65px;
+            height: 65px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f8f9fa;
+            background-color: white;
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255,255,255,0.8);
+        }
+        .product-img-container:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(94, 114, 228, 0.2);
         }
         .product-img-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        
+        /* Badge styling */
+        .badge {
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Button styling */
+        .btn {
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+        }
+        .btn-outline-primary {
+            border-width: 2px;
+        }
+        .btn-outline-danger {
+            border-width: 2px;
+        }
+        
+        /* Extra styles for better UI */
+        .product-name {
+            font-weight: 600;
+            color: #344767;
+            transition: all 0.3s ease;
+        }
+        .product-name:hover {
+            color: #5e72e4;
+        }
+        
+        /* DataTables customization */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: linear-gradient(135deg, #5e72e4 0, #825ee4 100%) !important;
+            color: white !important;
+            border: none;
+            border-radius: 50px;
+            padding: 5px 15px;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #f8f9fa !important;
+            border-color: transparent;
+        }
+        .dataTables_wrapper .dataTables_filter input {
+            border-radius: 50px;
+            border: 1px solid #e9ecef;
+            padding: 5px 15px;
+            transition: all 0.3s ease;
+        }
+        .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: #5e72e4;
+            box-shadow: 0 0 0 2px rgba(94, 114, 228, 0.25);
+            outline: none;
         }
     </style>
 {% endblock %}
 
 {% block content %}
-<div class="page-inner">
+<div class="page-inner animate__animated animate__fadeIn">
     <div class="page-header d-flex justify-content-between align-items-center mb-4">
-        <h2 class="page-title fw-bold">Gestion des produits</h2>
+        <div class="d-flex align-items-center">
+            <div class="icon-circle bg-gradient-primary text-white p-3 me-3 shadow">
+                <i class="fa fa-box-open fa-lg"></i>
+            </div>
+            <div>
+                <h2 class="page-title fw-bold mb-1">Gestion des produits</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}"><i class="fa fa-home mr-1"></i>Accueil</a></li>
+                        <li class="breadcrumb-item active">Produits</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
     </div>
     
+    <!-- Product Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-lg h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="fw-bold mb-0">{{ products|length }}</h5>
+                            <span class="text-muted">Total des produits</span>
+                        </div>
+                        <div class="icon-circle bg-gradient-primary text-white">
+                            <i class="fa fa-boxes fa-lg p-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-lg h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="fw-bold mb-0">{{ products|filter(p => p.stock > 0)|length }}</h5>
+                            <span class="text-muted">Produits en stock</span>
+                        </div>
+                        <div class="icon-circle bg-gradient-success text-white">
+                            <i class="fa fa-check-circle fa-lg p-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-lg h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="fw-bold mb-0">{{ products|filter(p => p.stock == 0)|length }}</h5>
+                            <span class="text-muted">Produits en rupture</span>
+                        </div>
+                        <div class="icon-circle bg-gradient-danger text-white">
+                            <i class="fa fa-times-circle fa-lg p-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-lg h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="fw-bold mb-0">{{ products|filter(p => p.createdAt > date('-30 days'))|length }}</h5>
+                            <span class="text-muted">Nouveaux (30j)</span>
+                        </div>
+                        <div class="icon-circle bg-gradient-info text-white">
+                            <i class="fa fa-calendar-alt fa-lg p-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="card border-0 shadow-sm rounded-3">
+            <div class="card border-0 shadow-lg rounded-3">
                 <div class="card-header bg-gradient-light py-3 border-bottom-0 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold"><i class="fa fa-box mr-2 text-primary"></i>Liste des produits</h5>
-                    <a href="{{ path('admin_products_new') }}" class="btn btn-primary rounded-pill shadow-sm">
-                        <i class="fa fa-plus mr-2"></i>
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-primary text-white p-2 me-3 shadow-sm">
+                            <i class="fa fa-list fa-sm"></i>
+                        </div>
+                        <h5 class="mb-0 fw-bold">Liste des produits</h5>
+                    </div>
+                    <a href="{{ path('admin_products_new') }}" class="btn btn-primary shadow-sm">
+                        <i class="fa fa-plus-circle mr-2"></i>
                         Ajouter un produit
                     </a>
                 </div>
@@ -89,24 +281,27 @@
                         {% endfor %}
                     {% endfor %}
                     
-                    <div class="table-responsive">
-                        <table id="products-table" class="display table table-striped table-hover">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th class="fw-bold">ID</th>
-                                    <th class="fw-bold">Image</th>
-                                    <th class="fw-bold">Nom</th>
-                                    <th class="fw-bold">Catégorie</th>
-                                    <th class="fw-bold">Prix</th>
-                                    <th class="fw-bold">Stock</th>
-                                    <th class="fw-bold">Créé le</th>
-                                    <th class="fw-bold">Actions</th>
-                                </tr>
-                            </thead>
+                    <div class="table-container">
+                        <div class="table-responsive">
+                            <table id="products-table" class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fa fa-hashtag mr-2 text-primary"></i>ID</th>
+                                        <th><i class="fa fa-image mr-2 text-primary"></i>Image</th>
+                                        <th><i class="fa fa-tag mr-2 text-primary"></i>Nom</th>
+                                        <th><i class="fa fa-layer-group mr-2 text-primary"></i>Catégorie</th>
+                                        <th><i class="fa fa-money-bill mr-2 text-primary"></i>Prix</th>
+                                        <th><i class="fa fa-cubes mr-2 text-primary"></i>Stock</th>
+                                        <th><i class="fa fa-calendar-alt mr-2 text-primary"></i>Créé le</th>
+                                        <th><i class="fa fa-cogs mr-2 text-primary"></i>Actions</th>
+                                    </tr>
+                                </thead>
                             <tbody>
                                 {% for product in products %}
-                                    <tr>
-                                        <td><span class="badge bg-light text-dark rounded-pill px-3">{{ product.id }}</span></td>
+                                    <tr class="align-middle animate__animated animate__fadeIn">
+                                        <td>
+                                            <span class="badge bg-light text-dark fw-normal shadow-sm px-3 py-2">#{{ product.id }}</span>
+                                        </td>
                                         <td>
                                             <div class="product-img-container">
                                             {% if product.primaryImage %}
@@ -116,40 +311,73 @@
                                             {% endif %}
                                             </div>
                                         </td>
-                                        <td>{{ product.name }}</td>
+                                        <td>
+                                            <span class="product-name">{{ product.name }}</span>
+                                        </td>
                                         <td>
                                             {% if product.category == 'men' %}
-                                                <span class="badge bg-primary text-white rounded-pill px-3 py-2">Hommes</span>
+                                                <span class="badge bg-gradient-primary text-white shadow-sm px-3 py-2">
+                                                    <i class="fa fa-male mr-1"></i> Hommes
+                                                </span>
                                             {% elseif product.category == 'women' %}
-                                                <span class="badge bg-info text-white rounded-pill px-3 py-2">Femmes</span>
+                                                <span class="badge bg-gradient-info text-white shadow-sm px-3 py-2">
+                                                    <i class="fa fa-female mr-1"></i> Femmes
+                                                </span>
                                             {% elseif product.category == 'kids' %}
-                                                <span class="badge bg-success text-white rounded-pill px-3 py-2">Enfants</span>
+                                                <span class="badge bg-gradient-success text-white shadow-sm px-3 py-2">
+                                                    <i class="fa fa-child mr-1"></i> Enfants
+                                                </span>
                                             {% elseif product.category == 'accessories' %}
-                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">Accessoires</span>
+                                                <span class="badge bg-gradient-warning text-dark shadow-sm px-3 py-2">
+                                                    <i class="fa fa-glasses mr-1"></i> Accessoires
+                                                </span>
                                             {% else %}
-                                                <span class="badge bg-secondary text-white rounded-pill px-3 py-2">{{ product.category }}</span>
+                                                <span class="badge bg-gradient-secondary text-white shadow-sm px-3 py-2">
+                                                    {{ product.category }}
+                                                </span>
                                             {% endif %}
                                         </td>
-                                        <td><span class="fw-bold text-success">{{ product.price }} TND</span></td>
+                                        <td>
+                                            <div class="price-badge bg-gradient-light shadow-sm p-2 rounded-pill text-center">
+                                                <span class="fw-bold text-success">{{ product.price }} <small>TND</small></span>
+                                            </div>
+                                        </td>
                                         <td>
                                             {% if product.stock > 10 %}
-                                                <span class="badge bg-success text-white rounded-pill px-3 py-2">{{ product.stock }}</span>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="badge bg-gradient-success text-white shadow-sm px-3 py-2">
+                                                        <i class="fa fa-check-circle mr-1"></i> {{ product.stock }}
+                                                    </span>
+                                                </div>
                                             {% elseif product.stock > 0 %}
-                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">{{ product.stock }}</span>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="badge bg-gradient-warning text-dark shadow-sm px-3 py-2">
+                                                        <i class="fa fa-exclamation-circle mr-1"></i> {{ product.stock }}
+                                                    </span>
+                                                </div>
                                             {% else %}
-                                                <span class="badge bg-danger text-white rounded-pill px-3 py-2">Rupture</span>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="badge bg-gradient-danger text-white shadow-sm px-3 py-2">
+                                                        <i class="fa fa-times-circle mr-1"></i> Rupture
+                                                    </span>
+                                                </div>
                                             {% endif %}
                                         </td>
-                                        <td><small class="text-muted">{{ product.createdAt|date('d/m/Y') }}</small></td>
+                                        <td>
+                                            <div class="date-badge shadow-sm p-1 rounded text-center">
+                                                <i class="fa fa-calendar-day text-primary mr-1"></i>
+                                                <span class="text-muted">{{ product.createdAt|date('d/m/Y') }}</span>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <a href="{{ path('admin_products_edit', {'id': product.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill shadow-sm" data-toggle="tooltip" title="Modifier le produit">
+                                                <a href="{{ path('admin_products_edit', {'id': product.id}) }}" class="btn btn-sm btn-outline-primary shadow-sm" data-toggle="tooltip" title="Modifier le produit">
                                                     <i class="fa fa-edit mr-1"></i> Modifier
                                                 </a>
                                                 
-                                                <form method="POST" action="{{ path('admin_products_delete', {'id': product.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit?');" style="display: inline-block;">
+                                                <form method="POST" action="{{ path('admin_products_delete', {'id': product.id}) }}" id="delete-form-{{ product.id }}" style="display: inline-block;">
                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill shadow-sm" data-toggle="tooltip" title="Supprimer le produit">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger shadow-sm delete-product" data-id="{{ product.id }}" data-toggle="tooltip" title="Supprimer le produit">
                                                         <i class="fa fa-trash mr-1"></i> Supprimer
                                                     </button>
                                                 </form>
@@ -175,6 +403,7 @@
     {{ parent() }}
     <script>
         $(document).ready(function() {
+            // Initialize DataTable
             $('#products-table').DataTable({
                 "pageLength": 10,
                 "language": {
@@ -191,6 +420,68 @@
                         "previous": "Précédent"
                     }
                 }
+            });
+            
+            // Handle product deletion with SweetAlert2
+            $('.delete-product').on('click', function() {
+                const productId = $(this).data('id');
+                const deleteForm = $(`#delete-form-${productId}`);
+                
+                Swal.fire({
+                    title: 'Êtes-vous sûr?',
+                    text: "Vous êtes sur le point de supprimer ce produit. Cette action est irréversible!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Oui, supprimer!',
+                    cancelButtonText: 'Annuler',
+                    iconColor: '#d33',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                        cancelButton: 'btn btn-secondary'
+                    },
+                    buttonsStyling: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form via AJAX
+                        const formData = deleteForm.serialize();
+                        const url = deleteForm.attr('action');
+                        
+                        $.ajax({
+                            url: url,
+                            method: 'POST',
+                            data: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    // Show success message with SweetAlert2
+                                    Swal.fire({
+                                        title: 'Supprimé!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#28a745',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        // Reload the page to update the products list
+                                        window.location.reload();
+                                    });
+                                }
+                            },
+                            error: function() {
+                                // Show error message
+                                Swal.fire({
+                                    title: 'Erreur!',
+                                    text: 'Une erreur est survenue lors de la suppression du produit.',
+                                    icon: 'error',
+                                    confirmButtonColor: '#d33'
+                                });
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>

@@ -7,6 +7,60 @@
     <link rel="stylesheet" href="{{ asset('back/assets/css/kaiadmin.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('back/assets/css/demo.css') }}" />
     <link rel="stylesheet" href="{{ asset('back/assets/css/fonts.min.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        /* Custom styling for dashboard cards */
+        .dashboard-card {
+            transition: all 0.3s ease;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            overflow: hidden;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rounded-xl {
+            border-radius: 0.75rem;
+        }
+        
+        .btn-action {
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .btn-action:hover {
+            transform: translateX(5px);
+        }
+        
+        /* Modern table styles */
+        .table th {
+            font-weight: 600;
+            border-top: none;
+        }
+        
+        /* DataTable custom styling */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            border-radius: 0.5rem;
+            border: none !important;
+            background: transparent !important;
+        }
+        
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: linear-gradient(to right, #4e73df, #6f42c1) !important;
+            color: white !important;
+            border: none !important;
+            box-shadow: 0 4px 10px rgba(78, 115, 223, 0.25);
+        }
+        
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: rgba(78, 115, 223, 0.1) !important;
+            color: #4e73df !important;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}
@@ -51,6 +105,9 @@
 
     <!-- Bootstrap Notify -->
     <script src="{{ asset('back/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- jQuery Vector Maps -->
     <script src="{{ asset('back/assets/js/plugin/jsvectormap/jsvectormap.min.js') }}"></script>
@@ -74,10 +131,10 @@
       <div class="logo-header" data-background-color="dark">
         <a href="{{ path('admin_dashboard') }}" class="logo">
           <img
-            src="{{ asset('back/assets/img/kaiadmin/logo_light.svg') }}"
+            src="{{ asset('front/images/icons/ban1.png') }}"
             alt="navbar brand"
             class="navbar-brand"
-            height="20"
+            height="34"
           />
         </a>
         <div class="nav-toggle">
@@ -172,7 +229,7 @@
           </ul>
         </nav>
         <div class="copyright ml-auto">
-          {{ "now"|date("Y") }} © Clothing Shop Admin
+          {{ "now"|date("Y") }} © BA DISCOUNT
         </div>
       </div>
     </footer>

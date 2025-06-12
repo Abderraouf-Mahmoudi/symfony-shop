@@ -1,112 +1,238 @@
 {% extends 'back/base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Color input styles */
+        input[type="color"] {
+            height: 38px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        input[type="color"]:hover {
+            transform: scale(1.05);
+        }
+        .color-preview {
+            transition: all 0.3s ease;
+        }
+        .color-preview:hover {
+            transform: scale(1.2);
+        }
+    </style>
+{% endblock %}
+
 {% block title %}Créer un nouveau produit{% endblock %}
 
 {% block content %}
 <div class="page-inner">
-    <div class="page-header">
-        <h4 class="page-title">Gestion des produits</h4>
+    <div class="page-header animate__animated animate__fadeIn">
+        <h4 class="page-title"><i class="fa fa-box-open mr-2"></i>Gestion des produits</h4>
         <ul class="breadcrumbs">
             <li class="nav-home">
-                <a href="{{ path('admin_dashboard') }}">
-                    <i class="flaticon-home"></i>
+                <a href="{{ path('admin_dashboard') }}" data-toggle="tooltip" title="Dashboard">
+                    <i class="fa fa-home"></i>
                 </a>
             </li>
             <li class="separator">
-                <i class="flaticon-right-arrow"></i>
+                <i class="fa fa-angle-right"></i>
             </li>
             <li class="nav-item">
                 <a href="{{ path('admin_products') }}">Produits</a>
             </li>
             <li class="separator">
-                <i class="flaticon-right-arrow"></i>
+                <i class="fa fa-angle-right"></i>
             </li>
             <li class="nav-item">
-                <span>Nouveau produit</span>
+                <span class="badge badge-info">Nouveau produit</span>
             </li>
         </ul>
     </div>
     
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Créer un nouveau produit</div>
+            <div class="card shadow-sm animate__animated animate__fadeIn">
+                <div class="card-header bg-gradient-primary text-white">
+                    <div class="card-title mb-0">
+                        <i class="fa fa-plus-circle mr-2"></i>Créer un nouveau produit
+                    </div>
                 </div>
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data" id="product-form" onsubmit="return false;" novalidate>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name">Nom du produit</label>
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Entrez le nom du produit" required>
+                                    <label for="name" class="form-label"><i class="fa fa-tag mr-1"></i> Nom du produit</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-signature"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Entrez le nom du produit" required minlength="3" maxlength="100" data-validation="required|minlength:3|maxlength:100">
+                                    </div>
+                                    <small class="form-text text-danger validation-message" id="name-validation"></small>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="price">Prix (TND)</label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" placeholder="Entrez le prix" required>
+                                    <label for="price" class="form-label"><i class="fa fa-money-bill mr-1"></i> Prix (TND)</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
+                                        </div>
+                                        <input type="number" step="0.01" min="0" max="99999.99" class="form-control" id="price" name="price" placeholder="Entrez le prix" required data-validation="required|min:0|max:99999.99">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">TND</span>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-danger validation-message" id="price-validation"></small>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="stock">Quantité en stock</label>
-                                    <input type="number" min="0" class="form-control" id="stock" name="stock" placeholder="Entrez la quantité en stock" required>
+                                    <label for="stock" class="form-label"><i class="fa fa-inventory mr-1"></i> Quantité en stock</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-boxes"></i></span>
+                                        </div>
+                                        <input type="number" min="0" max="99999" class="form-control" id="stock" name="stock" placeholder="Entrez la quantité en stock" required data-validation="required|min:0|max:99999">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">unités</span>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-danger validation-message" id="stock-validation"></small>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="category">Catégorie</label>
-                                    <select class="form-control" id="category" name="category" required>
-                                        <option value="">Sélectionnez une catégorie</option>
-                                        <option value="men">Hommes</option>
-                                        <option value="women">Femmes</option>
-                                        <option value="kids">Enfants</option>
-                                        <option value="accessories">Accessoires</option>
-                                    </select>
+                                    <label for="category" class="form-label"><i class="fa fa-layer-group mr-1"></i> Catégorie</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-sitemap"></i></span>
+                                        </div>
+                                        <select class="form-control custom-select" id="category" name="category" required data-validation="required">
+                                            <option value="">Sélectionnez une catégorie</option>
+                                            <option value="men">Hommes</option>
+                                            <option value="women">Femmes</option>
+                                            <option value="kids">Enfants</option>
+                                            <option value="accessories">Accessoires</option>
+                                        </select>
+                                    </div>
+                                    <small class="form-text text-danger validation-message" id="category-validation"></small>
                                 </div>
                             </div>
                             
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="Entrez la description du produit" required></textarea>
+                                    <label for="description" class="form-label"><i class="fa fa-align-left mr-1"></i> Description</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-edit"></i></span>
+                                        </div>
+                                        <textarea class="form-control" id="description" name="description" rows="6" placeholder="Entrez la description du produit" required minlength="10" maxlength="2000" data-validation="required|minlength:10|maxlength:2000" style="border-top-right-radius: 4px; border-bottom-right-radius: 4px;"></textarea>
+                                    </div>
+                                    <small class="form-text text-danger validation-message" id="description-validation"></small>
+                                    <div class="d-flex justify-content-end">
+                                        <small class="form-text text-muted char-counter badge badge-light"><i class="fa fa-text-height"></i> <span id="description-counter">0</span>/2000 caractères</small>
+                                    </div>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="images">Images du produit (minimum 1 requise)</label>
-                                    <div class="input-file input-file-image">
-                                        <div class="image-preview-container" id="image-previews">
+                                    <label for="images" class="form-label"><i class="fa fa-images mr-1"></i> Images du produit (minimum 1 requise)</label>
+                                    <div class="input-file input-file-image border p-3 rounded bg-light">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="badge badge-info mr-2"><i class="fa fa-info-circle"></i> Info</span>
+                                            <small class="text-muted">Formats acceptés: JPG, JPEG, PNG. Taille max: 5MB par image</small>
+                                        </div>
+                                        
+                                        <div class="image-preview-container border rounded p-2 bg-white mb-3" id="image-previews">
                                             <div class="image-preview-item">
-                                                <img class="img-upload-preview" width="150" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview">
+                                                <div class="text-center p-3 bg-white border border-dashed rounded">
+                                                    <img class="img-upload-preview mb-2" width="150" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview">
+                                                    <p class="text-muted mb-0"><i class="fa fa-cloud-upload-alt"></i> Les images s'afficheront ici</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <input type="file" class="form-control form-control-file" id="images" name="images[]" accept="image/*" multiple required>
-                                        <label for="images" class="btn btn-primary btn-round btn-lg"><i class="fa fa-file-image"></i> Sélectionner des images</label>
-                                        <small class="form-text text-muted">La première image sera définie comme l'image principale. Vous pourrez la modifier ultérieurement.</small>
+                                        
+                                        <input type="file" class="form-control form-control-file" id="images" name="images[]" accept="image/jpeg,image/png,image/jpg" multiple required data-validation="required|filetype:jpg,jpeg,png|maxsize:5">
+                                        <small class="form-text text-danger validation-message" id="images-validation"></small>
+                                        
+                                        <div class="text-center">
+                                            <label for="images" class="btn btn-info btn-rounded px-4 mt-2 mb-0 shadow-sm">
+                                                <i class="fa fa-file-image mr-2"></i> Sélectionner des images
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="alert alert-light border mt-3 mb-0">
+                                            <div class="d-flex">
+                                                <div class="mr-2"><i class="fa fa-lightbulb text-warning"></i></div>
+                                                <div><small>La première image sera définie comme l'image principale. Vous pourrez la modifier ultérieurement.</small></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label>Couleurs du produit</label>
-                                    <div id="color-container">
-                                        <div class="row color-row mb-3">
-                                            <div class="col-md-5">
-                                                <input type="text" class="form-control" name="color_names[]" placeholder="Nom de couleur (ex: Rouge)">
-                                            </div>
-                                            <div class="col-md-5">
-                                                <input type="color" class="form-control" name="color_codes[]">
-                                            </div>
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-danger btn-sm remove-color"><i class="fa fa-trash"></i></button>
+                                <div class="form-group mb-4">
+                                    <label class="form-label fw-bold">Couleurs du produit</label>
+                                    
+                                    <div class="add-new-colors mt-3">
+                                        <h6 class="fw-bold mb-3 d-flex align-items-center"><i class="fa fa-palette text-warning mr-2"></i> Ajouter des couleurs</h6>
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-body">
+                                                <div id="color-container">
+                                                    <div class="row color-row mb-3 align-items-center animate__animated animate__fadeIn">
+                                                        <div class="col-md-1">
+                                                            <div class="color-preview new-color-preview" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #ddd; background-color: #3366ff;"></div>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-light"><i class="fa fa-tag"></i></span>
+                                                                <input type="text" class="form-control new-color-name" name="color_names[]" placeholder="Nom de couleur (ex: Bleu)">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-light"><i class="fa fa-fill-drip"></i></span>
+                                                                <input type="color" class="form-control new-color-code" name="color_codes[]" value="#3366ff">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 text-end">
+                                                            <button type="button" class="btn btn-outline-danger btn-sm rounded-circle shadow-sm remove-color" title="Supprimer cette couleur"><i class="fa fa-times"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3 text-center">
+                                                    <button type="button" id="add-color" class="btn btn-outline-info btn-sm rounded-pill px-4 shadow-sm">
+                                                        <i class="fa fa-plus mr-1"></i> Ajouter une autre couleur
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" id="add-color" class="btn btn-info btn-sm"><i class="fa fa-plus"></i> Ajouter une couleur</button>
                                 </div>
                             </div>
                         </div>
                         
+                        <hr class="mt-4">
                         <div class="card-action">
-                            <button type="submit" class="btn btn-success">Créer le produit</button>
-                            <a href="{{ path('admin_products') }}" class="btn btn-danger">Annuler</a>
+                            <div id="form-errors" class="alert alert-danger d-none mb-3 animate__animated animate__fadeIn">
+                                <div class="d-flex">
+                                    <div class="mr-3">
+                                        <i class="fa fa-exclamation-triangle fa-2x text-danger"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Erreur de validation</h5>
+                                        <p class="mb-0">Veuillez corriger les erreurs ci-dessous avant de soumettre le formulaire.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 text-center text-md-left mb-3 mb-md-0">
+                                    <a href="{{ path('admin_products') }}" class="btn btn-outline-danger btn-rounded px-4">
+                                        <i class="fa fa-arrow-left mr-2"></i> Annuler et retourner aux produits
+                                    </a>
+                                </div>
+                                <div class="col-md-6 text-center text-md-right">
+                                    <button type="submit" class="btn btn-success btn-lg btn-rounded shadow px-5" id="submit-product">
+                                        <i class="fa fa-check-circle mr-2"></i> Créer le produit
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -118,9 +244,560 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <style>
+        .form-control.is-invalid {
+            border-color: #dc3545;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .form-control.is-valid {
+            border-color: #28a745;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .validation-message {
+            display: none;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        
+        .image-preview-item {
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .image-preview-item .badge {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+        }
+        
+        #image-upload-button {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        #image-upload-button:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        #product-form .color-row {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        
+        #product-form .color-row:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: white;
+        }
+
+
+        .form-control.is-valid {
+            border-color: #28a745;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .validation-message {
+            display: none;
+            margin-top: 5px;
+            font-size: 80%;
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+
+    </style>
     <script>
-        // Multiple images preview
+        // Global function for form submission
+
+        function submitProductForm(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                $('#form-errors').removeClass('d-none');
+                $('html, body').animate({ scrollTop: $('#form-errors').offset().top - 100 }, 500);
+                return false;
+            }
+            
+            $('#form-errors').addClass('d-none');
+            
+            // Show loading indicator
+            const submitBtn = $('#submit-product');
+            const originalBtnText = submitBtn.html();
+            submitBtn.html('<i class="fa fa-spinner fa-spin"></i> Création en cours...');
+            submitBtn.attr('disabled', true);
+            
+            // Create FormData object
+            const formData = new FormData(document.getElementById('product-form'));
+            
+            // Send AJAX request
+            $.ajax({
+                url: '{{ path("admin_products_new") }}',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log('Success response:', response);
+                    // Show success SweetAlert
+                    Swal.fire({
+                        title: 'Produit ajouté avec succès!',
+                        text: 'Que souhaitez-vous faire maintenant?',
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonColor: '#28a745',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Voir la liste des produits',
+                        cancelButtonText: 'Ajouter un autre produit'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Redirect to products list
+                            window.location.href = '{{ path("admin_products") }}';
+                        } else {
+                            // Reload the page to add another product
+                            window.location.reload();
+                        }
+                    });
+                },
+                error: function(xhr) {
+                    console.log('Error response:', xhr);
+                    // Show error message
+                    Swal.fire({
+                        title: 'Erreur!',
+                        text: 'Une erreur est survenue lors de la création du produit.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    
+                    // Reset button
+                    submitBtn.html(originalBtnText);
+                    submitBtn.attr('disabled', false);
+                }
+            });
+            
+            return false;
+        }
+        
+        // Form validation functions
+        const showError = (element, message) => {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+            const messageElement = $(`#${element.attr('id')}-validation`);
+            messageElement.text(message).css('display', 'block').css('color', '#dc3545');
+        };
+        
+        const showSuccess = (element) => {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+            const messageElement = $(`#${element.attr('id')}-validation`);
+            messageElement.text('').css('display', 'none');
+        };
+        
+        // Name validation
+        const validateName = () => {
+            const nameInput = $('#name');
+            const value = nameInput.val().trim();
+            const minLength = parseInt(nameInput.attr('minlength'));
+            const maxLength = parseInt(nameInput.attr('maxlength'));
+            
+            if (value === '') {
+                showError(nameInput, 'Le nom du produit est requis');
+                return false;
+            } else if (value.length < minLength) {
+                showError(nameInput, `Le nom doit contenir au moins ${minLength} caractères`);
+                return false;
+            } else if (value.length > maxLength) {
+                showError(nameInput, `Le nom ne peut pas dépasser ${maxLength} caractères`);
+                return false;
+            } else {
+                showSuccess(nameInput);
+                return true;
+            }
+        };
+        
+        // Price validation
+        const validatePrice = () => {
+            const priceInput = $('#price');
+            const value = priceInput.val();
+            const min = parseFloat(priceInput.attr('min'));
+            const max = parseFloat(priceInput.attr('max'));
+            
+            if (value === '') {
+                showError(priceInput, 'Le prix est requis');
+                return false;
+            } else if (isNaN(value) || parseFloat(value) < min) {
+                showError(priceInput, `Le prix doit être supérieur ou égal à ${min}`);
+                return false;
+            } else if (parseFloat(value) > max) {
+                showError(priceInput, `Le prix ne peut pas dépasser ${max}`);
+                return false;
+            } else {
+                showSuccess(priceInput);
+                return true;
+            }
+        };
+        
+        // Stock validation
+        const validateStock = () => {
+            const stockInput = $('#stock');
+            const value = stockInput.val();
+            const min = parseInt(stockInput.attr('min'));
+            const max = parseInt(stockInput.attr('max'));
+            
+            if (value === '') {
+                showError(stockInput, 'La quantité en stock est requise');
+                return false;
+            } else if (isNaN(value) || parseInt(value) < min) {
+                showError(stockInput, `La quantité doit être supérieure ou égale à ${min}`);
+                return false;
+            } else if (parseInt(value) > max) {
+                showError(stockInput, `La quantité ne peut pas dépasser ${max}`);
+                return false;
+            } else {
+                showSuccess(stockInput);
+                return true;
+            }
+        };
+        
+        // Category validation
+        const validateCategory = () => {
+            const categoryInput = $('#category');
+            const value = categoryInput.val();
+            
+            if (value === '') {
+                showError(categoryInput, 'Veuillez sélectionner une catégorie');
+                return false;
+            } else {
+                showSuccess(categoryInput);
+                return true;
+            }
+        };
+        
+        // Description validation
+        const validateDescription = () => {
+            const descriptionInput = $('#description');
+            const value = descriptionInput.val().trim();
+            const minLength = parseInt(descriptionInput.attr('minlength'));
+            const maxLength = parseInt(descriptionInput.attr('maxlength'));
+            
+            if (value === '') {
+                showError(descriptionInput, 'La description est requise');
+                return false;
+            } else if (value.length < minLength) {
+                showError(descriptionInput, `La description doit contenir au moins ${minLength} caractères`);
+                return false;
+            } else if (value.length > maxLength) {
+                showError(descriptionInput, `La description ne peut pas dépasser ${maxLength} caractères`);
+                return false;
+            } else {
+                showSuccess(descriptionInput);
+                return true;
+            }
+        };
+        
+        // Images validation
+        const validateImages = () => {
+            const imagesInput = $('#images');
+            const files = imagesInput.prop('files');
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+            
+            if (files.length === 0) {
+                showError(imagesInput, 'Au moins une image est requise');
+                return false;
+            }
+            
+            // Check each file
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Check file type
+                if (!allowedTypes.includes(file.type)) {
+                    showError(imagesInput, `Le fichier "${file.name}" n'est pas dans un format autorisé (JPG, JPEG, PNG)`);
+                    return false;
+                }
+                
+                // Check file size
+                if (file.size > maxSize) {
+                    showError(imagesInput, `Le fichier "${file.name}" dépasse la taille maximale de 5MB`);
+                    return false;
+                }
+            }
+            
+            showSuccess(imagesInput);
+            return true;
+        };
+        
+        // Description character counter removed (duplicate)
+        
+        // Validate all fields
+        const validateForm = () => {
+            let isValid = true;
+            
+            // Validate all fields
+            isValid = validateName() && isValid;
+            isValid = validatePrice() && isValid;
+            isValid = validateStock() && isValid;
+            isValid = validateCategory() && isValid;
+            isValid = validateDescription() && isValid;
+            isValid = validateImages() && isValid;
+            
+            return isValid;
+        };
+
+        // Form validation and multiple images preview
         $(document).ready(function() {
+            // Form validation functions
+            const showError = (element, message) => {
+                $(element).addClass('is-invalid').removeClass('is-valid');
+                const messageElement = $(`#${element.attr('id')}-validation`);
+                messageElement.text(message).css('display', 'block').css('color', '#dc3545');
+            };
+            
+            const showSuccess = (element) => {
+                $(element).removeClass('is-invalid').addClass('is-valid');
+                const messageElement = $(`#${element.attr('id')}-validation`);
+                messageElement.text('').css('display', 'none');
+            };
+            
+            // Name validation
+            const validateName = () => {
+                const nameInput = $('#name');
+                const value = nameInput.val().trim();
+                const minLength = parseInt(nameInput.attr('minlength'));
+                const maxLength = parseInt(nameInput.attr('maxlength'));
+                
+                if (value === '') {
+                    showError(nameInput, 'Le nom du produit est requis');
+                    return false;
+                } else if (value.length < minLength) {
+                    showError(nameInput, `Le nom doit contenir au moins ${minLength} caractères`);
+                    return false;
+                } else if (value.length > maxLength) {
+                    showError(nameInput, `Le nom ne peut pas dépasser ${maxLength} caractères`);
+                    return false;
+                } else {
+                    showSuccess(nameInput);
+                    return true;
+                }
+            };
+            
+            // Price validation
+            const validatePrice = () => {
+                const priceInput = $('#price');
+                const value = priceInput.val();
+                const min = parseFloat(priceInput.attr('min'));
+                const max = parseFloat(priceInput.attr('max'));
+                
+                if (value === '') {
+                    showError(priceInput, 'Le prix est requis');
+                    return false;
+                } else if (isNaN(value) || parseFloat(value) < min) {
+                    showError(priceInput, `Le prix doit être supérieur ou égal à ${min}`);
+                    return false;
+                } else if (parseFloat(value) > max) {
+                    showError(priceInput, `Le prix ne peut pas dépasser ${max}`);
+                    return false;
+                } else {
+                    showSuccess(priceInput);
+                    return true;
+                }
+            };
+            
+            // Stock validation
+            const validateStock = () => {
+                const stockInput = $('#stock');
+                const value = stockInput.val();
+                const min = parseInt(stockInput.attr('min'));
+                const max = parseInt(stockInput.attr('max'));
+                
+                if (value === '') {
+                    showError(stockInput, 'La quantité en stock est requise');
+                    return false;
+                } else if (isNaN(value) || parseInt(value) < min) {
+                    showError(stockInput, `La quantité doit être supérieure ou égale à ${min}`);
+                    return false;
+                } else if (parseInt(value) > max) {
+                    showError(stockInput, `La quantité ne peut pas dépasser ${max}`);
+                    return false;
+                } else {
+                    showSuccess(stockInput);
+                    return true;
+                }
+            };
+            
+            // Category validation
+            const validateCategory = () => {
+                const categoryInput = $('#category');
+                const value = categoryInput.val();
+                
+                if (value === '') {
+                    showError(categoryInput, 'Veuillez sélectionner une catégorie');
+                    return false;
+                } else {
+                    showSuccess(categoryInput);
+                    return true;
+                }
+            };
+            
+            // Description validation
+            const validateDescription = () => {
+                const descriptionInput = $('#description');
+                const value = descriptionInput.val().trim();
+                const minLength = parseInt(descriptionInput.attr('minlength'));
+                const maxLength = parseInt(descriptionInput.attr('maxlength'));
+                
+                if (value === '') {
+                    showError(descriptionInput, 'La description est requise');
+                    return false;
+                } else if (value.length < minLength) {
+                    showError(descriptionInput, `La description doit contenir au moins ${minLength} caractères`);
+                    return false;
+                } else if (value.length > maxLength) {
+                    showError(descriptionInput, `La description ne peut pas dépasser ${maxLength} caractères`);
+                    return false;
+                } else {
+                    showSuccess(descriptionInput);
+                    return true;
+                }
+            };
+            
+            // Images validation
+            const validateImages = () => {
+                const imagesInput = $('#images');
+                const files = imagesInput.prop('files');
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                
+                if (files.length === 0) {
+                    showError(imagesInput, 'Au moins une image est requise');
+                    return false;
+                }
+                
+                // Check each file
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    // Check file type
+                    if (!allowedTypes.includes(file.type)) {
+                        showError(imagesInput, `Le fichier "${file.name}" n'est pas dans un format autorisé (JPG, JPEG, PNG)`);
+                        return false;
+                    }
+                    
+                    // Check file size
+                    if (file.size > maxSize) {
+                        showError(imagesInput, `Le fichier "${file.name}" dépasse la taille maximale de 5MB`);
+                        return false;
+                    }
+                }
+                
+                showSuccess(imagesInput);
+                return true;
+            };
+            
+            // Description character counter
+            $('#description').on('input', function() {
+                const currentLength = $(this).val().length;
+                const maxLength = 2000; // Hardcoding the value since it's specified in the UI
+                $('#description-counter').text(currentLength);
+                
+                // Change color when approaching limit
+                if (currentLength > maxLength * 0.9) {
+                    $('#description-counter').css('color', '#dc3545');
+                } else {
+                    $('#description-counter').css('color', '');
+                }
+            });
+            
+            // Validate all fields
+            const validateForm = () => {
+                let isValid = true;
+                
+                // Validate all fields
+                isValid = validateName() && isValid;
+                isValid = validatePrice() && isValid;
+                isValid = validateStock() && isValid;
+                isValid = validateCategory() && isValid;
+                isValid = validateDescription() && isValid;
+                isValid = validateImages() && isValid;
+                
+                // Show or hide form error message
+                if (!isValid) {
+                    $('#form-errors').removeClass('d-none');
+                    // Scroll to first error
+                    const firstError = $('.is-invalid').first();
+                    if (firstError.length) {
+                        $('html, body').animate({
+                            scrollTop: firstError.offset().top - 100
+                        }, 200);
+                        firstError.addClass('shake');
+                        setTimeout(() => { firstError.removeClass('shake'); }, 500);
+                    }
+                } else {
+                    $('#form-errors').addClass('d-none');
+                }
+                
+                return isValid;
+            };
+            
+            // Input event listeners
+            $('#name').on('blur', validateName);
+            $('#price').on('blur', validatePrice);
+            $('#stock').on('blur', validateStock);
+            $('#category').on('change', validateCategory);
+            $('#description').on('blur', validateDescription);
+            $('#images').on('change', validateImages);
+            
+            // Set up click handler on submit button
+            $('#submit-product').on('click', function(e) {
+                e.preventDefault();
+                submitProductForm(e);
+            });
+            
+            // Set up form submit handler as a backup
+            $('#product-form').off('submit').on('submit', function(e) {
+                e.preventDefault();
+                submitProductForm(e);
+                return false;
+            });
+            
             // Handle image upload preview
             $('#images').change(function() {
                 $('#image-previews').empty();
@@ -149,28 +826,55 @@
                 }
             });
             
-            // Handle color management
+            // Handle adding new colors with animation
             $('#add-color').click(function() {
                 const colorRow = `
-                    <div class="row color-row mb-3">
-                        <div class="col-md-5">
-                            <input type="text" class="form-control" name="color_names[]" placeholder="Color Name (e.g. Red)">
+                    <div class="row color-row mb-3 align-items-center animate__animated animate__fadeIn">
+                        <div class="col-md-1">
+                            <div class="color-preview new-color-preview" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #ddd; background-color: #3366ff;"></div>
                         </div>
                         <div class="col-md-5">
-                            <input type="color" class="form-control" name="color_codes[]">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-tag"></i></span>
+                                <input type="text" class="form-control new-color-name" name="color_names[]" placeholder="Nom de couleur (ex: Bleu)">
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-danger btn-sm remove-color"><i class="fa fa-trash"></i></button>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-fill-drip"></i></span>
+                                <input type="color" class="form-control new-color-code" name="color_codes[]" value="#3366ff">
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-end">
+                            <button type="button" class="btn btn-outline-danger btn-sm rounded-circle shadow-sm remove-color" title="Supprimer cette couleur"><i class="fa fa-times"></i></button>
                         </div>
                     </div>
                 `;
                 
                 $('#color-container').append(colorRow);
+                // Animate scroll to new color row
+                $('html, body').animate({
+                    scrollTop: $('#color-container .color-row:last').offset().top - 100
+                }, 500);
+                
+                // Update color preview when color input changes
+                $('.new-color-code').last().on('input', function() {
+                    $(this).closest('.color-row').find('.new-color-preview').css('background-color', $(this).val());
+                });
             });
             
-            // Remove color row
+            // Remove color row with fade out animation
             $(document).on('click', '.remove-color', function() {
-                $(this).closest('.color-row').remove();
+                const row = $(this).closest('.color-row');
+                row.addClass('animate__animated animate__fadeOut');
+                setTimeout(() => {
+                    row.remove();
+                }, 500);
+            });
+            
+            // Update color previews when color inputs change
+            $(document).on('input', '.new-color-code', function() {
+                $(this).closest('.color-row').find('.new-color-preview').css('background-color', $(this).val());
             });
         });
     </script>

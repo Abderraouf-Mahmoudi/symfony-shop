@@ -127,7 +127,18 @@ class BackController extends AbstractController
             // Flush all changes
             $productRepository->getEntityManager()->flush();
             
-            $this->addFlash('success', 'Product added successfully!');
+            // Check if this is an AJAX request
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'success' => true,
+                    'message' => 'Produit ajouté avec succès!',
+                    'productId' => $product->getId()
+                ]);
+            } else {
+                $this->addFlash('success', 'Product added successfully!');
+            }
+            
+            // Regular form submission - redirect
             return $this->redirectToRoute('admin_products');
         }
         
@@ -250,8 +261,17 @@ class BackController extends AbstractController
             // Save all changes
             $productRepository->getEntityManager()->flush();
             
-            $this->addFlash('success', 'Product updated successfully!');
-            return $this->redirectToRoute('admin_products');
+            // Check if this is an AJAX request
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'success' => true,
+                    'message' => 'Produit mis à jour avec succès!',
+                    'productId' => $product->getId()
+                ]);
+            } else {
+                $this->addFlash('success', 'Product updated successfully!');
+                return $this->redirectToRoute('admin_products');
+            }
         }
         
         return $this->render('back/products/edit.html.twig', [
@@ -264,7 +284,16 @@ class BackController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
             $productRepository->remove($product);
-            $this->addFlash('success', 'Product deleted successfully!');
+            
+            // Check if this is an AJAX request
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'success' => true,
+                    'message' => 'Produit supprimé avec succès!'
+                ]);
+            } else {
+                $this->addFlash('success', 'Product deleted successfully!');
+            }
         }
         
         return $this->redirectToRoute('admin_products');

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BA DISCOUNT{% endblock %}</title>
+    
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('back/assets/css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('back/assets/css/fonts.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('back/assets/css/kaiadmin.min.css') }}" />
+        <style>
+            :root {
+                --primary-color: #1572E8;
+                --secondary-color: #6861CE;
+                --success-color: #31CE36;
+                --info-color: #48ABF7;
+                --accent-color: #f3f3f3;
+            }
+            
+            body {
+                background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Public Sans', sans-serif;
+            }
+            
+            .admin-login-container {
+                max-width: 550px;
+                width: 550px;
+                margin: 0 auto;
+                padding: 2rem 0;
+                animation: fadeIn 0.5s ease-in-out;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                min-height: 75vh;
+            }
+            
+            .card {
+                border: none;
+                border-radius: 10px;
+                box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+                overflow: hidden;
+                width: 100%;
+            }
+            
+            .card-header {
+                border-bottom: none;
+                padding: 25px 30px;
+            }
+            
+            .card-body {
+                padding: 40px;
+            }
+            
+            .form-control {
+                height: 50px;
+                border-radius: 6px;
+                box-shadow: none;
+                transition: all 0.3s ease;
+            }
+            
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(21, 114, 232, 0.15);
+            }
+            
+            .btn-primary {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+                height: 50px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-primary:hover {
+                background-color: #0c66d0;
+                border-color: #0c66d0;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(21, 114, 232, 0.3);
+            }
+            
+            .form-check-input:checked {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+            
+            .form-label {
+                font-weight: 500;
+                margin-bottom: 8px;
+            }
+            
+            .logo-section {
+                text-align: center;
+                margin-bottom: 30px;
+                width: 100%;
+            }
+            
+            .logo-img {
+                height: 80px;
+                margin-bottom: 15px;
+                object-fit: contain;
+            }
+            
+            /* Footer styles removed */
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    {% endblock %}
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- Footer removed as requested -->
+    
+    {% block javascripts %}
+        <script src="{{ asset('back/assets/js/core/jquery-3.7.1.min.js') }}"></script>
+        <script src="{{ asset('back/assets/js/core/popper.min.js') }}"></script>
+        <script src="{{ asset('back/assets/js/core/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('back/assets/js/plugin/webfont/webfont.min.js') }}"></script>
+        <script>
+          WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+              families: [
+                "Font Awesome 5 Solid",
+                "Font Awesome 5 Regular",
+                "Font Awesome 5 Brands"
+              ],
+              urls: ["{{ asset('back/assets/css/fonts.min.css') }}"],
+            },
+            active: function () {
+              sessionStorage.fonts = true;
+            },
+          });
+        </script>
+    {% endblock %}
+</body>
+</html>

@@ -1,117 +1,200 @@
 {% extends 'back/base.html.twig' %}
 
-{% block title %}Tableau de bord administrateur - BAdiscount{% endblock %}
+{% block title %}Tableau de bord administrateur - BA DISCOUNT{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <style>
+        /* Modern gradient backgrounds */
         .bg-gradient-primary {
-            background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
             color: white;
         }
         .bg-gradient-info {
-            background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%) !important;
+            color: white;
         }
         .bg-gradient-success {
-            background: linear-gradient(87deg, #2dce89 0, #2dcecc 100%) !important;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            color: white;
         }
         .bg-gradient-danger {
-            background: linear-gradient(87deg, #f5365c 0, #f56036 100%) !important;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: white;
         }
         .bg-gradient-light {
-            background: linear-gradient(87deg, #f8f9fa 0, #f4f4f4 100%) !important;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%) !important;
         }
+        
+        /* Card animations and design */
         .dashboard-card {
             transform: translateY(0);
-            transition: transform 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+        
         .dashboard-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
+        
         .dashboard-card::after {
             content: '';
             position: absolute;
             bottom: 0;
             right: 0;
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             transform: translate(30%, 30%);
             z-index: 0;
         }
-        .icon-shape {
-            display: inline-flex;
+        
+        .dashboard-card .card-body {
+            position: relative;
+            z-index: 1;
+            padding: 1.75rem;
+        }
+        
+        .dashboard-card .card-footer {
+            background: rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.75rem;
+        }
+        
+        /* Stats icon styles */
+        .icon-big {
+            height: 64px;
+            width: 64px;
+            display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 1rem;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
+        
+        .dashboard-card:hover .icon-big {
+            transform: scale(1.1);
+        }
+        
+        /* Table styles */
         table.dataTable {
-            border-collapse: collapse !important;
-            border-radius: 0.5rem;
+            border-collapse: separate !important;
+            border-spacing: 0;
+            border-radius: 1rem;
             overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
+        
         table.dataTable thead th {
-            background-color: #f8f9fa;
+            background-color: #f8fafc;
             font-weight: 600;
-            border-bottom: 2px solid #e9ecef !important;
+            border-bottom: 2px solid #e2e8f0 !important;
+            padding: 1rem 1.25rem;
         }
+        
+        table.dataTable tbody td {
+            padding: 1rem 1.25rem;
+            vertical-align: middle;
+        }
+        
         .table-hover tbody tr:hover {
-            background-color: rgba(94, 114, 228, 0.075);
+            background-color: rgba(99, 102, 241, 0.05);
         }
-        .card {
-            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        
+        /* Button styles */
+        .btn-action {
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        .card:hover {
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+        
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge styles */
+        .badge {
+            font-weight: 600;
+            letter-spacing: 0.025em;
+        }
+        
+        /* Card header styles */
+        .card-header {
+            padding: 1.5rem 1.75rem;
+            background-color: transparent;
+        }
+        
+        /* Page header */
+        .page-header {
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .page-title {
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: #1e293b;
         }
     </style>
 {% endblock %}
 
 {% block content %}
 <div class="page-inner">
-    <div class="page-header d-flex justify-content-between align-items-center mb-4">
-        <h2 class="page-title fw-bold text-primary"><i class="fa fa-tachometer-alt me-2"></i>Tableau de bord</h2>
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h2 class="page-title"><i class="fa fa-tachometer-alt me-2"></i>Tableau de bord</h2>
+        <div>
+            <span class="badge bg-primary px-3 py-2 rounded-pill">Date: {{ 'now'|date('d M Y') }}</span>
+        </div>
     </div>
     
-    <div class="row">
+    <div class="row g-4 mb-4">
         <div class="col-sm-6 col-md-3">
-            <div class="card border-0 shadow-sm rounded-3 h-100 dashboard-card position-relative overflow-hidden bg-gradient-primary text-white">
+            <div class="card border-0 h-100 dashboard-card position-relative overflow-hidden bg-gradient-primary text-white">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="icon-big text-center icon-shape rounded-circle shadow-lg bg-white bg-opacity-25 p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="me-4">
+                            <div class="icon-big text-center rounded-xl bg-white bg-opacity-25 p-3">
                                 <i class="fa fa-tshirt"></i>
                             </div>
                         </div>
-                        <div class="col-7 col-stats">
-                            <div class="numbers">
-                                <p class="card-category text-white mb-1">Produits</p>
-                                <h4 class="card-title fw-bold fs-3 text-white">{{ product_count }}</h4>
-                            </div>
+                        <div>
+                            <p class="text-white-50 text-uppercase mb-1 font-weight-bold small">Produits</p>
+                            <h3 class="fw-bold mb-0">{{ product_count }}</h3>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('admin_products') }}" class="text-white text-decoration-none d-flex align-items-center justify-content-end">Voir tous les produits <i class="fa fa-arrow-right ml-2"></i></a>
+                    <a href="{{ path('admin_products') }}" class="text-white text-decoration-none d-flex align-items-center justify-content-between">
+                        <span class="small fw-bold">Voir tous les produits</span>
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
         
         <div class="col-sm-6 col-md-3">
-            <div class="card border-0 shadow-sm rounded-3 h-100 dashboard-card position-relative overflow-hidden bg-gradient-info text-white">
+            <div class="card border-0 h-100 dashboard-card position-relative overflow-hidden bg-gradient-info text-white">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="icon-big text-center icon-shape rounded-circle shadow-lg bg-white bg-opacity-25 p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="me-4">
+                            <div class="icon-big text-center rounded-xl bg-white bg-opacity-25 p-3">
                                 <i class="fa fa-shopping-cart"></i>
                             </div>
                         </div>
-                        <div class="col-7 col-stats">
-                            <div class="numbers">
-                                <div class="card-subtitle text-white opacity-75">Total</div>
-                                <p class="card-category text-white mb-1">Commandes en attente</p>
-                                <h4 class="card-title fw-bold fs-3 text-white">{{ pending_order_count }}</h4>
-                            </div>
+                        <div>
+                            <span class="text-white-50 small d-block">Total</span>
+                            <p class="text-white-50 text-uppercase mb-1 font-weight-bold small">Commandes en attente</p>
+                            <h3 class="fw-bold mb-0">{{ pending_order_count }}</h3>
                         </div>
                     </div>
                 </div>
@@ -122,48 +205,50 @@
         </div>
         
         <div class="col-sm-6 col-md-3">
-            <div class="card border-0 shadow-sm rounded-3 h-100 dashboard-card position-relative overflow-hidden bg-gradient-success text-white">
+            <div class="card border-0 h-100 dashboard-card position-relative overflow-hidden bg-gradient-success text-white">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="icon-big text-center icon-shape rounded-circle shadow-lg bg-white bg-opacity-25 p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="me-4">
+                            <div class="icon-big text-center rounded-xl bg-white bg-opacity-25 p-3">
                                 <i class="fa fa-wallet"></i>
                             </div>
                         </div>
-                        <div class="col-7 col-stats">
-                            <div class="numbers">
-                                <p class="card-category text-white mb-1">Revenus</p>
-                                <h4 class="card-title fw-bold fs-3 text-white">{{ revenue }} TND</h4>
-                            </div>
+                        <div>
+                            <p class="text-white-50 text-uppercase mb-1 font-weight-bold small">Revenus</p>
+                            <h3 class="fw-bold mb-0">{{ revenue }} TND</h3>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="card-link text-white text-decoration-none d-flex align-items-center justify-content-end">7 derniers jours <i class="fa fa-calendar ml-2"></i></div>
+                    <div class="text-white d-flex align-items-center justify-content-between">
+                        <span class="small fw-bold">7 derniers jours</span>
+                        <i class="fa fa-calendar"></i>
+                    </div>
                 </div>
             </div>
         </div>
         
         <div class="col-sm-6 col-md-3">
-            <div class="card border-0 shadow-sm rounded-3 h-100 dashboard-card position-relative overflow-hidden bg-gradient-danger text-white">
+            <div class="card border-0 h-100 dashboard-card position-relative overflow-hidden bg-gradient-danger text-white">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="icon-big text-center icon-shape rounded-circle shadow-lg bg-white bg-opacity-25 p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="me-4">
+                            <div class="icon-big text-center rounded-xl bg-white bg-opacity-25 p-3">
                                 <i class="fa fa-times-circle"></i>
                             </div>
                         </div>
-                        <div class="col-7 col-stats">
-                            <div class="numbers">
-                                <div class="card-subtitle text-white opacity-75">Total</div>
-                                <p class="card-category text-white mb-1">Commandes annulées</p>
-                                <h4 class="card-title fw-bold fs-3 text-white">{{ canceled_order_count }}</h4>
-                            </div>
+                        <div>
+                            <span class="text-white-50 small d-block">Total</span>
+                            <p class="text-white-50 text-uppercase mb-1 font-weight-bold small">Commandes annulées</p>
+                            <h3 class="fw-bold mb-0">{{ canceled_order_count }}</h3>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('admin_orders_index') }}" class="text-white text-decoration-none d-flex align-items-center justify-content-end">Voir toutes les commandes <i class="fa fa-arrow-right ml-2"></i></a>
+                    <a href="{{ path('admin_orders_index') }}" class="text-white text-decoration-none d-flex align-items-center justify-content-between">
+                        <span class="small fw-bold">Voir toutes les commandes</span>
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -171,9 +256,14 @@
     
     <div class="row">
         <div class="col-md-8">
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-header bg-gradient-light py-3 border-bottom-0">
-                    <h5 class="mb-0 fw-bold"><i class="fa fa-shopping-cart mr-2 text-primary"></i>Commandes récentes</h5>
+            <div class="card border-0 dashboard-card">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold d-flex align-items-center">
+                        <span class="icon-big bg-primary bg-opacity-10 rounded-xl p-2 me-3 text-primary">
+                            <i class="fa fa-shopping-cart"></i>
+                        </span>
+                        Commandes récentes
+                    </h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -196,23 +286,29 @@
                                         <td>{{ order.totalAmount }} TND</td>
                                         <td>
                                             {% if order.status == 'pending' %}
-                                                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">En attente</span>
+                                                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill"><i class="fa fa-clock me-1"></i> En attente</span>
                                             {% elseif order.status == 'done' %}
-                                                <span class="badge bg-success text-white px-3 py-2 rounded-pill">Terminée</span>
+                                                <span class="badge bg-success text-white px-3 py-2 rounded-pill"><i class="fa fa-check me-1"></i> Terminée</span>
                                             {% elseif order.status == 'canceled' %}
-                                                <span class="badge bg-danger text-white px-3 py-2 rounded-pill">Annulée</span>
+                                                <span class="badge bg-danger text-white px-3 py-2 rounded-pill"><i class="fa fa-times me-1"></i> Annulée</span>
                                             {% else %}
-                                                <span class="badge bg-secondary text-white px-3 py-2 rounded-pill">{{ order.status|capitalize }}</span>
+                                                <span class="badge bg-secondary text-white px-3 py-2 rounded-pill"><i class="fa fa-info-circle me-1"></i> {{ order.status|capitalize }}</span>
                                             {% endif %}
                                         </td>
                                         <td>{{ order.createdAt|date('Y-m-d') }}</td>
                                         <td>
-                                            <a href="{{ path('admin_orders_show', {'id': order.id}) }}" class="btn btn-sm btn-outline-info rounded-pill shadow-sm"><i class="fa fa-eye mr-1"></i> Voir</a>
+                                            <a href="{{ path('admin_orders_show', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary btn-action"><i class="fa fa-eye me-1"></i> Voir</a>
                                         </td>
                                     </tr>
                                 {% else %}
                                     <tr>
-                                        <td colspan="6" class="text-center">Pas de commandes récentes</td>
+                                        <td colspan="6" class="text-center p-4">
+                                            <div class="d-flex flex-column align-items-center py-3">
+                                                <i class="fa fa-inbox text-muted mb-3" style="font-size: 2.5rem;"></i>
+                                                <h5 class="text-muted mb-0">Pas de commandes récentes</h5>
+                                                <p class="text-muted small mt-2">Les nouvelles commandes apparaîtront ici</p>
+                                            </div>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -223,22 +319,27 @@
         </div>
         
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-header bg-gradient-light py-3 border-bottom-0">
-                    <h5 class="mb-0 fw-bold"><i class="fa fa-bolt mr-2 text-primary"></i>Actions rapides</h5>
+            <div class="card border-0 dashboard-card">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold d-flex align-items-center">
+                        <span class="icon-big bg-warning bg-opacity-10 rounded-xl p-2 me-3 text-warning">
+                            <i class="fa fa-bolt"></i>
+                        </span>
+                        Actions rapides
+                    </h5>
                 </div>
-                <div class="card-body pb-0">
+                <div class="card-body pb-2">
                     <div class="d-flex flex-column gap-3">
-                        <a href="{{ path('admin_products_new') }}" class="btn btn-primary rounded-pill shadow-sm d-flex align-items-center justify-content-between p-3 text-white">
-                            <span><i class="fa fa-plus-circle mr-2"></i>Ajouter un produit</span>
+                        <a href="{{ path('admin_products_new') }}" class="btn-action btn btn-primary d-flex align-items-center justify-content-between p-3 text-white">
+                            <span><i class="fa fa-plus-circle me-2"></i>Ajouter un produit</span>
                             <i class="fa fa-arrow-right"></i>
                         </a>
-                        <a href="{{ path('admin_products') }}" class="btn btn-info rounded-pill shadow-sm text-white d-flex align-items-center justify-content-between p-3">
-                            <span><i class="fa fa-box mr-2"></i>Gérer les produits</span>
+                        <a href="{{ path('admin_products') }}" class="btn-action btn btn-info d-flex align-items-center justify-content-between p-3 text-white">
+                            <span><i class="fa fa-box me-2"></i>Gérer les produits</span>
                             <i class="fa fa-arrow-right"></i>
                         </a>
-                        <a href="{{ path('admin_orders_index') }}" class="btn btn-success rounded-pill shadow-sm d-flex align-items-center justify-content-between p-3 text-white">
-                            <span><i class="fa fa-shopping-bag mr-2"></i>Gérer les commandes</span>
+                        <a href="{{ path('admin_orders_index') }}" class="btn-action btn btn-success d-flex align-items-center justify-content-between p-3 text-white">
+                            <span><i class="fa fa-shopping-bag me-2"></i>Gérer les commandes</span>
                             <i class="fa fa-arrow-right"></i>
                         </a>
                     </div>
@@ -255,7 +356,30 @@
         $(document).ready(function() {
             $('#recent-orders').DataTable({
                 "pageLength": 5,
-                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Tous"]],
+                "language": {
+                    "search": "<i class='fa fa-search'></i> Rechercher:",
+                    "lengthMenu": "Afficher _MENU_ entrées",
+                    "info": "Affichage _START_ à _END_ sur _TOTAL_ entrées",
+                    "paginate": {
+                        "first": "Premier",
+                        "last": "Dernier",
+                        "next": "<i class='fa fa-chevron-right'></i>",
+                        "previous": "<i class='fa fa-chevron-left'></i>"
+                    },
+                    "emptyTable": "Aucune donnée disponible",
+                    "infoEmpty": "Aucune entrée à afficher"
+                },
+                "responsive": true,
+                "autoWidth": false,
+                "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>><"table-responsive"t><"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                "order": [[ 0, "desc" ]]
+            });
+            
+            // Add animation effects to cards
+            $('.dashboard-card').each(function(i) {
+                $(this).css('animation-delay', (i * 0.1) + 's');
+                $(this).addClass('animate__animated animate__fadeInUp');
             });
         });
     </script>

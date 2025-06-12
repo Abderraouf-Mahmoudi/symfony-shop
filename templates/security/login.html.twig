@@ -1,57 +1,81 @@
-{% extends 'back/base.html.twig' %}
+{% extends 'security/external_base.html.twig' %}
 
 {% block title %}Log in!{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="h4 mb-0">Clothing Shop Admin Login</h2>
-                </div>
+<div class="admin-login-container">
+    <div class="logo-section">
+        <img src="{{ asset('front/images/icons/ban1.png') }}" alt="BA DISCOUNT" class="logo-img">
+        <h2 class="text-white fw-bold">Admin Dashboard</h2>
+    </div>
+    <div class="card">
+        <div class="card-header bg-white">
+            <h2 class="h4 mb-0 text-center fw-bold">Admin Login</h2>
+        </div>
                 <div class="card-body p-4">
                     {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     {% endif %}
 
                     {% if app.user %}
-                        <div class="alert alert-info mb-3">
-                            You are already logged in as {{ app.user.userIdentifier }},
-                            <form method="post" action="{{ path('admin_logout') }}" class="d-inline">
+                        <div class="alert alert-info alert-dismissible fade show mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            You are already logged in as <strong>{{ app.user.userIdentifier }}</strong>
+                            <form method="post" action="{{ path('admin_logout') }}" class="d-inline ms-2">
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
-                                <button type="submit" class="btn btn-link p-0 align-baseline text-decoration-underline">Logout</button>
+                                <button type="submit" class="btn btn-sm btn-outline-info">Logout</button>
                             </form>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     {% endif %}
                     
                     <form method="post">
-                        <div class="mb-3">
-                            <label for="inputEmail" class="form-label">Email</label>
-                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                        <div class="mb-4">
+                            <label for="inputEmail" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" 
+                                       class="form-control" placeholder="admin@example.com" 
+                                       autocomplete="email" required autofocus>
+                            </div>
                         </div>
                         
-                        <div class="mb-3">
-                            <label for="inputPassword" class="form-label">Password</label>
-                            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label for="inputPassword" class="form-label">Password</label>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                <input type="password" name="password" id="inputPassword" 
+                                       class="form-control" placeholder="••••••••" 
+                                       autocomplete="current-password" required>
+                            </div>
                         </div>
                         
                         <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
 
-                        <div class="mb-3 form-check">
+                        <div class="mb-4 form-check">
                             <input type="checkbox" class="form-check-input" name="_remember_me" id="rememberMe">
                             <label class="form-check-label" for="rememberMe">Remember me</label>
                         </div>
 
-                        <div class="d-grid">
+                        <div class="d-grid gap-2">
                             <button class="btn btn-lg btn-primary" type="submit">
-                                <i class="fas fa-sign-in-alt me-2"></i> Sign in
+                                <i class="fas fa-sign-in-alt me-2"></i> Sign in to Dashboard
                             </button>
                         </div>
                     </form>
                 </div>
+                <div class="card-footer bg-white text-center py-3">
+                    <div class="small text-muted">
+                        <i class="fas fa-shield-alt me-1"></i> Secure Admin Portal
+                    </div>
+                </div>
             </div>
+            <!-- Copyright text removed -->
         </div>
-    </div>
-</div>
 {% endblock content %}

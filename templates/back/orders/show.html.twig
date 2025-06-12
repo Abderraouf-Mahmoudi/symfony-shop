@@ -3,11 +3,16 @@
 {% block title %}Détails de la commande{% endblock %}
 
 {% block content %}
-<div class="page-inner pt-3">
+<div class="page-inner pt-3 animate__animated animate__fadeIn">
     <div class="page-header d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="page-title fw-bold">Commande #{{ order.id }}</h2>
-            <div class="d-flex align-items-center text-muted">
+            <div class="d-flex align-items-center mb-2">
+                <div class="icon-circle bg-gradient-primary text-white shadow me-3">
+                    <i class="fa fa-shopping-cart"></i>
+                </div>
+                <h2 class="page-title fw-bold mb-0">Commande #{{ order.id }}</h2>
+            </div>
+            <div class="d-flex align-items-center text-muted ms-4">
                 <a href="{{ path('admin_dashboard') }}" class="text-decoration-none text-primary">
                     <i class="fa fa-home mr-1"></i> Tableau de bord
                 </a>
@@ -20,10 +25,10 @@
             </div>
         </div>
         <div>
-            <a href="{{ path('admin_orders_pdf', {'id': order.id}) }}" class="btn btn-danger btn-sm shadow-sm rounded-3 mr-2" target="_blank">
+            <a href="{{ path('admin_orders_pdf', {'id': order.id}) }}" class="btn btn-gradient-danger btn-sm shadow hover-lift rounded-3 me-2" target="_blank">
                 <i class="fa fa-file-pdf mr-2"></i> Exporter PDF
             </a>
-            <a href="{{ path('admin_orders_index') }}" class="btn btn-primary btn-sm shadow-sm rounded-3">
+            <a href="{{ path('admin_orders_index') }}" class="btn btn-gradient-primary btn-sm shadow hover-lift rounded-3">
                 <i class="fa fa-arrow-left mr-2"></i> Retour
             </a>
         </div>
@@ -41,50 +46,43 @@
     
     <div class="row mb-4">
         <div class="col-md-12">
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-header bg-light py-3">
+            <div class="card border-0 shadow rounded-3 animate__animated animate__fadeIn">
+                <div class="card-header bg-light py-3 d-flex align-items-center">
+                    <div class="icon-circle bg-gradient-primary text-white shadow me-3 small-icon">
+                        <i class="fa fa-tasks"></i>
+                    </div>
                     <h5 class="mb-0 fw-bold">Statut de la Commande</h5>
                 </div>
                 <div class="card-body p-4">
                     <!-- Order Status Badge -->
                     <div class="d-flex align-items-center mb-4">
-                        <h6 class="mb-0 mr-3">Statut actuel:</h6>
+                        <h6 class="mb-0 me-3">Statut actuel:</h6>
                         {% if order.status == 'pending' %}
-                            <span class="badge bg-warning text-dark px-3 py-2">En attente</span>
+                            <span class="badge bg-gradient-warning text-dark px-4 py-2 shadow-sm">
+                                <i class="fa fa-clock me-1"></i> En attente
+                            </span>
                         {% elseif order.status == 'done' %}
-                            <span class="badge bg-success px-3 py-2">Terminée</span>
+                            <span class="badge bg-gradient-success text-white px-4 py-2 shadow-sm">
+                                <i class="fa fa-check-circle me-1"></i> Terminée
+                            </span>
                         {% elseif order.status == 'canceled' %}
-                            <span class="badge bg-danger px-3 py-2">Annulée</span>
+                            <span class="badge bg-gradient-danger text-white px-4 py-2 shadow-sm">
+                                <i class="fa fa-times-circle me-1"></i> Annulée
+                            </span>
                         {% endif %}
                     </div>
                     
                     <!-- Status Change Options -->
+                    {% if order.status != 'done' and order.status != 'canceled' %}
                     <div class="d-flex flex-wrap gap-2">
-                        <form method="GET" action="{{ path('admin_orders_update_status', {'id': order.id, 'status': 'pending'}) }}" onsubmit="return confirmStatusChange('pending');">
-                            <button type="submit" class="btn btn-outline-warning rounded-3 px-3">
-                                <i class="fa fa-clock mr-2"></i> En attente
-                            </button>
-                        </form>
-                        <form method="GET" action="{{ path('admin_orders_update_status', {'id': order.id, 'status': 'done'}) }}" onsubmit="return confirmStatusChange('done');">
-                            <button type="submit" class="btn btn-outline-success rounded-3 px-3">
-                                <i class="fa fa-check-circle mr-2"></i> Terminée
-                            </button>
-                        </form>
-                        <form method="GET" action="{{ path('admin_orders_update_status', {'id': order.id, 'status': 'canceled'}) }}" onsubmit="return confirmStatusChange('canceled');">
-                            <button type="submit" class="btn btn-outline-danger rounded-3 px-3">
-                                <i class="fa fa-times-circle mr-2"></i> Annulée
-                            </button>
-                        </form>
-                        <button type="button" onclick="updateProductStock()" class="btn btn-outline-info rounded-3 px-3">
-                            <i class="fa fa-sync mr-2"></i> Mettre à jour le stock
+                        <button type="button" class="btn btn-gradient-success text-white rounded-pill px-4 py-2 shadow-sm hover-lift status-action-button" data-status="done" data-url="{{ path('admin_orders_update_status', {'id': order.id, 'status': 'done'}) }}">
+                            <i class="fa fa-check-circle me-2"></i> Terminée
                         </button>
-                        <form method="POST" action="{{ path('admin_orders_delete', {'id': order.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette commande?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ order.id) }}">
-                            <button type="submit" class="btn btn-outline-danger rounded-3 px-3">
-                                <i class="fa fa-trash mr-2"></i> Supprimer
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-gradient-danger text-white rounded-pill px-4 py-2 shadow-sm hover-lift status-action-button" data-status="canceled" data-url="{{ path('admin_orders_update_status', {'id': order.id, 'status': 'canceled'}) }}">
+                            <i class="fa fa-times-circle me-2"></i> Annulée
+                        </button>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -94,70 +92,76 @@
     <div class="row mb-4">
         <!-- Customer Information Card -->
         <div class="col-lg-6 mb-4 mb-lg-0">
-            <div class="card border-0 shadow-sm rounded-3 h-100">
-                <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold"><i class="fa fa-user-circle mr-2 text-primary"></i>Informations Client</h5>
+            <div class="card border-0 shadow-lg hover-lift-sm rounded-3 h-100 animate__animated animate__fadeIn">
+                <!-- Professional header with primary gradient and crisp icon -->
+                <div class="card-header bg-gradient-primary text-white py-3 d-flex align-items-center rounded-top">
+                    <div class="icon-circle-lg bg-white text-gradient-primary shadow-lg me-3">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h5 class="mb-0 fw-bold">Informations Client</h5>
                 </div>
                 <div class="card-body p-4">
-                    <div class="d-flex flex-column">
-                        <div class="mb-4">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="icon-big text-center icon-primary mr-3">
-                                    <i class="fa fa-user text-primary"></i>
-                                </span>
-                                <h6 class="mb-0 fw-bold">{{ order.customerName }}</h6>
+                    <!-- Professional customer info with clear structure -->
+                    <div class="client-info">
+                        <!-- Customer name with highlighted panel -->
+                        <div class="info-panel mb-4">
+                            <div class="info-label">Nom du client</div>
+                            <div class="info-value primary-value">
+                                <i class="fas fa-user-circle info-icon primary-icon"></i>
+                                {{ order.customerName }}
                             </div>
-                            <p class="mb-1 ms-5 text-muted">
-                                <i class="fa fa-envelope mr-2 small"></i>{{ order.customerEmail }}
-                            </p>
-                            {% if order.phone %}
-                            <p class="mb-0 ms-5 text-muted">
-                                <i class="fa fa-phone mr-2 small"></i>{{ order.phone }}
-                            </p>
-                            {% endif %}
                         </div>
                         
-                        <div class="mb-3">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="icon-big text-center icon-primary mr-3">
-                                    <i class="fa fa-calendar text-primary"></i>
-                                </span>
-                                <h6 class="mb-0 fw-bold">Date & Statut</h6>
+                        <!-- Phone with separate panel if available -->
+                        {% if order.phone %}
+                        <div class="info-panel mb-4">
+                            <div class="info-label">Téléphone</div>
+                            <div class="info-value">
+                                <i class="fas fa-phone-alt info-icon"></i>
+                                {{ order.phone }}
                             </div>
-                            <p class="mb-1 ms-5 text-muted">
-                                <i class="fa fa-clock mr-2 small"></i>Créée le: {{ order.createdAt|date('d/m/Y à H:i') }}
-                            </p>
-                            {% if order.updatedAt %}
-                            <p class="mb-0 ms-5 text-muted">
-                                <i class="fa fa-sync mr-2 small"></i>Mise à jour: {{ order.updatedAt|date('d/m/Y à H:i') }}
-                            </p>
-                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Date & Status information in professional panel format -->
+                        <div class="info-panel mb-4">
+                            <div class="info-label">Date & Statut</div>
+                            <div class="info-value">
+                                <div class="timeline-item">
+                                    <i class="fas fa-calendar-plus info-icon success-icon"></i>
+                                    <span class="timeline-date">{{ order.createdAt|date('d/m/Y') }}</span>
+                                    <span class="timeline-text">Créée à {{ order.createdAt|date('H:i') }}</span>
+                                </div>
+                            </div>
+                            <div class="info-value">
+                                {% if order.updatedAt %}
+                                <div class="timeline-item mt-2">
+                                    <i class="fas fa-sync info-icon warning-icon"></i>
+                                    <span class="timeline-date">{{ order.updatedAt|date('d/m/Y') }}</span>
+                                    <span class="timeline-text">Mise à jour à {{ order.updatedAt|date('H:i') }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
                         
                         {% if order.size %}
-                        <div class="mb-3">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="icon-big text-center icon-primary mr-3">
-                                    <i class="fa fa-ruler text-primary"></i>
-                                </span>
-                                <h6 class="mb-0 fw-bold">Taille</h6>
-                            </div>
-                            <p class="mb-0 ms-5 text-muted">
+                        <!-- Size information -->  
+                        <div class="info-panel mb-4">
+                            <div class="info-label">Taille</div>
+                            <div class="info-value">
+                                <i class="fas fa-ruler-combined info-icon"></i>
                                 {{ order.size }}
-                            </p>
+                            </div>
                         </div>
                         {% endif %}
                         
                         {% if order.notes is not empty %}
-                        <div class="mb-0">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="icon-big text-center icon-primary mr-3">
-                                    <i class="fa fa-comment text-primary"></i>
-                                </span>
-                                <h6 class="mb-0 fw-bold">Notes additionnelles</h6>
-                            </div>
-                            <div class="ms-5 p-3 bg-light rounded-3 border">
-                                <p class="mb-0">{{ order.notes|nl2br }}</p>
+                        <!-- Notes section with improved styling -->  
+                        <div class="info-panel mb-0">
+                            <div class="info-label">Notes additionnelles</div>
+                            <div class="notes-container">
+                                <i class="fas fa-comment-alt notes-icon"></i>
+                                <div class="notes-content">{{ order.notes|nl2br }}</div>
                             </div>
                         </div>
                         {% endif %}
@@ -168,54 +172,47 @@
                     
         <!-- Shipping & Billing Information Card -->        
         <div class="col-lg-6">
-            <div class="card border-0 shadow-sm rounded-3 h-100">
-                <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold"><i class="fa fa-map-marker mr-2 text-primary"></i>Informations de livraison</h5>
+            <div class="card border-0 shadow-lg hover-lift-sm rounded-3 h-100 animate__animated animate__fadeIn">
+                <!-- Professional header with success gradient and crisp icon -->
+                <div class="card-header bg-gradient-success text-white py-3 d-flex align-items-center rounded-top">
+                    <div class="icon-circle-lg bg-white text-gradient-success shadow-lg me-3">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h5 class="mb-0 fw-bold">Informations de livraison</h5>
                 </div>
                 <div class="card-body p-4">
-                    <div class="d-flex flex-column">
-                        <!-- Shipping Address -->                        
-                        <div class="mb-4">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="icon-big text-center icon-success mr-3">
-                                    <i class="fa fa-truck text-success"></i>
-                                </span>
-                                <h6 class="mb-0 fw-bold">Adresse de livraison</h6>
-                            </div>
-                            <div class="ms-5 p-3 bg-light rounded-3 border">
-                                <p class="mb-1"><i class="fa fa-home mr-2 text-muted"></i>{{ order.shippingAddress }}</p>
-                                {% if order.city %}
-                                <p class="mb-1"><i class="fa fa-building mr-2 text-muted"></i>{{ order.city }}</p>
-                                {% endif %}
-                                {% if order.postalCode %}
-                                <p class="mb-0"><i class="fa fa-envelope mr-2 text-muted"></i>{{ order.postalCode }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <!-- Billing Address -->                        
-                        <div class="mb-4">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="icon-big text-center icon-warning mr-3">
-                                    <i class="fa fa-file-text text-warning"></i>
-                                </span>
-                                <h6 class="mb-0 fw-bold">Adresse de facturation</h6>
-                            </div>
-                            <div class="ms-5 p-3 bg-light rounded-3 border">
-                                <p class="mb-0"><i class="fa fa-home mr-2 text-muted"></i>{{ order.billingAddress ?: order.shippingAddress }}</p>
+                    <div class="shipping-info">
+                        <!-- Shipping Address with professional design -->
+                        <div class="info-panel mb-4">
+                            <div class="info-label">Adresse de livraison</div>
+                            <div class="address-card">
+                                <div class="address-header">
+                                    <i class="fas fa-truck-loading address-icon"></i>
+                                    <span class="address-type">Livraison</span>
+                                </div>
+                                <div class="address-content">
+                                    <div class="address-line">{{ order.shippingAddress }}</div>
+                                    {% if order.city %}
+                                    <div class="address-line">{{ order.city }}</div>
+                                    {% endif %}
+                                    {% if order.postalCode %}
+                                    <div class="address-line">{{ order.postalCode }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                         
-                        <!-- Order Total -->                        
-                        <div class="mt-auto">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="icon-big text-center icon-primary mr-3">
-                                    <i class="fa fa-money text-primary"></i>
-                                </span>
-                                <h6 class="mb-0 fw-bold">Total de la commande</h6>
-                            </div>
-                            <div class="ms-5">
-                                <h3 class="fw-bold text-primary mb-0">{{ order.totalAmount|number_format(2, ',', ' ') }} <span class="fs-6">TND</span></h3>
+                        <!-- Billing Address with professional design -->
+                        <div class="info-panel mb-4">
+                            <div class="info-label">Adresse de facturation</div>
+                            <div class="address-card">
+                                <div class="address-header billing-header">
+                                    <i class="fas fa-file-invoice address-icon"></i>
+                                    <span class="address-type">Facturation</span>
+                                </div>
+                                <div class="address-content">
+                                    <div class="address-line">{{ order.billingAddress ?: order.shippingAddress }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -227,9 +224,12 @@
     <!-- Order Items Table -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-header bg-light py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fa fa-shopping-basket mr-2 text-primary"></i>Articles commandés</h5>
+            <div class="card border-0 shadow rounded-3 animate__animated animate__fadeIn">
+                <div class="card-header bg-light py-3 d-flex align-items-center">
+                    <div class="icon-circle bg-gradient-warning text-white shadow me-3 small-icon">
+                        <i class="fa fa-shopping-basket"></i>
+                    </div>
+                    <h5 class="mb-0 fw-bold">Articles commandés</h5>
                 </div>
                 <div class="card-body p-4">
                     <div class="table-responsive">
@@ -313,8 +313,8 @@
                             </tbody>
                             <tfoot>
                                 <tr class="table-light">
-                                    <td colspan="{% if order.items|first.size is defined and order.items|first.colorName is defined %}6{% elseif order.items|first.size is defined or order.items|first.colorName is defined %}5{% else %}4{% endif %}" class="text-end fw-bold">Total:</td>
-                                    <td class="text-end fw-bold fs-5 text-primary">{{ order.totalAmount|number_format(2, ',', ' ') }} TND</td>
+                                    <td colspan="{% if order.items|first.size is defined and order.items|first.colorName is defined %}6{% elseif order.items|first.size is defined or order.items|first.colorName is defined %}5{% else %}4{% endif %}" class="text-end fw-bold">Total: {{ order.totalAmount|number_format(2, ',', ' ') }} TND</td>
+                                    <td class="text-end fw-bold fs-5 text-primary"></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -326,10 +326,348 @@
 </div>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .icon-circle:hover {
+            transform: scale(1.1);
+        }
+        
+        .small-icon {
+            width: 30px;
+            height: 30px;
+            font-size: 0.85rem;
+        }
+        
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Gradient backgrounds */
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        }
+        
+        .bg-gradient-success {
+            background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+        }
+        
+        .bg-gradient-info {
+            background: linear-gradient(135deg, #36b9cc 0%, #258391 100%);
+        }
+        
+        .bg-gradient-warning {
+            background: linear-gradient(135deg, #f6c23e 0%, #dda20a 100%);
+        }
+        
+        .bg-gradient-light {
+            background: linear-gradient(135deg, #f8f9fc 0%, #e2e3e5 100%);
+        }
+        
+        /* Text gradients */
+        .text-gradient-info {
+            background: linear-gradient(135deg, #36b9cc 0%, #258391 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .text-gradient-dark {
+            background: linear-gradient(135deg, #5a5c69 0%, #373840 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .text-gradient-secondary {
+            background: linear-gradient(135deg, #858796 0%, #60616f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Additional utilities */
+        .hover-lift-sm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .shadow-lg {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .smaller-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 0.7rem;
+        }
+        
+        /* Animation */
+        @keyframes pulse-light {
+            0% { box-shadow: 0 0 0 0 rgba(54, 185, 204, 0.4); }
+            70% { box-shadow: 0 0 0 5px rgba(54, 185, 204, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(54, 185, 204, 0); }
+        }
+        
+        .pulse-light {
+            animation: pulse-light 2s infinite;
+        }
+        
+        .bg-gradient-danger {
+            background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+        }
+        
+        .bg-gradient-secondary {
+            background: linear-gradient(135deg, #858796 0%, #60616f 100%);
+        }
+        
+        /* Professional card styles */
+        .icon-circle-lg {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            font-size: 1.25rem;
+        }
+        
+        .info-panel {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #858796;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-value {
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            background-color: #f8f9fc;
+            border-radius: 0.5rem;
+            border-left: 3px solid #4e73df;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-value.primary-value {
+            border-left-color: #4e73df;
+        }
+        
+        .info-icon {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .primary-icon { color: #4e73df; }
+        .success-icon { color: #1cc88a; }
+        .warning-icon { color: #f6c23e; }
+        .danger-icon { color: #e74a3b; }
+        
+        /* Timeline styling for dates */
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .timeline-text {
+            color: #858796;
+        }
+        
+        /* Notes styling */
+        .notes-container {
+            display: flex;
+            background-color: #fff8e1;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 3px solid #f6c23e;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        
+        .notes-icon {
+            color: #f6c23e;
+            margin-right: 15px;
+            font-size: 1.2rem;
+            margin-top: 3px;
+        }
+        
+        .notes-content {
+            flex: 1;
+            line-height: 1.6;
+        }
+        
+        /* Address card styling */
+        .address-card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #e3e6f0;
+        }
+        
+        .address-header {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+            color: white;
+        }
+        
+        .billing-header {
+            background: linear-gradient(135deg, #f6c23e 0%, #dda20a 100%);
+        }
+        
+        .address-icon {
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+        
+        .address-type {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .address-content {
+            padding: 1rem;
+        }
+        
+        .address-line {
+            margin-bottom: 0.4rem;
+            line-height: 1.5;
+        }
+        
+        .address-line:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Button gradients */
+        .btn-gradient-primary {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient-success {
+            background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient-info {
+            background: linear-gradient(135deg, #36b9cc 0%, #258391 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient-warning {
+            background: linear-gradient(135deg, #f6c23e 0%, #dda20a 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient-danger {
+            background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient-secondary {
+            background: linear-gradient(135deg, #858796 0%, #60616f 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        /* Table styling */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .table thead th {
+            border-top: none;
+            border-bottom: 1px solid #e3e6f0;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #5a5c69;
+        }
+        
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(240, 243, 255, 0.7);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+        }
+        
+        /* Badge styling */
+        .badge {
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+    </style>
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script>
         $(document).ready(function() {
+            // Add animations on page load
+            setTimeout(function() {
+                $('.card').addClass('animate__fadeIn');
+            }, 100);
+            
             // Initialize DataTables if any exist
             if ($('#recent-orders').length) {
                 $('#recent-orders').DataTable({
@@ -341,25 +679,177 @@
                 });
             }
             
-            // Function to confirm status change
-            window.confirmStatusChange = function(status) {
-                let statusText = '';
-                switch(status) {
-                    case 'pending': statusText = 'En attente'; break;
-                    case 'done': statusText = 'Terminée'; break;
-                    case 'canceled': statusText = 'Annulée'; break;
-                }
-                return confirm(`Êtes-vous sûr de vouloir changer le statut de la commande en "${statusText}" ?`);
+            // Initialize order items table
+            if ($('#order-items-table').length) {
+                $('#order-items-table').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/French.json'
+                    },
+                    pageLength: 5,
+                    lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "Tous"]]
+                });
             }
+            
+            // Initialize tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+            
+            // New status action button handler with SweetAlert2 and AJAX
+            $('.status-action-button').on('click', function() {
+                const status = $(this).data('status');
+                const url = $(this).data('url');
+                const orderId = {{ order.id }};
+                let statusText = '';
+                let statusIcon = '';
+                let confirmBtnColor = '';
+                
+                switch(status) {
+                    case 'done': 
+                        statusText = 'Terminée'; 
+                        statusIcon = 'success';
+                        confirmBtnColor = '#1cc88a';
+                        break;
+                    case 'canceled': 
+                        statusText = 'Annulée'; 
+                        statusIcon = 'error';
+                        confirmBtnColor = '#e74a3b';
+                        break;
+                }
+                
+                // Show confirmation dialog
+                Swal.fire({
+                    title: 'Changer le statut ?',
+                    text: `Êtes-vous sûr de vouloir changer le statut de la commande en "${statusText}" ?`,
+                    icon: statusIcon,
+                    showCancelButton: true,
+                    confirmButtonColor: confirmBtnColor,
+                    cancelButtonColor: '#858796',
+                    confirmButtonText: `<i class="fa fa-check"></i> Oui, changer en ${statusText}`,
+                    cancelButtonText: '<i class="fa fa-times"></i> Annuler',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Traitement en cours...',
+                            html: `<div class="d-flex justify-content-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Chargement...</span>
+                                    </div>
+                                  </div>`,
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        // Use fetch to make the request
+                        fetch(url)
+                            .then(response => response.text())
+                            .then(html => {
+                                // Process the response and extract flash messages
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                
+                                // Build success message
+                                let successHtml = `<p class="mb-3">Traitement de la commande #${orderId} effectué</p>`;
+                                
+                                // Add product stock information for 'done' status
+                                if (status === 'done') {
+                                    // Get number of items
+                                    const itemCount = {{ order.items|length }};
+                                    successHtml += `<p class="mb-3">Commande avec ${itemCount} article(s)</p>`;
+                                    
+                                    {% for item in order.items %}
+                                    successHtml += `<p class="mb-2">Produit #{{ item.product.id }}: Stock mis à jour (-{{ item.quantity }} unités)</p>`;
+                                    {% endfor %}
+                                }
+                                
+                                // Add status update message
+                                successHtml += `<p class="mt-3">Statut de la commande modifié en <strong>${statusText}</strong></p>`;
+                                
+                                // Show success message
+                                Swal.fire({
+                                    title: 'Mis à jour avec succès!',
+                                    html: successHtml,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: confirmBtnColor
+                                }).then(() => {
+                                    // Reload the page to show updated status
+                                    window.location.reload();
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    title: 'Erreur!',
+                                    text: 'Une erreur est survenue lors du changement de statut.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#e74a3b'
+                                });
+                            });
+                    }
+                });
+            });
+            
+            // Delete order button click handler
+            $('.delete-order-button').on('click', function() {
+                const form = $(this).closest('form');
+                
+                Swal.fire({
+                    title: 'Supprimer la commande ?',
+                    text: "Cette action est irréversible !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e74a3b',
+                    cancelButtonColor: '#858796',
+                    confirmButtonText: '<i class="fa fa-trash"></i> Oui, supprimer',
+                    cancelButtonText: '<i class="fa fa-times"></i> Annuler',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
         });
         
-        // Update product stock function
+        // Update product stock function with SweetAlert2
         function updateProductStock() {
-            if (confirm('Êtes-vous sûr de vouloir mettre à jour le stock pour cette commande ?')) {
-                // Disable button to prevent multiple clicks
-                const button = document.querySelector('button[onclick="updateProductStock()"]');
-                button.disabled = true;
-                button.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> Mise à jour en cours...';
+            // Show confirmation dialog
+            Swal.fire({
+                title: 'Mettre à jour le stock ?',
+                text: 'Cette action va ajuster le stock des produits en fonction des quantités commandées.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#36b9cc',
+                cancelButtonColor: '#858796',
+                confirmButtonText: '<i class="fa fa-sync"></i> Oui, mettre à jour',
+                cancelButtonText: '<i class="fa fa-times"></i> Annuler',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Disable button to prevent multiple clicks
+                    const button = document.getElementById('updateStockBtn');
+                    button.disabled = true;
+                    button.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Mise à jour en cours...';
                 
                 // Get order items
                 const orderItems = [];
@@ -425,29 +915,41 @@
                             </div>`;
                         });
                         
-                        // Insert alerts after the page header
-                        $(alertsHtml).insertAfter('.page-header');
+                        // Show success notification with SweetAlert2 instead of alerts
+                        let successMessage = '<ul class="mb-0 ps-3 text-start">';
+                        results.forEach(result => {
+                            successMessage += `<li>Produit #${result.id} (${result.name}): Stock mis à jour de ${result.oldStock} à ${result.newStock} (-${result.quantity} unités)</li>`;
+                        });
+                        successMessage += '</ul>';
                         
-                        // Reload the page after 2 seconds to refresh stock display
-                        setTimeout(() => {
+                        Swal.fire({
+                            title: 'Stock mis à jour !',
+                            html: successMessage,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fa fa-check"></i> OK',
+                            confirmButtonColor: '#1cc88a',
+                        }).then(() => {
+                            // Reload the page after confirmation
                             location.reload();
-                        }, 2000);
+                        });
                     })
                     .catch(error => {
                         console.error('Error updating stock:', error);
                         button.disabled = false;
-                        button.innerHTML = '<i class="fa fa-sync mr-2"></i> Mettre à jour le stock';
+                        button.innerHTML = '<i class="fa fa-sync me-2"></i> Mettre à jour le stock';
                         
-                        const errorAlert = `
-                            <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-3" role="alert">
-                                <i class="fa fa-exclamation-triangle mr-2"></i>
-                                Erreur lors de la mise à jour du stock. Veuillez réessayer.
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            </div>`;
-                        
-                        $(errorAlert).insertAfter('.page-header');
+                        // Show error with SweetAlert2
+                        Swal.fire({
+                            title: 'Erreur !',
+                            text: 'Erreur lors de la mise à jour du stock. Veuillez réessayer.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#e74a3b',
+                        });
                     });
+                }
+            });
             }
-        }
+        
     </script>
 {% endblock %}

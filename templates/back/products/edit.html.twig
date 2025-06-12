@@ -2,16 +2,24 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
+        /* Image preview styles */
         .image-preview-container {
             display: flex;
             flex-wrap: wrap;
             margin-bottom: 15px;
+            gap: 15px;
         }
         .image-preview-item {
             position: relative;
             margin-right: 10px;
             margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .image-preview-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         .image-preview-item .badge {
             position: absolute;
@@ -21,12 +29,60 @@
         .image-item {
             display: inline-block;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+        .image-item:hover img {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         .image-actions {
             text-align: left;
         }
+        
+        /* Color input styles */
         input[type="color"] {
             height: 38px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        input[type="color"]:hover {
+            transform: scale(1.05);
+        }
+        .color-preview {
+            transition: all 0.3s ease;
+        }
+        .color-preview:hover {
+            transform: scale(1.2);
+        }
+        
+        /* Gradient buttons */
+        .btn-gradient {
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #0056b3, #520dc2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: white;
+        }
+        
+        /* Card hover effects */
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Delete checkbox styles */
+        .delete-image-checkbox:checked ~ label {
+            font-weight: bold;
+        }
+        .image-item.marked-for-deletion img {
+            opacity: 0.5;
+            filter: grayscale(100%);
         }
     </style>
 {% endblock %}
@@ -55,136 +111,213 @@
                     <h5 class="mb-0 fw-bold"><i class="fa fa-edit mr-2 text-primary"></i>Modifier le produit: {{ product.name }}</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form id="edit-product-form" action="{{ path('admin_products_edit', {'id': product.id}) }}" method="post" enctype="multipart/form-data" onsubmit="return false;">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="name">Nom du produit</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" placeholder="Entrez le nom du produit" required>
+                                <div class="form-group mb-3">
+                                    <label for="name" class="form-label">Nom du produit <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-primary text-white"><i class="fa fa-tag"></i></span>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" placeholder="Entrez le nom du produit" required>
+                                    </div>
+                                    <div class="invalid-feedback">Veuillez entrer un nom de produit.</div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="price">Prix (TND)</label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" value="{{ product.price }}" placeholder="Entrez le prix" required>
+                                <div class="form-group mb-3">
+                                    <label for="price" class="form-label">Prix (TND) <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-success text-white"><i class="fa fa-dollar-sign"></i></span>
+                                        <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" value="{{ product.price }}" placeholder="Entrez le prix" required>
+                                    </div>
+                                    <div class="invalid-feedback">Le prix doit être supérieur à zéro.</div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="stock">Quantité en stock</label>
-                                    <input type="number" min="0" class="form-control" id="stock" name="stock" value="{{ product.stock }}" placeholder="Entrez la quantité en stock" required>
+                                <div class="form-group mb-3">
+                                    <label for="stock" class="form-label">Quantité en stock <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-info text-white"><i class="fa fa-boxes"></i></span>
+                                        <input type="number" min="0" class="form-control" id="stock" name="stock" value="{{ product.stock }}" placeholder="Entrez la quantité en stock" required>
+                                    </div>
+                                    <div class="invalid-feedback">La quantité en stock doit être un nombre positif.</div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="category">Catégorie</label>
-
-                                    <select class="form-control" id="category" name="category" required>
-                                        <option value="">Sélectionnez une catégorie</option>
-                                        <option value="men" {% if product.category == 'men' %}selected{% endif %}>Hommes</option>
-                                        <option value="women" {% if product.category == 'women' %}selected{% endif %}>Femmes</option>
-                                        <option value="kids" {% if product.category == 'kids' %}selected{% endif %}>Enfants</option>
-                                        <option value="accessories" {% if product.category == 'accessories' %}selected{% endif %}>Accessoires</option>
-                                    </select>
+                                <div class="form-group mb-3">
+                                    <label for="category" class="form-label">Catégorie <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-warning text-white"><i class="fa fa-list"></i></span>
+                                        <select class="form-control" id="category" name="category" required>
+                                            <option value="">Sélectionnez une catégorie</option>
+                                            <option value="men" {% if product.category == 'men' %}selected{% endif %}>Hommes</option>
+                                            <option value="women" {% if product.category == 'women' %}selected{% endif %}>Femmes</option>
+                                            <option value="kids" {% if product.category == 'kids' %}selected{% endif %}>Enfants</option>
+                                            <option value="accessories" {% if product.category == 'accessories' %}selected{% endif %}>Accessoires</option>
+                                        </select>
+                                    </div>
+                                    <div class="invalid-feedback">Veuillez sélectionner une catégorie.</div>
                                 </div>
                             </div>
                             
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="Entrez la description du produit" required>{{ product.description }}</textarea>
+                                <div class="form-group mb-3">
+                                    <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-secondary text-white"><i class="fa fa-align-left"></i></span>
+                                        <textarea class="form-control" id="description" name="description" rows="5" placeholder="Entrez la description du produit" maxlength="1000" required>{{ product.description }}</textarea>
+                                    </div>
+                                    <div class="invalid-feedback">La description est obligatoire.</div>
+                                    <small class="text-muted character-count"><span id="char-count">0</span>/1000 caractères</small>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="images">Images du produit</label>
+                                <div class="form-group mb-4">
+                                    <label for="images" class="form-label">Images du produit <span class="text-danger">*</span></label>
                                     
                                     {# Current images #}
-                                    <div class="current-images mb-3">
-                                        <h6 class="fw-bold mb-3">Images actuelles</h6>
-                                        <div class="d-flex flex-wrap">
+                                    <div class="current-images mb-3 mt-3">
+                                        <h6 class="fw-bold mb-3 d-flex align-items-center"><i class="fa fa-images text-primary mr-2"></i> Images actuelles</h6>
+                                        <div class="d-flex flex-wrap" id="current-images-container">
                                             {% if product.images|length > 0 %}
                                                 {% for image in product.images %}
-                                                    <div class="image-item position-relative m-2">
-                                                        <img src="{{ asset('uploads/products/' ~ image.imagePath) }}" alt="{{ product.name }}" class="img-thumbnail" width="150">
-                                                        <div class="image-actions mt-2">
-                                                            <div class="custom-control custom-radio">
-                                                                <input type="radio" id="primary_{{ image.id }}" name="primary_image" value="{{ image.id }}" class="custom-control-input" {% if image.isPrimary %}checked{% endif %}>
-                                                                <label class="custom-control-label" for="primary_{{ image.id }}">Principale</label>
+                                                    <div class="image-item position-relative m-2 animate__animated animate__fadeIn" id="img-container-{{ image.id }}">
+                                                        <div class="card border-0 shadow-sm h-100">
+                                                            <div class="position-relative">
+                                                                <img src="{{ asset('uploads/products/' ~ image.imagePath) }}" alt="{{ product.name }}" class="card-img-top" width="150" height="150" style="object-fit: cover;">
+                                                                {% if image.isPrimary %}
+                                                                    <span class="badge bg-success position-absolute top-0 end-0 m-2">Principale</span>
+                                                                {% endif %}
                                                             </div>
-                                                            <div class="custom-control custom-checkbox mt-1">
-                                                                <input type="checkbox" id="delete_{{ image.id }}" name="delete_images[]" value="{{ image.id }}" class="custom-control-input">
-                                                                <label class="custom-control-label text-danger" for="delete_{{ image.id }}">Supprimer</label>
+                                                            <div class="card-body p-2">
+                                                                <div class="form-check mb-2">
+                                                                    <input type="radio" id="primary_{{ image.id }}" name="primary_image" value="{{ image.id }}" class="form-check-input" {% if image.isPrimary %}checked{% endif %}>
+                                                                    <label class="form-check-label" for="primary_{{ image.id }}">Image principale</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="delete_{{ image.id }}" name="delete_images[]" value="{{ image.id }}" class="form-check-input delete-image-checkbox">
+                                                                    <label class="form-check-label text-danger" for="delete_{{ image.id }}">Supprimer</label>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 {% endfor %}
                                             {% else %}
-                                                <p class="text-muted">Aucune image téléversée.</p>
+                                                <div class="text-center w-100 py-4 text-muted bg-light rounded">
+                                                    <i class="fa fa-image fa-3x mb-3 opacity-50"></i>
+                                                    <p>Aucune image téléversée.</p>
+                                                </div>
                                             {% endif %}
                                         </div>
                                     </div>
                                     
                                     {# Add new images #}
-                                    <h6>Ajouter de nouvelles images</h6>
-                                    <div class="input-file input-file-image">
-                                        <div class="image-preview-container" id="image-previews">
-                                            <div class="image-preview-item">
-                                                <img class="img-upload-preview" width="150" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview">
+                                    <div class="add-new-images mt-4 mb-4">
+                                        <h6 class="fw-bold mb-3 d-flex align-items-center"><i class="fa fa-plus-circle text-success mr-2"></i> Ajouter de nouvelles images</h6>
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-body">
+                                                <div class="image-preview-container" id="image-previews">
+                                                    <div class="image-preview-item text-center p-3">
+                                                        <img class="img-upload-preview mb-2" width="120" height="120" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview" style="object-fit: contain;">
+                                                        <p class="mb-0 text-muted">Aperçu des images</p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3">
+                                                    <input type="file" class="form-control form-control-file d-none" id="images" name="images[]" accept="image/*" multiple>
+                                                    <label for="images" class="btn btn-primary btn-gradient rounded-pill shadow-sm w-100">
+                                                        <i class="fa fa-cloud-upload-alt mr-2"></i> Sélectionner des images
+                                                    </label>
+                                                    <small class="form-text text-muted mt-2">
+                                                        <i class="fa fa-info-circle mr-1"></i> Formats acceptés: JPG, PNG, GIF. Taille max: 5MB.
+                                                        <br>Vous pouvez sélectionner plusieurs images à la fois.
+                                                    </small>
+                                                </div>
                                             </div>
                                         </div>
-                                        <input type="file" class="form-control form-control-file" id="images" name="images[]" accept="image/*" multiple>
-                                        <label for="images" class="btn btn-primary rounded-pill shadow-sm"><i class="fa fa-file-image mr-2"></i> Ajouter des images</label>
-                                        <small class="form-text text-muted">Vous pouvez sélectionner plusieurs images à la fois.</small>
                                     </div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label>Couleurs du produit</label>
+                                <div class="form-group mb-4">
+                                    <label class="form-label">Couleurs du produit</label>
                                     
                                     {# Current colors #}
-                                    <div class="current-colors mb-3">
-                                        <h6>Couleurs actuelles</h6>
-                                        <div id="existing-color-container">
-                                            {% if product.colors|length > 0 %}
-                                                {% for color in product.colors %}
-                                                    <div class="row color-row mb-3">
-                                                        <div class="col-md-5">
-                                                            <input type="hidden" name="existing_color_ids[]" value="{{ color.id }}">
-                                                            <input type="text" class="form-control" name="existing_color_names[]" value="{{ color.name }}" placeholder="Color Name">
+                                    <div class="current-colors mb-4 mt-3">
+                                        <h6 class="fw-bold mb-3 d-flex align-items-center"><i class="fa fa-palette text-warning mr-2"></i> Couleurs actuelles</h6>
+                                        <div class="card border-0 shadow-sm mb-3">
+                                            <div class="card-body">
+                                                <div id="existing-color-container">
+                                                    {% if product.colors|length > 0 %}
+                                                        {% for color in product.colors %}
+                                                            <div class="row color-row mb-3 align-items-center animate__animated animate__fadeIn" id="color-row-{{ color.id }}">
+                                                                <div class="col-md-1">
+                                                                    <div class="color-preview" style="width: 25px; height: 25px; border-radius: 50%; background-color: {{ color.code }}; border: 1px solid #ddd;"></div>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text bg-light"><i class="fa fa-tag"></i></span>
+                                                                        <input type="hidden" name="existing_color_ids[]" value="{{ color.id }}">
+                                                                        <input type="text" class="form-control" name="existing_color_names[]" value="{{ color.name }}" placeholder="Nom de la couleur">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text bg-light"><i class="fa fa-fill-drip"></i></span>
+                                                                        <input type="color" class="form-control" name="existing_color_codes[]" value="{{ color.code }}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1 text-end">
+                                                                    <button type="button" class="btn btn-outline-danger btn-sm rounded-circle shadow-sm remove-existing-color" data-id="{{ color.id }}" title="Supprimer cette couleur"><i class="fa fa-times"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <div class="text-center py-4 text-muted bg-light rounded" id="no-colors-message">
+                                                            <i class="fa fa-palette fa-3x mb-3 opacity-50"></i>
+                                                            <p>Aucune couleur ajoutée.</p>
                                                         </div>
-                                                        <div class="col-md-5">
-                                                            <input type="color" class="form-control" name="existing_color_codes[]" value="{{ color.code }}">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-existing-color" data-id="{{ color.id }}"><i class="fa fa-trash"></i></button>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            {% else %}
-                                                <p class="text-muted">Aucune couleur ajoutée.</p>
-                                            {% endif %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     
                                     {# Add new colors #}
-                                    <h6>Ajouter de nouvelles couleurs</h6>
-                                    <div id="color-container">
-                                        <div class="row color-row mb-3">
-                                            <div class="col-md-5">
-                                                <input type="text" class="form-control" name="color_names[]" placeholder="Nom de couleur (ex: Rouge)">
-                                            </div>
-                                            <div class="col-md-5">
-                                                <input type="color" class="form-control" name="color_codes[]">
-                                            </div>
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill shadow-sm remove-color"><i class="fa fa-trash mr-1"></i></button>
+                                    <div class="add-new-colors mt-4">
+                                        <h6 class="fw-bold mb-3 d-flex align-items-center"><i class="fa fa-plus-circle text-info mr-2"></i> Ajouter de nouvelles couleurs</h6>
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-body">
+                                                <div id="color-container">
+                                                    <div class="row color-row mb-3 align-items-center animate__animated animate__fadeIn">
+                                                        <div class="col-md-1">
+                                                            <div class="color-preview new-color-preview" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #ddd;"></div>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-light"><i class="fa fa-tag"></i></span>
+                                                                <input type="text" class="form-control new-color-name" name="color_names[]" placeholder="Nom de couleur (ex: Rouge)">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-light"><i class="fa fa-fill-drip"></i></span>
+                                                                <input type="color" class="form-control new-color-code" name="color_codes[]" value="#3366ff">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 text-end">
+                                                            <button type="button" class="btn btn-outline-danger btn-sm rounded-circle shadow-sm remove-color" title="Supprimer cette couleur"><i class="fa fa-times"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3 text-center">
+                                                    <button type="button" id="add-color" class="btn btn-outline-info btn-sm rounded-pill px-4 shadow-sm">
+                                                        <i class="fa fa-plus mr-1"></i> Ajouter une autre couleur
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" id="add-color" class="btn btn-outline-info btn-sm rounded-pill shadow-sm"><i class="fa fa-plus mr-1"></i> Ajouter une couleur</button>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="d-flex gap-3 mt-4">
-                            <button type="submit" class="btn btn-success rounded-pill shadow-sm">
+                            <button type="submit" id="submit-btn" class="btn btn-success rounded-pill shadow-sm fw-bold">
                                 <i class="fa fa-save mr-2"></i>Mettre à jour le produit
                             </button>
                             <a href="{{ path('admin_products') }}" class="btn btn-outline-danger rounded-pill shadow-sm">
@@ -201,74 +334,333 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Multiple images preview
+            // Character counter for description
+            const updateCharCount = () => {
+                const maxLength = $('#description').attr('maxlength');
+                const currentLength = $('#description').val().length;
+                $('#char-count').text(currentLength);
+                
+                // Change color when approaching limit
+                if (currentLength > maxLength * 0.8) {
+                    $('#char-count').removeClass('text-muted').addClass('text-danger');
+                } else {
+                    $('#char-count').removeClass('text-danger').addClass('text-muted');
+                }
+            };
+            
+            // Initialize character counter
+            updateCharCount();
+            $('#description').on('input', updateCharCount);
+            
+            // Enhanced Image Preview and Management
             $('#images').change(function() {
+                const placeholder = `<div class="image-preview-item text-center p-3"><img class="img-upload-preview mb-2" width="120" height="120" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview" style="object-fit: contain;"><p class="mb-0 text-muted">Aperçu des images</p></div>`;
                 $('#image-previews').empty();
                 
                 const files = Array.from(this.files);
+                if (files.length === 0) {
+                    $('#image-previews').html(placeholder);
+                    return;
+                }
+                
+                // Process each file with a slight delay for animation effect
                 files.forEach((file, index) => {
                     let reader = new FileReader();
                     reader.onload = (e) => {
-                        $('#image-previews').append(`
-                            <div class="image-preview-item d-inline-block m-2">
-                                <img class="img-upload-preview" width="150" src="${e.target.result}" alt="preview">
-                            </div>
-                        `);
+                        setTimeout(() => {
+                            $('#image-previews').append(`
+                                <div class="image-preview-item animate__animated animate__fadeIn">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <img class="card-img-top" width="120" height="120" src="${e.target.result}" alt="preview" style="object-fit: cover;">
+                                        <div class="card-footer bg-light text-center p-1">
+                                            <small class="text-muted">${file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }, index * 100);
                     };
                     reader.readAsDataURL(file);
                 });
-                
-                // Show a message if no files were selected
-                if (files.length === 0) {
-                    $('#image-previews').append(`
-                        <div class="image-preview-item">
-                            <img class="img-upload-preview" width="150" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview">
-                        </div>
-                    `);
+            });
+            
+            // Visual effect for images marked for deletion
+            $(document).on('change', '.delete-image-checkbox', function() {
+                const container = $(this).closest('.image-item');
+                if ($(this).is(':checked')) {
+                    container.addClass('marked-for-deletion animate__animated animate__pulse');
+                    $('img', container).css('opacity', '0.5');
+                } else {
+                    container.removeClass('marked-for-deletion animate__animated animate__pulse');
+                    $('img', container).css('opacity', '1');
                 }
             });
             
-            // Handle adding new colors
+            // Enhanced color management with live preview
+            // Initialize color previews
+            function updateColorPreviews() {
+                $('.new-color-code').each(function() {
+                    const preview = $(this).closest('.color-row').find('.new-color-preview');
+                    preview.css('background-color', $(this).val());
+                });
+            }
+            
+            // Run on page load
+            updateColorPreviews();
+            
+            // Update color preview when color input changes
+            $(document).on('input', '.new-color-code', function() {
+                const preview = $(this).closest('.color-row').find('.new-color-preview');
+                preview.css('background-color', $(this).val());
+                // Add a quick pulse animation when color changes
+                preview.addClass('animate__animated animate__pulse');
+                setTimeout(() => {
+                    preview.removeClass('animate__animated animate__pulse');
+                }, 500);
+            });
+            
+            // Handle adding new colors with animation
             $('#add-color').click(function() {
                 const colorRow = `
-                    <div class="row color-row mb-3">
-                        <div class="col-md-5">
-                            <input type="text" class="form-control" name="color_names[]" placeholder="Color Name (e.g. Red)">
+                    <div class="row color-row mb-3 align-items-center animate__animated animate__fadeIn">
+                        <div class="col-md-1">
+                            <div class="color-preview new-color-preview" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #ddd; background-color: #3366ff;"></div>
                         </div>
                         <div class="col-md-5">
-                            <input type="color" class="form-control" name="color_codes[]">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-tag"></i></span>
+                                <input type="text" class="form-control new-color-name" name="color_names[]" placeholder="Nom de couleur (ex: Bleu)">
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill shadow-sm remove-color"><i class="fa fa-trash mr-1"></i></button>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-fill-drip"></i></span>
+                                <input type="color" class="form-control new-color-code" name="color_codes[]" value="#3366ff">
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-end">
+                            <button type="button" class="btn btn-outline-danger btn-sm rounded-circle shadow-sm remove-color" title="Supprimer cette couleur"><i class="fa fa-times"></i></button>
                         </div>
                     </div>
                 `;
                 
                 $('#color-container').append(colorRow);
+                // Animate scroll to new color row
+                $('html, body').animate({
+                    scrollTop: $('#color-container .color-row:last').offset().top - 100
+                }, 500);
             });
             
-            // Remove new color row
+            // Remove new color row with fade out animation
             $(document).on('click', '.remove-color', function() {
-                $(this).closest('.color-row').remove();
+                const row = $(this).closest('.color-row');
+                row.addClass('animate__animated animate__fadeOut');
+                setTimeout(() => {
+                    row.remove();
+                }, 500);
             });
             
-            // Remove existing color row
+            // Remove existing color row with animation
             $(document).on('click', '.remove-existing-color', function() {
                 const colorId = $(this).data('id');
-                $(this).closest('.color-row').remove();
-                $('form').append(`<input type="hidden" name="delete_colors[]" value="${colorId}">`);
+                const row = $(this).closest('.color-row');
+                
+                // Fade out animation
+                row.addClass('animate__animated animate__fadeOut');
+                setTimeout(() => {
+                    row.remove();
+                    // Add hidden input to mark color for deletion
+                    $('form').append(`<input type="hidden" name="delete_colors[]" value="${colorId}">`);
+                    
+                    // Check if all colors are removed
+                    if ($('#existing-color-container .color-row').length === 0) {
+                        $('#existing-color-container').html(`
+                            <div class="text-center py-4 text-muted bg-light rounded animate__animated animate__fadeIn" id="no-colors-message">
+                                <i class="fa fa-palette fa-3x mb-3 opacity-50"></i>
+                                <p>Aucune couleur ajoutée.</p>
+                            </div>
+                        `);
+                    }
+                }, 500);
             });
             
-            // Confirm before submitting if images to delete are selected
-            $('form').submit(function(e) {
-                const deleteImagesCount = $('input[name="delete_images[]"]:checked').length;
-                const totalImages = {{ product.images|length }} + $('#images')[0].files.length - deleteImagesCount;
+            // Form validation and submission with AJAX
+            $('form').on('submit', function(e) {
+                e.preventDefault();
                 
-                if (totalImages < 1) {
-                    e.preventDefault();
-                    alert('Product must have at least one image. Please add at least one image before submitting.');
+                // Form validation function
+                function validateForm() {
+                    let isValid = true;
+                    
+                    // Clear previous validation
+                    $('.is-invalid').removeClass('is-invalid');
+                    $('.is-valid').removeClass('is-valid');
+                    $('.invalid-feedback').remove();
+                    
+                    // Validate name
+                    if ($('#name').val().trim() === '') {
+                        $('#name').addClass('is-invalid');
+                        $('#name').after('<div class="invalid-feedback">Le nom du produit est requis</div>');
+                        isValid = false;
+                    } else {
+                        $('#name').addClass('is-valid');
+                    }
+                    
+                    // Validate price
+                    const price = $('#price').val().trim();
+                    if (price === '' || isNaN(price) || parseFloat(price) <= 0) {
+                        $('#price').addClass('is-invalid');
+                        $('#price').after('<div class="invalid-feedback">Le prix doit être un nombre positif</div>');
+                        isValid = false;
+                    } else {
+                        $('#price').addClass('is-valid');
+                    }
+                    
+                    // Validate stock
+                    const stock = $('#stock').val().trim();
+                    if (stock === '' || isNaN(stock) || parseInt(stock) < 0) {
+                        $('#stock').addClass('is-invalid');
+                        $('#stock').after('<div class="invalid-feedback">Le stock doit être un nombre positif ou zéro</div>');
+                        isValid = false;
+                    } else {
+                        $('#stock').addClass('is-valid');
+                    }
+                    
+                    // Validate description (optional but check if not too short)
+                    const description = $('#description').val().trim();
+                    if (description.length > 0 && description.length < 10) {
+                        $('#description').addClass('is-invalid');
+                        $('#description').after('<div class="invalid-feedback">La description doit contenir au moins 10 caractères</div>');
+                        isValid = false;
+                    } else if (description.length >= 10) {
+                        $('#description').addClass('is-valid');
+                    }
+                    
+                    // Validate image count
+                    const deleteImagesCount = $('input[name="delete_images[]"]:checked').length;
+                    const totalImages = {{ product.images|length }} + $('#images')[0].files.length - deleteImagesCount;
+                    
+                    if (totalImages < 1) {
+                        isValid = false;
+                        Swal.fire({
+                            title: 'Erreur!',
+                            text: 'Le produit doit avoir au moins une image. Veuillez ajouter au moins une image.',
+                            icon: 'error',
+                            confirmButtonColor: '#d33'
+                        });
+                        return false;
+                    }
+                    
+                    return isValid;
+                }
+                
+                // Run validation
+                if (!validateForm()) {
+                    return false;
+                }
+                
+                // Check if images are being deleted
+                const imagesToDelete = $('.delete-image-checkbox:checked').length;
+                if (imagesToDelete > 0) {
+                    // Use SweetAlert2 for deletion confirmation
+                    Swal.fire({
+                        title: 'Confirmation',
+                        text: `Vous allez supprimer ${imagesToDelete} image(s). Confirmez-vous cette action ?`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Oui, supprimer',
+                        cancelButtonText: 'Annuler',
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            submitFormWithAjax();
+                        }
+                    });
+                } else {
+                    submitFormWithAjax();
+                }
+                
+                // AJAX form submission function
+                function submitFormWithAjax() {
+                    // Show loading spinner
+                    Swal.fire({
+                        title: 'En cours...',
+                        text: 'Mise à jour du produit',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Create FormData object for file uploads
+                    const formData = new FormData($('#edit-product-form')[0]);
+                    
+                    // Ensure we include the CSRF token
+                    if ($('input[name="_token"]').length === 0) {
+                        formData.append('_token', '{{ csrf_token("edit" ~ product.id) }}'); 
+                    }
+                    
+                    // Log form data for debugging
+                    console.log('Form submission data:');
+                    for (let pair of formData.entries()) {
+                        console.log(pair[0] + ': ' + pair[1]);
+                    }
+                    
+                    // Submit form via AJAX
+                    $.ajax({
+                        url: $('#edit-product-form').attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Show success message with SweetAlert2
+                                Swal.fire({
+                                    title: 'Succès!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    confirmButtonColor: '#28a745',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Retour à la liste',
+                                    cancelButtonText: 'Continuer l\'édition',
+                                    reverseButtons: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Redirect to products list
+                                        window.location.href = '{{ path('admin_products') }}';
+                                    }
+                                });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Erreur!',
+                            text: 'Une erreur est survenue lors de la mise à jour du produit.',
+                            icon: 'error',
+                            confirmButtonColor: '#d33'
+                        });
+                    }
+                });
+            }
+            });
+            
+            // Add validation on input change
+            $('#edit-product-form input[required], #edit-product-form textarea[required], #edit-product-form select[required]').on('change input', function() {
+                if ($(this).val() === '' || $(this).val() === null) {
+                    $(this).addClass('is-invalid');
+                    $(this).removeClass('is-valid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).addClass('is-valid');
                 }
             });
         });
