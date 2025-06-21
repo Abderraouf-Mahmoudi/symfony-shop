@@ -4,6 +4,8 @@
 
 {% block stylesheets %}
 {{ parent() }}
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
 <style>
     .item-color-info {
         display: flex;
@@ -18,6 +20,76 @@
         border-radius: 50%;
         margin-right: 5px;
         border: 1px solid #ddd;
+    }
+    
+    /* Mobile scroll indicator - hidden by default for all devices */
+    .mobile-scroll-indicator {
+        display: none;
+        text-align: center;
+        padding: 8px;
+        color: #888;
+        font-size: 12px;
+        animation: fadeInOut 2s infinite;
+    }
+    
+    @keyframes fadeInOut {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+    }
+    
+    /* Responsive Cart Table Styles */
+    @media (max-width: 768px) {
+        .table-shopping-cart {
+            min-width: 500px;
+        }
+        
+        .wrap-table-shopping-cart {
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .m-l-25.m-r--38.m-lr-0-xl {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        
+        .col-lg-10.col-xl-7.m-lr-auto.m-b-50 {
+            padding: 0 10px;
+        }
+        
+        .column-1 {
+            width: 80px;
+        }
+        
+        .how-itemcart1 img {
+            max-width: 70px;
+            max-height: 70px;
+        }
+        
+        .column-2 {
+            min-width: 120px;
+        }
+        
+        .column-3, .column-5 {
+            min-width: 90px;
+        }
+        
+        .column-4 {
+            min-width: 110px;
+        }
+    }
+    
+    /* Only show scroll indicator on small mobile screens */
+    @media (max-width: 576px) {
+        .mobile-scroll-indicator {
+            display: block;
+        }
+        
+        .bor10.p-lr-40.p-t-30.p-b-40 {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
     }
 </style>
 {% endblock %}
@@ -35,6 +107,10 @@
             <div class="row">
                 <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
                     <div class="m-l-25 m-r--38 m-lr-0-xl">
+                        <!-- Mobile scroll hint -->
+                        <div class="mobile-scroll-indicator">
+                            <i class="fa fa-arrow-left"></i> Faites défiler horizontalement pour voir tout le panier <i class="fa fa-arrow-right"></i>
+                        </div>
                         <div class="wrap-table-shopping-cart">
                             <table class="table-shopping-cart">
                                 <tr class="table_head">
@@ -43,12 +119,11 @@
                                     <th class="column-3">Prix</th>
                                     <th class="column-4">Quantité</th>
                                     <th class="column-5">Total</th>
-                                    <th class="column-5">Action</th>
                                 </tr>
                                 
                                 {% if items is empty %}
                                     <tr class="table_row">
-                                        <td colspan="6" class="text-center p-4">
+                                        <td colspan="5" class="text-center p-4">
                                             Votre panier est vide.
                                         </td>
                                         <td>
@@ -78,10 +153,10 @@
                                                     </div>
                                                     
                                                     <!-- Display Color if available -->
-                                                    {% if item.color_name is defined and item.color_name %}
-                                                        <div class="item-color-info" style="display: flex; align-items: center;">
-                                                            <span class="color-dot" style="background-color: {{ item.color_code }}; display: inline-block; width: 15px; height: 15px; border-radius: 50%; margin-right: 5px; border: 1px solid #ddd;"></span>
-                                                            <small style="color: #888;">Couleur: {{ item.color_name }}</small>
+                                                    {% if item.color_id is defined and item.color_id %}
+                                                        <div class="item-color-info">
+                                                            <span class="color-dot" style="background-color: {{ item.color_code }};"></span>
+                                                            <small style="color: #888;">{{ item.color_name }}</small>
                                                         </div>
                                                     {% endif %}
                                                 </div>
@@ -109,14 +184,6 @@
                                                 </div>
                                             </td>
                                             <td class="column-5">{{ item.quantity * item.product.price|number_format(2) }} TND</td>
-                                            <td class="column-6">
-                                                <a href="{{ path('remove_from_cart', {
-                                                    'id': item.product.id, 
-                                                    'size': item.size
-                                                }) }}{% if item.color_id is defined and item.color_id %}?color_id={{ item.color_id }}{% endif %}" class="btn-remove-item">
-                                                    <i class="fa fa-times"></i> Supprimer
-                                                </a>
-                                            </td>
                                         </tr>
                                     {% endfor %}
                                 {% endif %}
@@ -133,22 +200,40 @@
                 <div class="col-lg-7 col-xl-5 m-lr-auto m-b-50">
                     <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-lr-0-xl p-lr-15-sm">
                         <h4 class="mtext-109 cl2 p-b-30">Totale</h4>
-                        <div class="flex-w flex-t bor12 p-b-13">
+
+                        <div class="flex-w flex-t p-t-16">
                             <div class="size-208">
-                                <span class="stext-110 cl2">Total:</span>
+                                <span class="mtext-101 cl2">Sous-total:</span>
                             </div>
-                            <div class="size-209">
+                            <div class="size-209 p-t-1">
+                                <span class="mtext-110 cl2">{{ subtotal|number_format(2) }} TND</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-w flex-t p-t-10 p-b-10">
+                            <div class="size-208">
+                                <span class="mtext-101 cl2">Livraison:</span>
+                            </div>
+                            <div class="size-209 p-t-1">
+                                <span class="mtext-110 cl2">
+                                    {% if shipping > 0 %}
+                                        {{ shipping|number_format(2) }} TND
+                                    {% else %}
+                                        Gratuit
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-w flex-t p-t-10 p-b-33" style="border-top: 1px dashed #ccc; margin-top: 10px;">
+                            <div class="size-208">
+                                <span class="mtext-110 cl2 font-weight-bold">Total:</span>
+                            </div>
+                            <div class="size-209 p-t-1">
                                 <span class="mtext-110 cl2">{{ total|number_format(2) }} TND</span>
                             </div>
                         </div>
-                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                            <div class="size-208">
-                                <span class="stext-110 cl2">Totale:</span>
-                            </div>
-                            <div class="size-209">
-                                <span class="mtext-110 cl2">{{ total|number_format(2) }} TND</span>
-                            </div>
-                        </div>
+
                         <button type="button" class="flex-c-m stext-101 cl0 size-112 bg3 bor15 hov-btn3 p-lr-15 trans-04 pointer" data-toggle="modal" data-target="#checkoutModal">Passer au paiement</button>
                     </div>
                 </div>
@@ -161,51 +246,33 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title mtext-105" id="checkoutModalLabel">Checkout Information</h5>
+                <h5 class="modal-title mtext-105" id="checkoutModalLabel">Informations de commande</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ path('place_order') }}" method="post">
+            <form id="checkout-form" action="{{ path('place_order') }}" method="post">
                 <div class="modal-body p-4">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="fullname">Full Name</label>
+                                <label for="fullname">Nom complet</label>
                                 <input type="text" class="form-control" id="fullname" name="fullname" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="phone">Phone Number</label>
-                                <input type="text" class="form-control" id="phone" name="phone" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="address">Delivery Address (Optional)</label>
-                        <textarea class="form-control" id="address" name="address" rows="3"></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="city">City (Optional)</label>
-                                <input type="text" class="form-control" id="city" name="city">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="postalCode">Postal Code (Optional)</label>
-                                <input type="text" class="form-control" id="postalCode" name="postalCode">
+                                <label for="phone">Numéro de téléphone</label>
+                                <input type="text" class="form-control" id="phone" name="phone" required pattern="[0-9]{8}" title="Veuillez entrer un numéro de téléphone valide (8 chiffres)">
                             </div>
                         </div>
                     </div>
                     <div class="form-group mt-3">
-                        <label for="notes">Additional Notes</label>
-                        <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+                        <label for="notes">Notes supplémentaires</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="2" placeholder="Instructions spéciales pour la livraison, etc."></textarea>
                     </div>
                     <div class="order-summary mt-4">
-                        <h4 class="mtext-105 mb-3">Order Summary</h4>
+                        <h4 class="mtext-105 mb-3">Récapitulatif de commande</h4>
                         <ul class="list-group mb-3">
                             {% for item in items %}
                             <li class="list-group-item d-flex justify-content-between">
@@ -214,18 +281,402 @@
                             </li>
                             {% endfor %}
                             <li class="list-group-item d-flex justify-content-between">
-                                <span>Total</span>
+                                <span>Sous-total</span>
+                                <strong>{{ subtotal|number_format(2) }} TND</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Frais de livraison</span>
+                                <strong>
+                                    {% if shipping > 0 %}
+                                        {{ shipping|number_format(2) }} TND
+                                    {% else %}
+                                        Gratuit
+                                    {% endif %}
+                                </strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                <span class="text-primary"><strong>Total</strong></span>
                                 <strong>{{ total|number_format(2) }} TND</strong>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Confirm Order</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" id="confirm-order-btn" class="btn btn-primary">Confirmer la commande</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<!-- Footer -->
+<footer class="bg3 p-t-75 p-b-32">
+    <div class="container">
+        <div class="row">
+            <!-- Company Info -->
+            <div class="col-sm-6 col-lg-4">
+                <h4 class="stext-301 cl0 p-b-30">
+                    <i class="fa fa-store m-r-10"></i>
+                    À Propos de Nous
+                </h4>
+
+                <div class="p-b-20">
+                    <div class="flex-w p-b-5">
+                        <i class="fa fa-phone fs-18 cl7 m-r-10"></i>
+                        <span class="stext-107 cl7">+216 98 431 061</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Service -->
+            <div class="col-sm-6 col-lg-3">
+                <h4 class="stext-301 cl0 p-b-30">
+                    <i class="fa fa-headset m-r-10"></i>
+                    Service Client
+                </h4>
+
+                <ul>
+                    <li class="p-b-10">
+                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                            <i class="fa fa-search m-r-5"></i>
+                            Suivi de commande
+                        </a>
+                    </li>
+                    <li class="p-b-10">
+                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                            <i class="fa fa-undo m-r-5"></i>
+                            Retours & Échanges
+                        </a>
+                    </li>
+                    <li class="p-b-10">
+                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                            <i class="fa fa-truck m-r-5"></i>
+                            Livraison
+                        </a>
+                    </li>
+                    <li class="p-b-10">
+                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                            <i class="fa fa-question-circle m-r-5"></i>
+                            FAQ
+                        </a>
+                    </li>
+                    <li class="p-b-10">
+                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                            <i class="fa fa-shield-alt m-r-5"></i>
+                            Garantie
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Newsletter & Social -->
+            <div class="col-sm-6 col-lg-3">
+                <h4 class="stext-301 cl0 p-b-30">
+                    <i class="fa fa-paper-plane m-r-10"></i>
+                    Restez Connecté
+                </h4>
+
+                <div class="footer-social">
+                    <h5 class="stext-107 cl0 p-b-10">Suivez-nous</h5>
+                    <div class="flex-w">
+                        <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl1 trans-04" title="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="p-t-40 p-b-20">
+            <div class="bor15"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p class="stext-107 cl6 txt-center">
+                    &copy; {{ "now"|date("Y") }} BAdiscount. Tous droits réservés.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <div class="flex-c-m flex-w">
+                    <a href="#" class="stext-107 cl6 hov-cl1 trans-04 m-r-16">
+                        Conditions d'utilisation
+                    </a>
+                    <a href="#" class="stext-107 cl6 hov-cl1 trans-04 m-r-16">
+                        Confidentialité
+                    </a>
+                    <a href="#" class="stext-107 cl6 hov-cl1 trans-04">
+                        Mentions légales
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to top -->
+<div class="btn-back-to-top" id="myBtn">
+    <span class="symbol-btn-back-to-top">
+        <i class="zmdi zmdi-chevron-up"></i>
+    </span>
+</div>
+
+<style>
+    /* Enhanced Footer Styling */
+    footer.bg3 {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    footer.bg3::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        pointer-events: none;
+    }
+    
+    footer h4.stext-301 {
+        position: relative;
+        border-bottom: 2px solid #e74c3c;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+    
+    footer h4.stext-301::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: #e74c3c;
+    }
+    
+    footer h4.stext-301 i {
+        color: #e74c3c;
+        font-size: 18px;
+    }
+    
+    footer ul li a {
+        padding: 8px 0;
+        display: block;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+    
+    footer ul li a:hover {
+        padding-left: 15px;
+        border-left-color: #e74c3c;
+        color: #ffffff !important;
+    }
+    
+    footer ul li a i {
+        width: 20px;
+        color: #e74c3c;
+        transition: transform 0.3s ease;
+    }
+    
+    footer ul li a:hover i {
+        transform: translateX(5px);
+    }
+    
+    .footer-social a {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .footer-social a:hover {
+        background: #e74c3c;
+        border-color: #e74c3c;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+    }
+    
+    .footer-social a i {
+        font-size: 16px;
+    }
+    
+    footer .bor15 {
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #e74c3c 50%, transparent 100%);
+        border: none;
+    }
+    
+    footer .stext-107.cl6 {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    footer .stext-107.cl6:hover {
+        color: #ffffff !important;
+    }
+    
+    /* Responsive footer enhancements */
+    @media (max-width: 991.98px) {
+        footer h4.stext-301 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        footer .stext-107 {
+            font-size: 14px;
+        }
+        
+        .footer-social a {
+            width: 35px;
+            height: 35px;
+            margin-right: 10px;
+        }
+    }
+    
+    @media (max-width: 575.98px) {
+        footer.bg3 {
+            padding-top: 50px;
+        }
+        
+        footer h4.stext-301 {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        footer .col-sm-6,
+        footer .col-lg-4,
+        footer .col-lg-3 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        footer .footer-social {
+            text-align: center;
+        }
+        
+        footer .stext-107.cl6 {
+            text-align: center;
+        }
+        
+        footer .flex-w {
+            justify-content: center;
+            text-align: center;
+        }
+    }
+    
+    /* Back to top button styling */
+    .btn-back-to-top {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        border: none;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+    }
+    
+    .btn-back-to-top.show-btn {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    
+    .btn-back-to-top:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+    }
+    
+    .btn-back-to-top .symbol-btn-back-to-top {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        color: white;
+        font-size: 18px;
+    }
+</style>
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+
+<script>
+    // Back to top button functionality
+    window.addEventListener('scroll', function() {
+        const backToTopBtn = document.getElementById('myBtn');
+        if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('show-btn');
+        } else {
+            backToTopBtn.classList.remove('show-btn');
+        }
+    });
+
+    document.getElementById('myBtn').addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
+    // Order confirmation with SweetAlert2
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkoutForm = document.getElementById('checkout-form');
+        
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Form validation
+                if (!checkoutForm.checkValidity()) {
+                    checkoutForm.reportValidity();
+                    return false;
+                }
+                
+                // Show thank you message
+                Swal.fire({
+                    title: 'Merci pour votre commande!',
+                    text: 'Votre commande a été traitée avec succès. Nous vous contacterons bientôt pour confirmer les détails de livraison.',
+                    icon: 'success',
+                    confirmButtonText: 'Continuer',
+                    confirmButtonColor: '#4CAF50',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form
+                        checkoutForm.submit();
+                    }
+                });
+            });
+        }
+    });
+</script>
 {% endblock %}

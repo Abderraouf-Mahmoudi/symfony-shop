@@ -121,21 +121,10 @@
     <div class="customer-info">
         <h2>Informations client</h2>
         <div class="info-block"><strong>Nom:</strong> {{ order.customerName }}</div>
-        <div class="info-block"><strong>Email:</strong> {{ order.customerEmail }}</div>
         <div class="info-block"><strong>Téléphone:</strong> {{ order.phone }}</div>
     </div>
     
-    <div class="shipping-info">
-        <h2>Adresse de livraison</h2>
-        <div class="info-block">{{ order.shippingAddress }}</div>
-        <div class="info-block"><strong>Ville:</strong> {{ order.city }}</div>
-        <div class="info-block"><strong>Code postal:</strong> {{ order.postalCode }}</div>
-    </div>
-    
-    <div class="billing-info">
-        <h2>Adresse de facturation</h2>
-        <div class="info-block">{{ order.billingAddress ? order.billingAddress : order.shippingAddress }}</div>
-    </div>
+    {# Shipping and billing address sections removed as they are no longer collected #}
     
     <h2>Articles commandés</h2>
     <table>
@@ -182,7 +171,7 @@
     <div class="footer">
         <p>Merci pour votre commande!</p>
         <p>BAdiscount - Boutique de vêtements en ligne</p>
-        <p>Contact: info@badiscount.tn | Tel: +216 XX XXX XXX</p>
+        <p>Contact: admin.maynou@badiscount.tn | Tel: +216 98 431 061</p>
     </div>
 </body>
 </html>

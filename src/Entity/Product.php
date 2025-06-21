@@ -24,8 +24,7 @@ class Product
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     private $price;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $imagePath;
+    // imagePath property removed as it's now handled by the ProductImage entity
 
     #[ORM\Column(type: 'integer')]
     private $stock;
@@ -41,6 +40,12 @@ class Product
 
     #[ORM\Column(type: 'boolean', options: ["default" => false])]
     private $isNew = false;
+
+    #[ORM\Column(type: 'boolean', options: ["default" => false])]
+    private $freeShipping = false;
+    
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    private $shippingPrice = null;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: OrderItem::class)]
     private $orderItems;
@@ -100,17 +105,8 @@ class Product
         return $this;
     }
 
-    public function getImagePath(): ?string
-    {
-        return $this->imagePath;
-    }
-
-    public function setImagePath(?string $imagePath): self
-    {
-        $this->imagePath = $imagePath;
-
-        return $this;
-    }
+    // getImagePath and setImagePath methods removed
+    // Images are now managed through the ProductImage entity and the getImages() collection
 
     public function getStock(): ?int
     {
@@ -198,6 +194,30 @@ class Product
     public function setIsNew(bool $isNew): self
     {
         $this->isNew = $isNew;
+        
+        return $this;
+    }
+    
+    public function isFreeShipping(): ?bool
+    {
+        return $this->freeShipping;
+    }
+    
+    public function setFreeShipping(bool $freeShipping): self
+    {
+        $this->freeShipping = $freeShipping;
+        
+        return $this;
+    }
+    
+    public function getShippingPrice(): ?string
+    {
+        return $this->shippingPrice;
+    }
+    
+    public function setShippingPrice(?string $shippingPrice): self
+    {
+        $this->shippingPrice = $shippingPrice;
         
         return $this;
     }

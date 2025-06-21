@@ -15,37 +15,41 @@ use Symfony\Component\Routing\Annotation\Route;
 class FrontController extends AbstractController
 {
     #[Route('/', name: 'front_home')]
-    public function home(ProductRepository $productRepository): Response
+    public function home(ProductRepository $productRepository, Request $request): Response
     {
-        $products = $productRepository->findAllWithImages();
+        // Get current page from request, default to 1
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 10; // Products per page
+        $offset = ($page - 1) * $limit;
+        
+        // Get total count of products
+        $totalProducts = $productRepository->count([]);
+        
+        // Calculate total pages
+        $totalPages = ceil($totalProducts / $limit);
+        
+        // Get products for current page
+        $products = $productRepository->findBy([], ['id' => 'DESC'], $limit, $offset);
+        
+        // Add primary images to products
+        foreach ($products as $product) {
+            $primaryImage = null;
+            foreach ($product->getImages() as $image) {
+                $primaryImage = $image;
+                break; // Get first image as primary
+            }
+            $product->primaryImage = $primaryImage;
+        }
+        
         return $this->render('front/home.html.twig', [
-            'products' => $products
+            'products' => $products,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'totalProducts' => $totalProducts
         ]);
     }
 
-    #[Route('/about', name: 'front_about')]
-    public function about(): Response
-    {
-        return $this->render('front/about.html.twig');
-    }
-
-    #[Route('/blog', name: 'front_blog')]
-    public function blog(): Response
-    {
-        return $this->render('front/blog.html.twig');
-    }
-
-    #[Route('/blog-detail', name: 'front_blog_detail')]
-    public function blogDetail(): Response
-    {
-        return $this->render('front/blog-detail.html.twig');
-    }
-
-    #[Route('/contact', name: 'front_contact')]
-    public function contact(): Response
-    {
-        return $this->render('front/contact.html.twig');
-    }
+    // Removed unused methods: about, blog, blogDetail, contact
 
     #[Route('/product', name: 'front_product')]
     public function product(ProductRepository $productRepository): Response
@@ -118,13 +122,28 @@ class FrontController extends AbstractController
             }
         }
         
-        $total = array_reduce($cartWithData, function($total, $item) {
+        // Calculate subtotal
+        $subtotal = array_reduce($cartWithData, function($total, $item) {
             return $total + ($item['product']->getPrice() * $item['quantity']);
         }, 0);
         
+        // Find the highest shipping price among all cart items
+        $highestShippingPrice = 0;
+        foreach ($cartWithData as $item) {
+            $shippingPrice = $item['product']->getShippingPrice();
+            if ($shippingPrice > $highestShippingPrice) {
+                $highestShippingPrice = $shippingPrice;
+            }
+        }
+        
+        // Total is subtotal plus highest shipping price
+        $total = $subtotal + $highestShippingPrice;
+        
         return $this->render('front/shoping-cart.html.twig', [
             'items' => $cartWithData,
-            'total' => $total
+            'total' => $total,
+            'subtotal' => $subtotal,
+            'shipping' => $highestShippingPrice
         ]);
     }
     
@@ -178,6 +197,56 @@ class FrontController extends AbstractController
         $cart[$cartKey]['quantity'] += $quantity;
         
         $session->set('cart', $cart);
+        
+        // Handle AJAX requests
+        if ($request->isXmlHttpRequest()) {
+            // Calculate cart totals for response
+            $cartWithData = [];
+            $total = 0;
+            $itemCount = 0;
+            
+            foreach ($cart as $cartKey => $cartItem) {
+                $itemId = explode('-', $cartKey)[0];
+                $itemProduct = $productRepository->find($itemId);
+                if ($itemProduct) {
+                    $itemData = [
+                        'product' => $itemProduct,
+                        'quantity' => $cartItem['quantity'],
+                        'size' => $cartItem['size']
+                    ];
+                    
+                    if (isset($cartItem['color_id'])) {
+                        $itemData['color_id'] = $cartItem['color_id'];
+                        $itemData['color_name'] = $cartItem['color_name'];
+                        $itemData['color_code'] = $cartItem['color_code'];
+                    }
+                    
+                    $cartWithData[] = $itemData;
+                    $total += $itemProduct->getPrice() * $cartItem['quantity'];
+                    $itemCount += $cartItem['quantity'];
+                }
+            }
+            
+            // Return JSON response for AJAX
+            return $this->json([
+                'success' => true,
+                'message' => 'Product added to cart successfully',
+                'cartCount' => $itemCount,
+                'cartTotal' => number_format($total, 2),
+                'cartItems' => array_map(function($item) {
+                    return [
+                        'id' => $item['product']->getId(),
+                        'name' => $item['product']->getName(),
+                        'price' => $item['product']->getPrice(),
+                        'quantity' => $item['quantity'],
+                        'size' => $item['size'],
+                        'color_name' => $item['color_name'] ?? null,
+                        'color_code' => $item['color_code'] ?? null,
+                        'image' => $item['product']->getPrimaryImage() ? $item['product']->getPrimaryImage()->getImagePath() : null
+                    ];
+                }, $cartWithData)
+            ]);
+        }
         
         return $this->redirectToRoute('front_cart');
     }
@@ -389,20 +458,13 @@ class FrontController extends AbstractController
             // Get form data
             $fullname = $request->request->get('fullname');
             $phone = $request->request->get('phone');
-            $address = $request->request->get('address');
-            $city = $request->request->get('city');
-            $postalCode = $request->request->get('postalCode');
             $notes = $request->request->get('notes');
             
             // Create new order
             $order = new Order();
             $order->setCustomerName($fullname);
-            $order->setShippingAddress($address);
             $order->setPhone($phone);
-            $order->setCity($city);
-            $order->setPostalCode($postalCode);
             $order->setNotes($notes);
-            $order->setCustomerEmail(''); // Not collected in form, but required in entity
             
             // Calculate total and add order items
             $total = 0;

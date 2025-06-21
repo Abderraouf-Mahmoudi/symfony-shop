@@ -38,23 +38,4 @@ class StatisticsController extends AbstractController
             'monthly_sales' => $monthlySales,
         ]);
     }
-    
-    #[Route('/products', name: 'admin_statistics_products', methods: ['GET'])]
-    public function products(Request $request): Response
-    {
-        $limit = $request->query->getInt('limit', 20);
-        $status = $request->query->get('status');
-        
-        if (!in_array($status, ['pending', 'done', 'canceled'])) {
-            $status = null;
-        }
-        
-        $bestSellingProducts = $this->statisticsService->getBestSellingProducts($limit, $status);
-        
-        return $this->render('back/statistics/products.html.twig', [
-            'bestsellers' => $bestSellingProducts,
-            'selected_status' => $status,
-            'limit' => $limit,
-        ]);
-    }
 }

@@ -96,7 +96,7 @@
                 <!-- Professional header with primary gradient and crisp icon -->
                 <div class="card-header bg-gradient-primary text-white py-3 d-flex align-items-center rounded-top">
                     <div class="icon-circle-lg bg-white text-gradient-primary shadow-lg me-3">
-                        <i class="fas fa-user-tie"></i>
+                        <i class="fas fa-user"></i>
                     </div>
                     <h5 class="mb-0 fw-bold">Informations Client</h5>
                 </div>
@@ -117,7 +117,7 @@
                         <div class="info-panel mb-4">
                             <div class="info-label">Téléphone</div>
                             <div class="info-value">
-                                <i class="fas fa-phone-alt info-icon"></i>
+                                <i class="fas fa-phone info-icon"></i>
                                 {{ order.phone }}
                             </div>
                         </div>
@@ -130,30 +130,22 @@
                                 <div class="timeline-item">
                                     <i class="fas fa-calendar-plus info-icon success-icon"></i>
                                     <span class="timeline-date">{{ order.createdAt|date('d/m/Y') }}</span>
-                                    <span class="timeline-text">Créée à {{ order.createdAt|date('H:i') }}</span>
+                                    <span class="timeline-text">Créé le {{ order.createdAt|date('H:i') }}</span>
                                 </div>
                             </div>
+                            
+                            {% if order.updatedAt %}
                             <div class="info-value">
-                                {% if order.updatedAt %}
                                 <div class="timeline-item mt-2">
                                     <i class="fas fa-sync info-icon warning-icon"></i>
                                     <span class="timeline-date">{{ order.updatedAt|date('d/m/Y') }}</span>
                                     <span class="timeline-text">Mise à jour à {{ order.updatedAt|date('H:i') }}</span>
                                 </div>
-                                {% endif %}
                             </div>
+                            {% endif %}
                         </div>
                         
-                        {% if order.size %}
-                        <!-- Size information -->  
-                        <div class="info-panel mb-4">
-                            <div class="info-label">Taille</div>
-                            <div class="info-value">
-                                <i class="fas fa-ruler-combined info-icon"></i>
-                                {{ order.size }}
-                            </div>
-                        </div>
-                        {% endif %}
+                        <!-- Size information section removed -->
                         
                         {% if order.notes is not empty %}
                         <!-- Notes section with improved styling -->  
@@ -174,44 +166,28 @@
         <div class="col-lg-6">
             <div class="card border-0 shadow-lg hover-lift-sm rounded-3 h-100 animate__animated animate__fadeIn">
                 <!-- Professional header with success gradient and crisp icon -->
-                <div class="card-header bg-gradient-success text-white py-3 d-flex align-items-center rounded-top">
-                    <div class="icon-circle-lg bg-white text-gradient-success shadow-lg me-3">
-                        <i class="fas fa-shipping-fast"></i>
+                <div class="card-header bg-white py-3 d-flex align-items-center">
+                    <div class="icon-circle bg-gradient-info text-white p-2 me-3 shadow-sm">
+                        <i class="fas fa-info-circle"></i>
                     </div>
-                    <h5 class="mb-0 fw-bold">Informations de livraison</h5>
+                    <h5 class="mb-0 fw-bold">Notes additionnelles</h5>
                 </div>
                 <div class="card-body p-4">
-                    <div class="shipping-info">
-                        <!-- Shipping Address with professional design -->
+                    <div class="notes-info">
+                        <!-- Notes section replacing shipping information -->
                         <div class="info-panel mb-4">
-                            <div class="info-label">Adresse de livraison</div>
+                            <div class="info-label">Notes du client</div>
                             <div class="address-card">
                                 <div class="address-header">
-                                    <i class="fas fa-truck-loading address-icon"></i>
-                                    <span class="address-type">Livraison</span>
+                                    <i class="fas fa-comment address-icon"></i>
+                                    <span class="address-type">Commentaire</span>
                                 </div>
                                 <div class="address-content">
-                                    <div class="address-line">{{ order.shippingAddress }}</div>
-                                    {% if order.city %}
-                                    <div class="address-line">{{ order.city }}</div>
+                                    {% if order.notes %}
+                                        <div class="address-line">{{ order.notes }}</div>
+                                    {% else %}
+                                        <div class="address-line"><em>Aucune note fournie</em></div>
                                     {% endif %}
-                                    {% if order.postalCode %}
-                                    <div class="address-line">{{ order.postalCode }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Billing Address with professional design -->
-                        <div class="info-panel mb-4">
-                            <div class="info-label">Adresse de facturation</div>
-                            <div class="address-card">
-                                <div class="address-header billing-header">
-                                    <i class="fas fa-file-invoice address-icon"></i>
-                                    <span class="address-type">Facturation</span>
-                                </div>
-                                <div class="address-content">
-                                    <div class="address-line">{{ order.billingAddress ?: order.shippingAddress }}</div>
                                 </div>
                             </div>
                         </div>

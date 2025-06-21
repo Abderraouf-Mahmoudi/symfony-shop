@@ -19,14 +19,7 @@ class Order
     #[ORM\Column(type: 'string', length: 255)]
     private $customerName;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $customerEmail;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $shippingAddress;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $billingAddress;
+    // Customer email, shipping address and billing address fields removed
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     private $totalAmount;
@@ -46,14 +39,7 @@ class Order
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private $phone;
 
-    #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    private $size;
-
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private $city;
-
-    #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    private $postalCode;
+    // Size, city and postal code fields removed
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $notes;
@@ -82,41 +68,7 @@ class Order
         return $this;
     }
 
-    public function getCustomerEmail(): ?string
-    {
-        return $this->customerEmail;
-    }
-
-    public function setCustomerEmail(string $customerEmail): self
-    {
-        $this->customerEmail = $customerEmail;
-
-        return $this;
-    }
-
-    public function getShippingAddress(): ?string
-    {
-        return $this->shippingAddress;
-    }
-
-    public function setShippingAddress(string $shippingAddress): self
-    {
-        $this->shippingAddress = $shippingAddress;
-
-        return $this;
-    }
-
-    public function getBillingAddress(): ?string
-    {
-        return $this->billingAddress;
-    }
-
-    public function setBillingAddress(?string $billingAddress): self
-    {
-        $this->billingAddress = $billingAddress;
-
-        return $this;
-    }
+    // Removed getters and setters for customerEmail, shippingAddress, and billingAddress
 
     public function getTotalAmount(): ?string
     {
@@ -208,41 +160,7 @@ class Order
         return $this;
     }
 
-    public function getSize(): ?string
-    {
-        return $this->size;
-    }
-
-    public function setSize(?string $size): self
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(?string $city): self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function getPostalCode(): ?string
-    {
-        return $this->postalCode;
-    }
-
-    public function setPostalCode(?string $postalCode): self
-    {
-        $this->postalCode = $postalCode;
-
-        return $this;
-    }
+    // Removed getters and setters for size, city, and postalCode
 
     public function getNotes(): ?string
     {

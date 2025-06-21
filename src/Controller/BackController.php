@@ -32,9 +32,12 @@ class BackController extends AbstractController
         $canceledOrderCount = $orderRepository->count(['status' => 'canceled']);
         
         // Get revenue (income)
-        $settingRepository = $entityManager->getRepository('App\Entity\Setting');
-        $incomeSetting = $settingRepository->findOneBy(['name' => 'income']);
-        $revenue = $incomeSetting ? $incomeSetting->getValue() : '0';
+        // Calculate revenue dynamically from completed orders
+        $revenue = $entityManager->createQuery(
+            'SELECT SUM(o.totalAmount) FROM App\\Entity\\Order o WHERE o.status = :status'
+        )
+        ->setParameter('status', 'done')
+        ->getSingleScalarResult() ?? '0';
         
         // Get recent orders (limit 5)
         $recentOrders = $orderRepository->findBy([], ['createdAt' => 'DESC'], 5);
@@ -73,6 +76,17 @@ class BackController extends AbstractController
                 ->setPrice($request->request->get('price'))
                 ->setStock($request->request->get('stock'))
                 ->setCategory($request->request->get('category'));
+                
+            // Handle shipping options
+            $freeShipping = $request->request->get('freeShipping') === 'on';
+            $product->setFreeShipping($freeShipping);
+            
+            // Only set shipping price if not free shipping
+            if (!$freeShipping && $request->request->has('shippingPrice')) {
+                $product->setShippingPrice($request->request->get('shippingPrice'));
+            } else {
+                $product->setShippingPrice(null);
+            }
             
             // Save the product first to get an ID
             $productRepository->add($product, false);
@@ -156,6 +170,17 @@ class BackController extends AbstractController
                 ->setStock($request->request->get('stock'))
                 ->setCategory($request->request->get('category'))
                 ->setUpdatedAt(new \DateTimeImmutable());
+                
+            // Handle shipping options
+            $freeShipping = $request->request->get('freeShipping') === 'on';
+            $product->setFreeShipping($freeShipping);
+            
+            // Only set shipping price if not free shipping
+            if (!$freeShipping && $request->request->has('shippingPrice')) {
+                $product->setShippingPrice($request->request->get('shippingPrice'));
+            } else {
+                $product->setShippingPrice(null);
+            }
             
             // Get entity manager
             // EntityManager already injected as parameter

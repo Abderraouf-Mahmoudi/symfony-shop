@@ -1,4 +1,3 @@
-
 {% extends 'base_front.html.twig' %}
 
 {% block title %}BAdiscount{% endblock %}
@@ -27,7 +26,7 @@
             flex-direction: column;
         }
         .block2-pic {
-            height: 300px; /* Fixed height for all product images */
+            height: 250px; /* Consistent height for all devices */
             overflow: hidden;
             position: relative;
         }
@@ -48,617 +47,593 @@
             display: flex;
             margin-bottom: 15px;
         }
+        
+        /* Mobile responsive - 2 products per row */
+        @media (max-width: 575.98px) {
+            .isotope-grid .col-sm-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+                padding-left: 7.5px;
+                padding-right: 7.5px;
+                margin-bottom: 20px;
+            }
+            
+            .isotope-grid .col-sm-6 .block2 {
+                height: 100%;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            
+            .isotope-grid .col-sm-6 .block2:active {
+                transform: scale(0.98);
+                box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            }
+            
+            .isotope-grid .col-sm-6 .block2-pic {
+                height: 250px; /* Same as desktop for consistency */
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .isotope-grid .col-sm-6 .block2-pic img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+            
+            .isotope-grid .col-sm-6 .block2-txt {
+                padding: 12px 8px;
+                background: white;
+                text-align: center;
+            }
+            
+            .isotope-grid .col-sm-6 .block2-txt .stext-104 {
+                font-size: 13px;
+                line-height: 1.3;
+                margin-bottom: 6px;
+                font-weight: 500;
+                color: #333;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            .isotope-grid .col-sm-6 .block2-txt .mtext-106 {
+                font-size: 16px;
+                font-weight: 600;
+                color: #e74c3c;
+                margin-bottom: 8px;
+            }
+            
+            /* Mobile container improvements */
+            .isotope-grid {
+                margin-left: -7.5px;
+                margin-right: -7.5px;
+            }
+            
+            /* Better spacing for mobile section */
+            .bg0.p-t-23.p-b-130 {
+                padding-top: 20px !important;
+                padding-bottom: 40px !important;
+            }
+            
+            /* Mobile filter buttons */
+            .filter-tope-group .stext-106 {
+                font-size: 12px;
+                padding: 8px 12px;
+                margin: 5px 3px;
+            }
+            
+            /* Mobile section title */
+            .ltext-103 {
+                font-size: 20px !important;
+                margin-bottom: 15px;
+            }
+        }
+        
+        /* Enhanced mobile experience for very small screens */
+        @media (max-width: 360px) {
+            .isotope-grid .col-sm-6 {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            
+            .isotope-grid .col-sm-6 .block2-pic {
+                height: 250px; /* Keep consistent even on very small screens */
+            }
+            
+            .isotope-grid .col-sm-6 .block2-txt {
+                padding: 10px 6px;
+            }
+            
+            .isotope-grid .col-sm-6 .block2-txt .stext-104 {
+                font-size: 12px;
+            }
+            
+            .isotope-grid .col-sm-6 .block2-txt .mtext-106 {
+                font-size: 14px;
+            }
+        }
+        
+        /* Add to Cart Button Styling */
+        .btn-addcart-b2 {
+            background: transparent;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-addcart-b2:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.1);
+        }
+        
+        .btn-addcart-b2:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-addcart-b2 i {
+            transition: color 0.3s ease;
+        }
+        
+        .btn-addcart-b2:hover i {
+            color: #007bff !important;
+        }
+        
+        .btn-viewproduct-b2 {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-viewproduct-b2:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-viewproduct-b2:active {
+            transform: scale(0.95);
+        }
+        
+        /* Override existing width restriction to allow button centering */
+        .block2-txt-child2 {
+            width: auto !important;
+            justify-content: center;
+        }
+        
+        /* Mobile responsive fixes for product names */
+        .block2-txt {
+            min-height: auto !important;
+        }
+        
+        .stext-104 {
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            text-overflow: unset !important;
+            line-height: 1.4;
+            display: block !important;
+            max-width: 100%;
+        }
+        
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+            .block2-txt {
+                padding: 14px 8px !important;
+            }
+            
+            .stext-104 {
+                font-size: 14px !important;
+                line-height: 1.3;
+                margin-bottom: 8px !important;
+            }
+            
+            .text-center {
+                width: 100%;
+            }
+            
+            .btn-viewproduct-b2 {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+        
+        /* Responsive styling for no-products message */
+        #no-products-message {
+            background-color: #f8f9fa;
+            padding: 80px 0;
+            margin-top: 60px;
+            margin-bottom: 80px;
+            min-height: auto;
+        }
+        
+        .no-products-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+        
+        .no-products-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .no-products-text {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+        
+        @media (max-width: 575.98px) {
+            #no-products-message {
+                padding: 60px 0;
+                margin-top: 40px;
+                margin-bottom: 60px;
+            }
+            
+            .no-products-container {
+                max-width: 90%;
+                padding: 30px 20px;
+                border-radius: 15px;
+            }
+            
+            .no-products-title {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            
+            .no-products-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+    
+    <style>
+        /* Enhanced Footer Styling */
+        footer.bg3 {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer.bg3::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
+        }
+        
+        footer h4.stext-301 {
+            position: relative;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        footer h4.stext-301::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #e74c3c;
+        }
+        
+        footer h4.stext-301 i {
+            color: #e74c3c;
+            font-size: 18px;
+        }
+        
+        footer ul li a {
+            padding: 8px 0;
+            display: block;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        footer ul li a:hover {
+            padding-left: 15px;
+            border-left-color: #e74c3c;
+            color: #ffffff !important;
+        }
+        
+        footer ul li a i {
+            width: 20px;
+            color: #e74c3c;
+            transition: transform 0.3s ease;
+        }
+        
+        footer ul li a:hover i {
+            transform: translateX(5px);
+        }
+        
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .footer-social a:hover {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .footer-social a i {
+            font-size: 16px;
+        }
+        
+        footer .wrap-input1 {
+            position: relative;
+            border-radius: 25px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        footer .input1 {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+        }
+        
+        footer .input1::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        footer .size-103 {
+            border-radius: 25px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        footer .size-103:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+        }
+        
+        footer .bor15 {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #e74c3c 50%, transparent 100%);
+            border: none;
+        }
+        
+        footer .stext-107.cl6 {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        footer .stext-107.cl6:hover {
+            color: #ffffff !important;
+        }
+        
+        /* Contact info styling */
+        .contact-info-item {
+            transition: all 0.3s ease;
+            padding: 5px 0;
+            border-radius: 5px;
+        }
+        
+        .contact-info-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            padding-left: 10px;
+        }
+        
+        .contact-info-item i {
+            color: #e74c3c;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Responsive footer enhancements */
+        @media (max-width: 991.98px) {
+            footer h4.stext-301 {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+            
+            footer .stext-107 {
+                font-size: 14px;
+            }
+            
+            .footer-social a {
+                width: 35px;
+                height: 35px;
+                margin-right: 10px;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            footer.bg3 {
+                padding-top: 50px;
+            }
+            
+            footer h4.stext-301 {
+                text-align: center;
+                font-size: 16px;
+            }
+            
+            footer .col-sm-6 {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            
+            .footer-social {
+                text-align: center;
+            }
+            
+            .footer-social .flex-w {
+                justify-content: center;
+            }
+        }
     </style>
 {% endblock stylesheets %}
 
 {% block body %}
 
-		<!-- Modal Search -->
-		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
-			<button class="flex-c-m btn-hide-modal-search trans-04">
-				<i class="zmdi zmdi-close"></i>
-			</button>
-
-			<form class="container-search-header">
-				<div class="wrap-search-header">
-					<input class="plh0" type="text" name="search" placeholder="Recherche...">
-
-					<button class="flex-c-m trans-04">
-						<i class="zmdi zmdi-search"></i>
-					</button>
-				</div>
-			</form>
-		</div>
-	</header>
-
-
-	<!-- Sidebar -->
-	<aside class="wrap-sidebar js-sidebar">
-		<div class="s-full js-hide-sidebar"></div>
-
-		<div class="sidebar flex-col-l p-t-22 p-b-25">
-			<div class="flex-r w-full p-b-30 p-r-27">
-				<div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-sidebar">
-					<i class="zmdi zmdi-close"></i>
-				</div>
-			</div>
-
-			<div class="sidebar-content flex-w w-full p-lr-65 js-pscroll">
-				<ul class="sidebar-link w-full">
-					<li class="p-b-13">
-						<a href="{{ path('front_home') }}" class="stext-102 cl2 hov-cl1 trans-04">
-							Accueil
-						</a>
-					</li>
-
-
-					<li class="p-b-13">
-						<a href="{{ path('front_product') }}" class="stext-102 cl2 hov-cl1 trans-04">
-							Produits
-						</a>
-					</li>
-
-					<li class="p-b-13">
-						<a href="{{ path('front_cart') }}" class="stext-102 cl2 hov-cl1 trans-04">
-							Panier
-						</a>
-					</li>
-				</ul>
-
-				<div class="sidebar-gallery w-full p-tb-30">
-					<span class="mtext-101 cl5">
-						@ BAdiscount
-					</span>
-
-					<div class="flex-w flex-sb p-t-36 gallery-lb">
-						<!-- item gallery sidebar -->
-						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="{{ asset('front/images/gallery-01.jpg') }}" data-lightbox="gallery" 
-							style="background-image: url('{{ asset('front/images/gallery-01.jpg') }}');"></a>
-						</div>
-
-						<!-- item gallery sidebar -->
-						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="{{ asset('front/images/gallery-02.jpg') }}" data-lightbox="gallery" 
-							style="background-image: url('{{ asset('front/images/gallery-02.jpg') }}');"></a>
-						</div>
-
-						<!-- item gallery sidebar -->
-						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="{{ asset('front/images/gallery-03.jpg') }}" data-lightbox="gallery" 
-							style="background-image: url('{{ asset('front/images/gallery-03.jpg') }}');"></a>
-						</div>
-
-						<!-- item gallery sidebar -->
-						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="{{ asset('front/images/gallery-04.jpg') }}" data-lightbox="gallery" 
-							style="background-image: url('{{ asset('front/images/gallery-04.jpg') }}');"></a>
-						</div>
-
-						<!-- item gallery sidebar -->
-						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="{{ asset('front/images/gallery-05.jpg') }}" data-lightbox="gallery" 
-							style="background-image: url('{{ asset('front/images/gallery-05.jpg') }}');"></a>
-						</div>
-
-						<!-- item gallery sidebar -->
-						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="{{ asset('front/images/gallery-06.jpg') }}" data-lightbox="gallery" 
-							style="background-image: url('{{ asset('front/images/gallery-06.jpg') }}');"></a>
-						</div>
-
-						<!-- item gallery sidebar -->
-						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="{{ asset('front/images/gallery-07.jpg') }}" data-lightbox="gallery" 
-							style="background-image: url('{{ asset('front/images/gallery-07.jpg') }}');"></a>
-						</div>
-
-						<!-- item gallery sidebar -->
-						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="{{ asset('front/images/gallery-08.jpg') }}" data-lightbox="gallery" 
-							style="background-image: url('{{ asset('front/images/gallery-08.jpg') }}');"></a>
-						</div>
-
-						<!-- item gallery sidebar -->
-						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="{{ asset('front/images/gallery-09.jpg') }}" data-lightbox="gallery" 
-							style="background-image: url('{{ asset('front/images/gallery-09.jpg') }}');"></a>
-						</div>
-					</div>
-				</div>
-
-				<div class="sidebar-gallery w-full">
-					<span class="mtext-101 cl5">
-						À Propos
-					</span>
-
-					<p class="stext-108 cl6 p-t-27">
-						BAdiscount est une boutique en ligne tunisienne spécialisée dans les vêtements à prix abordables. Nous proposons une large sélection de vêtements pour hommes et femmes avec livraison dans toute la Tunisie.
-					</p>
-				</div>
-			</div>
-		</div>
-	</aside>
-
-
-	<!-- Cart popup has been moved to base_front.html.twig for all pages -->
-
-
-
-	<!-- Slider -->
-	<section class="section-slide">
-		<div class="wrap-slick1 rs2-slick1">
-			<div class="slick1">
-				<div class="item-slick1 bg-overlay1" style="background-image: url('{{ asset('front/images/slide-05.jpg') }}');" data-thumb="{{ asset('front/images/thumb-01.jpg') }}" data-caption="Women’s Wear">
-					<div class="container h-full">
-						<div class="flex-col-c-m h-full p-t-100 p-b-60 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-								<span class="ltext-202 txt-center cl0 respon2">
-									Collection Femmes 2025
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
-								<h2 class="ltext-104 txt-center cl0 p-t-22 p-b-40 respon1">
-									Nouvelles arrivées
-								</h2>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
-								<a href="{{ path('front_product') }}" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-									Acheter maintenant
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="item-slick1 bg-overlay1" style="background-image: url('{{ asset('front/images/slide-06.jpg') }}');" data-thumb="{{ asset('front/images/thumb-02.jpg') }}" data-caption="Men’s Wear">
-					<div class="container h-full">
-						<div class="flex-col-c-m h-full p-t-100 p-b-60 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="rollIn" data-delay="0">
-								<span class="ltext-202 txt-center cl0 respon2">
-									Nouvelle saison Hommes
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="lightSpeedIn" data-delay="800">
-								<h2 class="ltext-104 txt-center cl0 p-t-22 p-b-40 respon1">
-									Vestes et Manteaux
-								</h2>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="slideInUp" data-delay="1600">
-								<a href="{{ path('front_product') }}" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-									Acheter maintenant
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="item-slick1 bg-overlay1" style="background-image: url('{{ asset('front/images/slide-07.jpg') }}');" data-thumb="{{ asset('front/images/thumb-03.jpg') }}" data-caption="Men’s Wear">
-					<div class="container h-full">
-						<div class="flex-col-c-m h-full p-t-100 p-b-60 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="rotateInDownLeft" data-delay="0">
-								<span class="ltext-202 txt-center cl0 respon2">
-									Collection Hommes 2025
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="rotateInUpRight" data-delay="800">
-								<h2 class="ltext-104 txt-center cl0 p-t-22 p-b-40 respon1">
-									NOUVELLE SAISON
-								</h2>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="rotateIn" data-delay="1600">
-								<a href="{{ path('front_product') }}" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-									Acheter maintenant
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="wrap-slick1-dots p-lr-10"></div>
-		</div>
-	</section>
-
-
-	<!-- Banner -->
-	<div class="sec-banner bg0 p-t-95 p-b-55">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-6 p-b-30 m-lr-auto">
-					<!-- Block1 -->
-					<div class="block1 wrap-pic-w">
-						<img src="{{ asset('front/images/banner-04.jpg') }}" alt="IMG-BANNER">
-
-						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Femmes
-								</span>
-
-								<span class="block1-info stext-102 trans-04">
-									Nouvelle Tendance
-								</span>
-							</div>
-
-							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">
-									Acheter maintenant
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-
-				<div class="col-md-6 p-b-30 m-lr-auto">
-					<!-- Block1 -->
-					<div class="block1 wrap-pic-w">
-						<img src="{{ asset('front/images/banner-05.jpg') }}" alt="IMG-BANNER">
-
-						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Hommes
-								</span>
-
-								<span class="block1-info stext-102 trans-04">
-									Nouvelle Tendance
-								</span>
-							</div>
-
-							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">
-									Acheter maintenant
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-
-				<div class="col-md-6 col-lg-4 p-b-30 m-lr-auto">
-					<!-- Block1 -->
-					<div class="block1 wrap-pic-w">
-						<img src="{{ asset('front/images/banner-07.jpg') }}" alt="IMG-BANNER">
-
-						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Montres
-								</span>
-
-								<span class="block1-info stext-102 trans-04">
-									Printemps 2025
-								</span>
-							</div>
-
-							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">
-									Acheter maintenant
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-
-				<div class="col-md-6 col-lg-4 p-b-30 m-lr-auto">
-					<!-- Block1 -->
-					<div class="block1 wrap-pic-w">
-						<img src="{{ asset('front/images/banner-08.jpg') }}" alt="IMG-BANNER">
-
-						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Sacs
-								</span>
-
-								<span class="block1-info stext-102 trans-04">
-									Printemps 2025
-								</span>
-							</div>
-
-							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">
-									Acheter maintenant
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-
-				<div class="col-md-6 col-lg-4 p-b-30 m-lr-auto">
-					<!-- Block1 -->
-					<div class="block1 wrap-pic-w">
-						<img src="{{ asset('front/images/banner-09.jpg') }}" alt="IMG-BANNER">
-
-						<a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Accessoires
-								</span>
-
-								<span class="block1-info stext-102 trans-04">
-									Printemps 2025
-								</span>
-							</div>
-
-							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">
-									Acheter maintenant
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-	<!-- Product -->
-	<section class="bg0 p-t-23 p-b-130">
-		<div class="container">
-			<div class="p-b-10">
-				<h3 class="ltext-103 cl5">
-					Aperçu des Produits
-				</h3>
-			</div>
-
-			<div class="flex-w flex-sb-m p-b-52">
-				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
-						Tous les Produits
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-						Femmes
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-						Hommes
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".kids">
-						Enfants
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-						Sacs
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-						Chaussures
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-						Montres
-					</button>
-				</div>
-
-				<div class="flex-w flex-c-m m-tb-10">
-					<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
-						<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
-						<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						 Filtre
-					</div>
-
-					<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
-						<i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
-						<i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						Recherche
-					</div>
-				</div>
-				
-				<!-- Search product -->
-				<div class="dis-none panel-search w-full p-t-10 p-b-15">
-					<div class="bor8 dis-flex p-l-15">
-						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-							<i class="zmdi zmdi-search"></i>
-						</button>
-
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Recherche">
-					</div>	
-				</div>
-
-				<!-- Filter -->
-				<div class="dis-none panel-filter w-full p-t-10">
-					<div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
-						<div class="filter-col1 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Sort By
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Default
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Popularity
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Average rating
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-										Newness
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Price: Low to High
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Price: High to Low
-									</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="filter-col2 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Price
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-										All
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$0.00 - $50.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$50.00 - $100.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$100.00 - $150.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$150.00 - $200.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$200.00+
-									</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="filter-col3 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Color
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #222;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										Black
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #4272d7;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-										Blue
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #b3b3b3;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										Grey
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #00ad5f;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										Green
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #fa4251;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										Red
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #aaa;">
-										<i class="zmdi zmdi-circle-o"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										White
-									</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="filter-col4 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Tags
-							</div>
-
-							<div class="flex-w p-t-4 m-r--5">
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Fashion
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Lifestyle
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Denim
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Streetstyle
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Crafts
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="row isotope-grid">
-                {% if products is empty %}
-                <div class="col-12 p-b-35">
-                    <div class="alert alert-info text-center">
+    <!-- Sidebar -->
+
+
+    <!-- Cart popup has been moved to base_front.html.twig for all pages -->
+
+
+
+    <!-- Slider -->
+    <section class="section-slide">
+        <div class="wrap-slick1 rs2-slick1">
+            <div class="slick1">
+                <div class="item-slick1 bg-overlay1" style="background-image: url('{{ asset('front/images/slide-05.jpg') }}');" data-thumb="{{ asset('front/images/thumb-01.jpg') }}" data-caption="Women’s Wear">
+                    <div class="container h-full">
+                        <div class="flex-col-c-m h-full p-t-100 p-b-60 respon5">
+                            <div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
+                                <span class="ltext-202 txt-center cl0 respon2">
+                                    Collection Femmes 2025
+                                </span>
+                            </div>
+                                
+                            <div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
+                                <h2 class="ltext-104 txt-center cl0 p-t-22 p-b-40 respon1">
+                                    Nouvelles arrivées
+                                </h2>
+                            </div>
+                                
+                            <div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
+                                <a href="{{ path('front_product') }}" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn2 p-lr-15 trans-04">
+                                    Acheter maintenant
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Banner -->
+    <div class="sec-banner bg0 p-t-95 p-b-55">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 p-b-30 m-lr-auto">
+                    <!-- Block1 -->
+                    <div class="block1 wrap-pic-w">
+                        <img src="{{ asset('front/images/banner-04.jpg') }}" alt="IMG-BANNER">
+
+                        <a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
+                            <div class="block1-txt-child1 flex-col-l">
+                                <span class="block1-name ltext-102 trans-04 p-b-8">
+                                    Femmes
+                                </span>
+
+                                <span class="block1-info stext-102 trans-04">
+                                    Nouvelle Tendance
+                                </span>
+                            </div>
+
+                            <div class="block1-txt-child2 p-b-4 trans-05">
+                                <div class="block1-link stext-101 cl0 trans-09">
+                                    Acheter maintenant
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-6 p-b-30 m-lr-auto">
+                    <!-- Block1 -->
+                    <div class="block1 wrap-pic-w">
+                        <img src="{{ asset('front/images/banner-05.jpg') }}" alt="IMG-BANNER">
+
+                        <a href="{{ path('front_product') }}" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
+                            <div class="block1-txt-child1 flex-col-l">
+                                <span class="block1-name ltext-102 trans-04 p-b-8">
+                                    Enfants
+                                </span>
+
+                                <span class="block1-info stext-102 trans-04">
+                                    Nouvelle Tendance
+                                </span>
+                            </div>
+
+                            <div class="block1-txt-child2 p-b-4 trans-05">
+                                <div class="block1-link stext-101 cl0 trans-09">
+                                    Acheter maintenant
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Product -->
+    <section class="bg0 p-t-23 p-b-130">
+        <div class="container">
+            <div class="p-b-10">
+                <h3 class="ltext-103 cl5">
+                    Aperçu des Produits
+                </h3>
+            </div>
+
+            <div class="flex-w flex-sb-m p-b-52">
+                <div class="flex-w flex-l-m filter-tope-group m-tb-10">
+                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
+                        Tous les Produits
+                    </button>
+
+                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
+                        Femmes
+                    </button>
+
+                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".enfant">
+                        Enfants
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="row isotope-grid">
+                {% if products|length == 0 %}
+                <div class="col-12">
+                    <div class="text-center p-t-50 p-b-50">
                         <h3>Coming Soon</h3>
                         <p>No products are available at the moment. Check back later!</p>
                     </div>
@@ -674,27 +649,26 @@
                                     {% else %}
                                         <img src="{{ asset('front/images/product-placeholder.jpg') }}" alt="No Image">
                                     {% endif %}
-
-                                    <a href="{{ path('front_product_detail', {'id': product.id}) }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-                                        Aperçu rapide
-                                    </a>
                                 </div>
 
-                                <div class="block2-txt flex-w flex-t p-t-14">
-                                    <div class="block2-txt-child1 flex-col-l ">
+                                <div class="block2-txt flex-col-c p-t-14">
+                                    <div class="text-center p-b-10">
                                         <a href="{{ path('front_product_detail', {'id': product.id}) }}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
                                             {{ product.name }}
                                         </a>
+                                    </div>
 
+                                    <div class="text-center p-b-15">
                                         <span class="stext-105 cl3">
                                             {{ product.price }} TND
                                         </span>
                                     </div>
 
-                                    <div class="block2-txt-child2 flex-r p-t-3">
-                                        <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-                                            <img class="icon-heart1 dis-block trans-04" src="{{ asset('front/images/icons/icon-heart-01.png') }}" alt="ICON">
-                                            <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{ asset('front/images/icons/icon-heart-02.png') }}" alt="ICON">
+                                    <div class="flex-c-m">
+                                        <a href="{{ path('front_product_detail', {'id': product.id}) }}" 
+                                           class="btn-viewproduct-b2" 
+                                           title="Aperçu rapide">
+                                            Aperçu rapide
                                         </a>
                                     </div>
                                 </div>
@@ -702,428 +676,230 @@
                         </div>
                     {% endfor %}
                 {% endif %}
-			</div>
+            </div>
+            
+            <!-- No products message for category filters (separate section) -->
+            <div id="no-products-message" style="display: none;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="no-products-container">
+                                <h3 class="no-products-title">Aucun produit disponible</h3>
+                                <p class="no-products-text">Aucun produit n'est disponible pour cette catégorie pour le moment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<!-- Pagination -->
-			<div class="flex-c-m flex-w w-full p-t-38">
-				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
-					1
-				</a>
-
-				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7">
-					2
-				</a>
-			</div>
-		</div>
-	</section>
-
-
-	<!-- Footer -->
-	<footer class="bg3 p-t-75 p-b-32">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-6 col-lg-3 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						Catégories
-					</h4>
-
-					<ul>
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Femmes
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Hommes
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Enfants
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Chaussures
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Montres
-							</a>
-						</li>
-					</ul>
-				</div>
-
-				<div class="col-sm-6 col-lg-3 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						Aide
-					</h4>
-
-					<ul>
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Suivi de commande
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Retours
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Livraison
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								FAQ
-							</a>
-						</li>
-					</ul>
-				</div>
-
-				<div class="col-sm-6 col-lg-3 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						CONTACTEZ-NOUS
-					</h4>
-
-					<p class="stext-107 cl7 size-201">
-						Des questions? Contactez-nous à notre boutique à Tunis, Tunisie ou appelez-nous au (+216) 55 123 456
-					</p>
-
-					<div class="p-t-27">
-						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
-							<i class="fa fa-facebook"></i>
-						</a>
-
-						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
-							<i class="fa fa-instagram"></i>
-						</a>
-
-						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
-							<i class="fa fa-pinterest-p"></i>
-						</a>
-					</div>
-				</div>
-
-				<div class="col-sm-6 col-lg-3 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						Newsletter
-					</h4>
-
-					<form>
-						<div class="wrap-input1 w-full p-b-4">
-							<input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
-							<div class="focus-input1 trans-04"></div>
-						</div>
-
-						<div class="p-t-18">
-							<button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-								S'abonner
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
-
-			<div class="p-t-40">
-				<div class="flex-c-m flex-w p-b-18">
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('front/images/icons/icon-pay-01.png') }}" alt="ICON-PAY">
-					</a>
-
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('front/images/icons/icon-pay-02.png') }}" alt="ICON-PAY">
-					</a>
-
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('front/images/icons/icon-pay-03.png') }}" alt="ICON-PAY">
-					</a>
-
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('front/images/icons/icon-pay-04.png') }}" alt="ICON-PAY">
-					</a>
-
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('front/images/icons/icon-pay-05.png') }}" alt="ICON-PAY">
-					</a>
-				</div>
-
-				
-			</div>
-		</div>
-	</footer>
+            <!-- Pagination -->
+            {% if totalPages > 1 %}
+            <div class="flex-c-m flex-w w-full p-t-38">
+                <!-- Previous page button -->
+                {% if currentPage > 1 %}
+                    <a href="{{ path('front_home', {'page': currentPage - 1}) }}" class="flex-c-m how-pagination1 trans-04 m-all-7">
+                        ‹
+                    </a>
+                {% endif %}
+                
+                <!-- Page numbers -->
+                {% for page in 1..totalPages %}
+                    {% if page == currentPage %}
+                        <a href="{{ path('front_home', {'page': page}) }}" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+                            {{ page }}
+                        </a>
+                    {% elseif page == 1 or page == totalPages or (page >= currentPage - 2 and page <= currentPage + 2) %}
+                        <a href="{{ path('front_home', {'page': page}) }}" class="flex-c-m how-pagination1 trans-04 m-all-7">
+                            {{ page }}
+                        </a>
+                    {% elseif page == currentPage - 3 or page == currentPage + 3 %}
+                        <span class="flex-c-m how-pagination1 trans-04 m-all-7">…</span>
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- Next page button -->
+                {% if currentPage < totalPages %}
+                    <a href="{{ path('front_home', {'page': currentPage + 1}) }}" class="flex-c-m how-pagination1 trans-04 m-all-7">
+                        ›
+                    </a>
+                {% endif %}
+            </div>
+            
+            <!-- Pagination info -->
+            <div class="flex-c-m w-full p-t-15">
+                <span class="stext-108 cl6">
+                    Affichage {{ ((currentPage - 1) * 10) + 1 }}-{{ min(currentPage * 10, totalProducts) }} sur {{ totalProducts }} produits
+                </span>
+            </div>
+            {% endif %}
+        </div>
+    </section>
 
 
-	<!-- Back to top -->
-	<div class="btn-back-to-top" id="myBtn">
-		<span class="symbol-btn-back-to-top">
-			<i class="zmdi zmdi-chevron-up"></i>
-		</span>
-	</div>
+    <!-- Footer -->
+    <footer class="bg3 p-t-75 p-b-32">
+        <div class="container">
+            <div class="row">
+                <!-- Company Info -->
+                <div class="col-sm-6 col-lg-4">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        <i class="fa fa-store m-r-10"></i>
+                        À Propos de Nous
+                    </h4>
 
-	<!-- Modal1 -->
-	<div class="wrap-modal1 js-modal1 p-t-60 p-b-20">
-		<div class="overlay-modal1 js-hide-modal1"></div>
+                    <div class="p-b-20">
+                        <div class="flex-w p-b-5">
+                            <i class="fa fa-phone fs-18 cl7 m-r-10"></i>
+                            <span class="stext-107 cl7">+216 98 431 061</span>
+                        </div>
+                    </div>
+                </div>
 
-		<div class="container">
-			<div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
-				<button class="how-pos3 hov3 trans-04 js-hide-modal1">
-					<img src="{{ asset('front/images/icons/icon-close.png') }}" alt="CLOSE">
-				</button>
+                <!-- Customer Service -->
+                <div class="col-sm-6 col-lg-3">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        <i class="fa fa-headset m-r-10"></i>
+                        Service Client
+                    </h4>
 
-				<div class="row">
-					<div class="col-md-6 col-lg-7 p-b-30">
-						<div class="p-l-25 p-r-30 p-lr-0-lg">
-							<div class="wrap-slick3 flex-sb flex-w">
-								<div class="wrap-slick3-dots"></div>
-								<div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
+                    <ul>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-search m-r-5"></i>
+                                Suivi de commande
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-undo m-r-5"></i>
+                                Retours & Échanges
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-truck m-r-5"></i>
+                                Livraison
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-question-circle m-r-5"></i>
+                                FAQ
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-shield-alt m-r-5"></i>
+                                Garantie
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-								<div class="slick3 gallery-lb">
-									<div class="item-slick3" data-thumb="{{ asset('front/images/product-detail-01.jpg') }}">
-										<div class="wrap-pic-w pos-relative">
-											<img src="{{ asset('front/images/product-detail-01.jpg') }}" alt="IMG-PRODUCT">
+                <!-- Newsletter & Social -->
+                <div class="col-sm-6 col-lg-3">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        <i class="fa fa-paper-plane m-r-10"></i>
+                        Restez Connecté
+                    </h4>
 
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{{ asset('front/images/product-detail-01.jpg') }}">
-												<i class="fa fa-expand"></i>
-											</a>
-										</div>
-									</div>
+                    <div class="footer-social">
+                        <h5 class="stext-107 cl0 p-b-10">Suivez-nous</h5>
+                        <div class="flex-w">
+                            <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="fs-18 cl7 hov-cl1 trans-04" title="TikTok">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-									<div class="item-slick3" data-thumb="{{ asset('front/images/product-detail-02.jpg') }}">
-										<div class="wrap-pic-w pos-relative">
-											<img src="{{ asset('front/images/product-detail-02.jpg') }}" alt="IMG-PRODUCT">
+            <!-- Footer Bottom -->
+            <div class="p-t-40 p-b-20">
+                <div class="bor15"></div>
+            </div>
 
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{{ asset('front/images/product-detail-02.jpg') }}">
-												<i class="fa fa-expand"></i>
-											</a>
-										</div>
-									</div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="stext-107 cl6 txt-center">
+                        &copy; {{ "now"|date("Y") }} BAdiscount. Tous droits réservés.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="flex-c-m flex-w">
+                        <a href="#" class="stext-107 cl6 hov-cl1 trans-04 m-r-16">
+                            Conditions d'utilisation
+                        </a>
+                        <a href="#" class="stext-107 cl6 hov-cl1 trans-04 m-r-16">
+                            Confidentialité
+                        </a>
+                        <a href="#" class="stext-107 cl6 hov-cl1 trans-04">
+                            Mentions légales
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-									<div class="item-slick3" data-thumb="{{ asset('front/images/product-detail-03.jpg') }}">
-										<div class="wrap-pic-w pos-relative">
-											<img src="{{ asset('front/images/product-detail-03.jpg') }}" alt="IMG-PRODUCT">
+    <!-- Back to top -->
+    <div class="btn-back-to-top" id="myBtn">
+        <span class="symbol-btn-back-to-top">
+            <i class="zmdi zmdi-chevron-up"></i>
+        </span>
+    </div>
 
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{{ asset('front/images/product-detail-03.jpg') }}">
-												<i class="fa fa-expand"></i>
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-					<div class="col-md-6 col-lg-5 p-b-30">
-						<div class="p-r-50 p-t-5 p-lr-0-lg">
-							<h4 class="mtext-105 cl2 js-name-detail p-b-14">
-								Lightweight Jacket
-							</h4>
-
-							<span class="mtext-106 cl2">
-								$58.79
-							</span>
-
-							<p class="stext-102 cl3 p-t-23">
-								Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.
-							</p>
-							
-							<!--  -->
-							<div class="p-t-33">
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-203 flex-c-m respon6">
-										Size
-									</div>
-
-									<div class="size-204 respon6-next">
-										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time">
-												<option>Choose an option</option>
-												<option>Size S</option>
-												<option>Size M</option>
-												<option>Size L</option>
-												<option>Size XL</option>
-											</select>
-											<div class="dropDownSelect2"></div>
-										</div>
-									</div>
-								</div>
-
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-203 flex-c-m respon6">
-										Color
-									</div>
-
-									<div class="size-204 respon6-next">
-										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time">
-												<option>Choose an option</option>
-												<option>Red</option>
-												<option>Blue</option>
-												<option>White</option>
-												<option>Grey</option>
-											</select>
-											<div class="dropDownSelect2"></div>
-										</div>
-									</div>
-								</div>
-
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-204 flex-w flex-m respon6-next">
-										<div class="wrap-num-product flex-w m-r-20 m-tb-10">
-											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-minus"></i>
-											</div>
-
-											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
-
-											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-plus"></i>
-											</div>
-										</div>
-
-										<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-											Add to cart
-										</button>
-									</div>
-								</div>	
-							</div>
-
-							<!--  -->
-							<div class="flex-w flex-m p-l-100 p-t-40 respon7">
-								<div class="flex-m bor9 p-r-10 m-r-11">
-									<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
-										<i class="zmdi zmdi-favorite"></i>
-									</a>
-								</div>
-
-								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
-									<i class="fa fa-facebook"></i>
-								</a>
-
-								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Twitter">
-									<i class="fa fa-twitter"></i>
-								</a>
-
-								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Google Plus">
-									<i class="fa fa-google-plus"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-<!--===============================================================================================-->	
-	
 <!--===============================================================================================-->
-	
+    
 <!--===============================================================================================-->
-	
-	
+    
 <!--===============================================================================================-->
-	
-	<script>
-		$(".js-select2").each(function(){
-			$(this).select2({
-				minimumResultsForSearch: 20,
-				dropdownParent: $(this).next('.dropDownSelect2')
-			});
-		})
-	</script>
+    
+    
 <!--===============================================================================================-->
-	
-	
-<!--===============================================================================================-->
-	
-	
-<!--===============================================================================================-->
-	
-	<script>
-        $('.parallax100') .parallax100();
-	</script>
-<!--===============================================================================================-->
-	
-	<script>
-		$('.gallery-lb') .each(function() { // the containers for all your galleries
-			$(this).magnificPopup({
-		        delegate: 'a', // the selector for gallery item
-		        type: 'image',
-		        gallery: {
-		        	enabled:true
-		        },
-		        mainClass: 'mfp-fade'
-		    });
-		});
-	</script>
-<!--===============================================================================================-->
-	
-<!--===============================================================================================-->
-	
-	<script>
-		$('.js-addwish-b2') .on('click', function(e){
-			e.preventDefault();
-		});
+    
+{% endblock %}
 
-		$('.js-addwish-b2') .each(function(){
-			var nameProduct = $(this).parent().parent().find('.js-name-b2') .html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
-
-				$(this).addClass('js-addedwish-b2');
-				$(this).off('click');
-			});
-		});
-
-		$('.js-addwish-detail') .each(function(){
-			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail') .html();
-
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
-
-				$(this).addClass('js-addedwish-detail');
-				$(this).off('click');
-			});
-		});
-
-		/*---------------------------------------------*/
-
-		$('.js-addcart-detail') .each(function(){
-			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail') .html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to cart !", "success");
-			});
-		});
-	</script>
-<!--===============================================================================================-->
-	
-	<script>
-		$('.js-pscroll') .each(function(){
-			$(this).css('position','relative');
-			$(this).css('overflow','hidden');
-			var ps = new PerfectScrollbar(this, {
-				wheelSpeed: 1,
-				scrollingThreshold: 1000,
-				wheelPropagation: false,
-			});
-
-			$(window).on('resize', function(){
-				ps.update();
-			})
-		});
-	</script>
-<!--===============================================================================================-->
-	
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script>
+        // Category filter handling - runs after jQuery is loaded
+        $(document).ready(function() {
+            // Category filter handling
+            $('.filter-tope-group button').on('click', function() {
+                // Remove active class from all buttons
+                $('.filter-tope-group button').removeClass('how-active1');
+                // Add active class to clicked button
+                $(this).addClass('how-active1');
+                
+                var filterValue = $(this).attr('data-filter');
+                
+                if (filterValue === '*') {
+                    // Show all products
+                    $('.isotope-grid .isotope-item').show();
+                    $('#no-products-message').hide();
+                } else {
+                    // Hide all products first
+                    $('.isotope-grid .isotope-item').hide();
+                    // Show only filtered products
+                    var filteredItems = $('.isotope-grid .isotope-item' + filterValue);
+                    filteredItems.show();
+                    
+                    // Check if any products are visible
+                    if (filteredItems.length == 0) {
+                        $('#no-products-message').show();
+                    } else {
+                        $('#no-products-message').hide();
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -175,7 +175,6 @@
                                         <td>
                                             <div class="d-flex flex-column">
                                                 <span class="fw-bold">{{ order.customerName }}</span>
-                                                <small class="text-muted">{{ order.customerEmail }}</small>
                                             </div>
                                         </td>
                                         <td>
@@ -224,12 +223,7 @@
                                                     <i class="fa fa-file-pdf"></i>
                                                 </a>
                                                 
-                                                <form method="POST" action="{{ path('admin_orders_delete', {'id': order.id}) }}" class="delete-form mx-1">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ order.id) }}">
-                                                    <button type="button" class="btn btn-gradient-danger btn-sm rounded-circle shadow hover-lift delete-button" data-toggle="tooltip" data-original-title="Supprimer la commande" data-bs-placement="top">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                <!-- Delete button removed as requested -->
                                             </div>
                                         </td>
                                     </tr>

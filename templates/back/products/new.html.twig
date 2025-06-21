@@ -25,116 +25,140 @@
 
 {% block content %}
 <div class="page-inner">
-    <div class="page-header animate__animated animate__fadeIn">
-        <h4 class="page-title"><i class="fa fa-box-open mr-2"></i>Gestion des produits</h4>
-        <ul class="breadcrumbs">
-            <li class="nav-home">
-                <a href="{{ path('admin_dashboard') }}" data-toggle="tooltip" title="Dashboard">
-                    <i class="fa fa-home"></i>
-                </a>
-            </li>
-            <li class="separator">
-                <i class="fa fa-angle-right"></i>
-            </li>
-            <li class="nav-item">
-                <a href="{{ path('admin_products') }}">Produits</a>
-            </li>
-            <li class="separator">
-                <i class="fa fa-angle-right"></i>
-            </li>
-            <li class="nav-item">
-                <span class="badge badge-info">Nouveau produit</span>
-            </li>
-        </ul>
+    <div class="page-header d-flex justify-content-between align-items-center mb-4 animate__animated animate__fadeIn">
+        <div>
+            <h2 class="page-title fw-bold">Créer un nouveau produit</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}"><i class="fa fa-home mr-2"></i>Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('admin_products') }}">Produits</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Nouveau</li>
+                </ol>
+            </nav>
+        </div>
     </div>
     
     <div class="row">
         <div class="col-md-12">
-            <div class="card shadow-sm animate__animated animate__fadeIn">
-                <div class="card-header bg-gradient-primary text-white">
-                    <div class="card-title mb-0">
-                        <i class="fa fa-plus-circle mr-2"></i>Créer un nouveau produit
-                    </div>
+            <div class="card border-0 shadow-sm rounded-3 animate__animated animate__fadeIn">
+                <div class="card-header bg-light py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fa fa-plus-circle mr-2 text-primary"></i>Créer un nouveau produit</h5>
                 </div>
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data" id="product-form" onsubmit="return false;" novalidate>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="name" class="form-label"><i class="fa fa-tag mr-1"></i> Nom du produit</label>
+                                <div class="form-group mb-3">
+                                    <label for="name" class="form-label">Nom du produit <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-signature"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Entrez le nom du produit" required minlength="3" maxlength="100" data-validation="required|minlength:3|maxlength:100">
+                                        <span class="input-group-text bg-primary text-white"><i class="fa fa-tag"></i></span>
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Entrez le nom du produit" required minlength="3" maxlength="100">
                                     </div>
-                                    <small class="form-text text-danger validation-message" id="name-validation"></small>
+                                    <div class="invalid-feedback">Veuillez entrer un nom de produit.</div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="price" class="form-label"><i class="fa fa-money-bill mr-1"></i> Prix (TND)</label>
+                                <div class="form-group mb-3">
+                                    <label for="price" class="form-label">Prix (TND) <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
-                                        </div>
-                                        <input type="number" step="0.01" min="0" max="99999.99" class="form-control" id="price" name="price" placeholder="Entrez le prix" required data-validation="required|min:0|max:99999.99">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">TND</span>
-                                        </div>
+                                        <span class="input-group-text bg-success text-white"><i class="fa fa-dollar-sign"></i></span>
+                                        <input type="number" step="0.01" min="0" max="99999.99" class="form-control" id="price" name="price" placeholder="Entrez le prix" required>
                                     </div>
-                                    <small class="form-text text-danger validation-message" id="price-validation"></small>
+                                    <div class="invalid-feedback">Le prix doit être supérieur à zéro.</div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="stock" class="form-label"><i class="fa fa-inventory mr-1"></i> Quantité en stock</label>
+                                <div class="form-group mb-3">
+                                    <label for="stock" class="form-label">Quantité en stock <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-boxes"></i></span>
-                                        </div>
-                                        <input type="number" min="0" max="99999" class="form-control" id="stock" name="stock" placeholder="Entrez la quantité en stock" required data-validation="required|min:0|max:99999">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">unités</span>
-                                        </div>
+                                        <span class="input-group-text bg-info text-white"><i class="fa fa-boxes"></i></span>
+                                        <input type="number" class="form-control" id="stock" name="stock" placeholder="Quantité disponible" required min="0">
                                     </div>
-                                    <small class="form-text text-danger validation-message" id="stock-validation"></small>
+                                    <div class="invalid-feedback">La quantité en stock doit être un nombre positif.</div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="category" class="form-label"><i class="fa fa-layer-group mr-1"></i> Catégorie</label>
+                                <div class="form-group mb-3">
+                                    <label for="category" class="form-label">Catégorie <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-sitemap"></i></span>
-                                        </div>
-                                        <select class="form-control custom-select" id="category" name="category" required data-validation="required">
+                                        <span class="input-group-text bg-warning text-white"><i class="fa fa-list"></i></span>
+                                        <select class="form-control" id="category" name="category" required>
                                             <option value="">Sélectionnez une catégorie</option>
-                                            <option value="men">Hommes</option>
                                             <option value="women">Femmes</option>
-                                            <option value="kids">Enfants</option>
-                                            <option value="accessories">Accessoires</option>
+                                            <option value="kids">Enfant</option>
                                         </select>
                                     </div>
-                                    <small class="form-text text-danger validation-message" id="category-validation"></small>
+                                    <div class="invalid-feedback">Veuillez sélectionner une catégorie.</div>
                                 </div>
+                                
+                                <div class="form-group mb-4">
+                                    <label for="shippingOptions" class="form-label h5 mb-3"><i class="fa fa-shipping-fast text-primary mr-2"></i>Options de livraison</label>
+                                    <div class="shipping-options-container">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                                <div class="shipping-toggle-container mb-3 p-3 rounded bg-light border-left border-primary border-3 position-relative overflow-hidden">
+                                                    <!-- Design elements -->
+                                                    <div class="position-absolute shipping-bg-element"><i class="fa fa-truck-loading opacity-10 text-lighter"></i></div>
+                                                    
+                                                    <!-- Free shipping toggle -->
+                                                    <div class="custom-control custom-switch custom-switch-lg">
+                                                        <input type="checkbox" class="custom-control-input" id="freeShipping" name="freeShipping" onchange="toggleShippingPrice()">
+                                                        <label class="custom-control-label h5 mb-0" for="freeShipping">Livraison gratuite</label>
+                                                    </div>
+                                                    <p class="text-muted mb-0 mt-2">L'option livraison gratuite attirera plus de clients et augmentera le taux de conversion.</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Shipping price section with animated transition -->
+                                            <div class="col-md-12">
+                                                <div id="shippingPriceGroup" class="shipping-price-container p-3 border rounded" data-animation="fade-in-up">
+                                                    <div class="mb-3">
+                                                        <label for="shippingPrice" class="form-label font-weight-bold">Prix de livraison</label>
+                                                        <div class="input-group input-group-lg shadow-sm">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text bg-gradient-primary text-white border-0"><i class="fa fa-money-bill-wave"></i></span>
+                                                            </div>
+                                                            <input type="number" class="form-control form-control-lg border-0 shadow-none" id="shippingPrice" name="shippingPrice" placeholder="Ex: 7.99" step="0.01" min="0">
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text bg-light border-0">TND</span>
+                                                            </div>
+                                                        </div>
+                                                        <small class="form-text text-muted mt-2">
+                                                            <i class="fa fa-info-circle mr-1"></i> Ce coût sera ajouté automatiquement au total de la commande client
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                                <style>
+                                    /* Custom shipping styles */
+                                    .border-3 { border-width: 3px !important; }
+                                    .shipping-bg-element { font-size: 6rem; right: -10px; bottom: -25px; transform: rotate(-10deg); z-index: 0; }
+                                    .opacity-10 { opacity: 0.1; }
+                                    .text-lighter { color: #e9ecef; }
+                                    .shipping-toggle-container { transition: all 0.3s ease; }
+                                    .shipping-toggle-container:hover { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+                                    .shipping-price-container { transition: all 0.3s ease; }
+                                    .custom-switch-lg .custom-control-label { padding-left: 6px; cursor: pointer; }
+                                    .bg-gradient-primary { background: linear-gradient(45deg, #007bff, #00a5ff); }
+                                </style>
                             </div>
                             
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="description" class="form-label"><i class="fa fa-align-left mr-1"></i> Description</label>
+                                <div class="form-group mb-3">
+                                    <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-edit"></i></span>
-                                        </div>
-                                        <textarea class="form-control" id="description" name="description" rows="6" placeholder="Entrez la description du produit" required minlength="10" maxlength="2000" data-validation="required|minlength:10|maxlength:2000" style="border-top-right-radius: 4px; border-bottom-right-radius: 4px;"></textarea>
+                                        <span class="input-group-text bg-secondary text-white"><i class="fa fa-align-left"></i></span>
+                                        <textarea class="form-control" id="description" name="description" rows="5" placeholder="Entrez la description du produit" maxlength="1000" required></textarea>
                                     </div>
-                                    <small class="form-text text-danger validation-message" id="description-validation"></small>
-                                    <div class="d-flex justify-content-end">
-                                        <small class="form-text text-muted char-counter badge badge-light"><i class="fa fa-text-height"></i> <span id="description-counter">0</span>/2000 caractères</small>
-                                    </div>
+                                    <div class="invalid-feedback">La description est obligatoire.</div>
+                                    <small class="text-muted character-count"><span id="char-count">0</span>/1000 caractères</small>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="images" class="form-label"><i class="fa fa-images mr-1"></i> Images du produit (minimum 1 requise)</label>
-                                    <div class="input-file input-file-image border p-3 rounded bg-light">
+                                <div class="form-group mb-4">
+                                    <label for="images" class="form-label">Images du produit <span class="text-danger">*</span></label>
+                                    <div class="input-file input-file-image border p-3 rounded bg-light shadow-sm">
                                         <div class="d-flex align-items-center mb-2">
                                             <span class="badge badge-info mr-2"><i class="fa fa-info-circle"></i> Info</span>
                                             <small class="text-muted">Formats acceptés: JPG, JPEG, PNG. Taille max: 5MB par image</small>
@@ -511,23 +535,19 @@
         };
         
         // Description validation
-        const validateDescription = () => {
+        function validateDescription() {
             const descriptionInput = $('#description');
             const value = descriptionInput.val().trim();
-            const minLength = parseInt(descriptionInput.attr('minlength'));
-            const maxLength = parseInt(descriptionInput.attr('maxlength'));
+            const maxLength = 1000; // Set from the maxlength attribute
             
-            if (value === '') {
-                showError(descriptionInput, 'La description est requise');
-                return false;
-            } else if (value.length < minLength) {
-                showError(descriptionInput, `La description doit contenir au moins ${minLength} caractères`);
+            if (!value) {
+                $(descriptionInput).removeClass('is-valid').addClass('is-invalid');
                 return false;
             } else if (value.length > maxLength) {
-                showError(descriptionInput, `La description ne peut pas dépasser ${maxLength} caractères`);
+                $(descriptionInput).removeClass('is-valid').addClass('is-invalid');
                 return false;
             } else {
-                showSuccess(descriptionInput);
+                $(descriptionInput).removeClass('is-invalid').addClass('is-valid');
                 return true;
             }
         };
@@ -681,20 +701,16 @@
             const validateDescription = () => {
                 const descriptionInput = $('#description');
                 const value = descriptionInput.val().trim();
-                const minLength = parseInt(descriptionInput.attr('minlength'));
-                const maxLength = parseInt(descriptionInput.attr('maxlength'));
+                const maxLength = 1000; // Set from the maxlength attribute
                 
-                if (value === '') {
-                    showError(descriptionInput, 'La description est requise');
-                    return false;
-                } else if (value.length < minLength) {
-                    showError(descriptionInput, `La description doit contenir au moins ${minLength} caractères`);
+                if (!value) {
+                    $(descriptionInput).removeClass('is-valid').addClass('is-invalid');
                     return false;
                 } else if (value.length > maxLength) {
-                    showError(descriptionInput, `La description ne peut pas dépasser ${maxLength} caractères`);
+                    $(descriptionInput).removeClass('is-valid').addClass('is-invalid');
                     return false;
                 } else {
-                    showSuccess(descriptionInput);
+                    $(descriptionInput).removeClass('is-invalid').addClass('is-valid');
                     return true;
                 }
             };
@@ -735,14 +751,21 @@
             // Description character counter
             $('#description').on('input', function() {
                 const currentLength = $(this).val().length;
-                const maxLength = 2000; // Hardcoding the value since it's specified in the UI
-                $('#description-counter').text(currentLength);
+                const maxLength = 1000; // Maxlength from the textarea attribute
+                $('#char-count').text(currentLength);
                 
                 // Change color when approaching limit
                 if (currentLength > maxLength * 0.9) {
-                    $('#description-counter').css('color', '#dc3545');
+                    $('#char-count').css('color', '#dc3545');
                 } else {
-                    $('#description-counter').css('color', '');
+                    $('#char-count').css('color', '');
+                }
+                
+                // Add validation classes
+                if(currentLength > 0) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
                 }
             });
             
@@ -876,6 +899,31 @@
             $(document).on('input', '.new-color-code', function() {
                 $(this).closest('.color-row').find('.new-color-preview').css('background-color', $(this).val());
             });
+            
+            // Initialize shipping price toggle
+            toggleShippingPrice();
+            
+            // Initialize description character counter
+            $('#char-count').text($('#description').val().length);
         });
+        
+        // Function to toggle shipping price field based on free shipping checkbox
+        function toggleShippingPrice() {
+            var freeShipping = $('#freeShipping').is(':checked');
+            var $priceGroup = $('#shippingPriceGroup');
+            
+            if (freeShipping) {
+                // Hide with animation
+                $priceGroup.slideUp(300, function() {
+                    $priceGroup.addClass('d-none');
+                });
+                $('#shippingPrice').removeAttr('required');
+            } else {
+                // Show with animation
+                $priceGroup.removeClass('d-none');
+                $priceGroup.hide().slideDown(300);
+                $('#shippingPrice').attr('required', 'required');
+            }
+        }
     </script>
 {% endblock %}

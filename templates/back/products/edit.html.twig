@@ -124,6 +124,16 @@
                                 </div>
                                 
                                 <div class="form-group mb-3">
+                                    <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-secondary text-white"><i class="fa fa-align-left"></i></span>
+                                        <textarea class="form-control" id="description" name="description" rows="5" placeholder="Entrez la description du produit" maxlength="1000" required>{{ product.description }}</textarea>
+                                    </div>
+                                    <div class="invalid-feedback">La description est obligatoire.</div>
+                                    <small class="text-muted character-count"><span id="char-count">0</span>/1000 caractères</small>
+                                </div>
+                                
+                                <div class="form-group mb-3">
                                     <label for="price" class="form-label">Prix (TND) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-success text-white"><i class="fa fa-dollar-sign"></i></span>
@@ -147,91 +157,25 @@
                                         <span class="input-group-text bg-warning text-white"><i class="fa fa-list"></i></span>
                                         <select class="form-control" id="category" name="category" required>
                                             <option value="">Sélectionnez une catégorie</option>
-                                            <option value="men" {% if product.category == 'men' %}selected{% endif %}>Hommes</option>
                                             <option value="women" {% if product.category == 'women' %}selected{% endif %}>Femmes</option>
-                                            <option value="kids" {% if product.category == 'kids' %}selected{% endif %}>Enfants</option>
-                                            <option value="accessories" {% if product.category == 'accessories' %}selected{% endif %}>Accessoires</option>
+                                            <option value="kids" {% if product.category == 'kids' %}selected{% endif %}>Enfant</option>
                                         </select>
                                     </div>
                                     <div class="invalid-feedback">Veuillez sélectionner une catégorie.</div>
                                 </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-secondary text-white"><i class="fa fa-align-left"></i></span>
-                                        <textarea class="form-control" id="description" name="description" rows="5" placeholder="Entrez la description du produit" maxlength="1000" required>{{ product.description }}</textarea>
-                                    </div>
-                                    <div class="invalid-feedback">La description est obligatoire.</div>
-                                    <small class="text-muted character-count"><span id="char-count">0</span>/1000 caractères</small>
-                                </div>
                                 
-                                <div class="form-group mb-4">
-                                    <label for="images" class="form-label">Images du produit <span class="text-danger">*</span></label>
-                                    
-                                    {# Current images #}
-                                    <div class="current-images mb-3 mt-3">
-                                        <h6 class="fw-bold mb-3 d-flex align-items-center"><i class="fa fa-images text-primary mr-2"></i> Images actuelles</h6>
-                                        <div class="d-flex flex-wrap" id="current-images-container">
-                                            {% if product.images|length > 0 %}
-                                                {% for image in product.images %}
-                                                    <div class="image-item position-relative m-2 animate__animated animate__fadeIn" id="img-container-{{ image.id }}">
-                                                        <div class="card border-0 shadow-sm h-100">
-                                                            <div class="position-relative">
-                                                                <img src="{{ asset('uploads/products/' ~ image.imagePath) }}" alt="{{ product.name }}" class="card-img-top" width="150" height="150" style="object-fit: cover;">
-                                                                {% if image.isPrimary %}
-                                                                    <span class="badge bg-success position-absolute top-0 end-0 m-2">Principale</span>
-                                                                {% endif %}
-                                                            </div>
-                                                            <div class="card-body p-2">
-                                                                <div class="form-check mb-2">
-                                                                    <input type="radio" id="primary_{{ image.id }}" name="primary_image" value="{{ image.id }}" class="form-check-input" {% if image.isPrimary %}checked{% endif %}>
-                                                                    <label class="form-check-label" for="primary_{{ image.id }}">Image principale</label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" id="delete_{{ image.id }}" name="delete_images[]" value="{{ image.id }}" class="form-check-input delete-image-checkbox">
-                                                                    <label class="form-check-label text-danger" for="delete_{{ image.id }}">Supprimer</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            {% else %}
-                                                <div class="text-center w-100 py-4 text-muted bg-light rounded">
-                                                    <i class="fa fa-image fa-3x mb-3 opacity-50"></i>
-                                                    <p>Aucune image téléversée.</p>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    
-                                    {# Add new images #}
-                                    <div class="add-new-images mt-4 mb-4">
-                                        <h6 class="fw-bold mb-3 d-flex align-items-center"><i class="fa fa-plus-circle text-success mr-2"></i> Ajouter de nouvelles images</h6>
-                                        <div class="card border-0 shadow-sm">
-                                            <div class="card-body">
-                                                <div class="image-preview-container" id="image-previews">
-                                                    <div class="image-preview-item text-center p-3">
-                                                        <img class="img-upload-preview mb-2" width="120" height="120" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview" style="object-fit: contain;">
-                                                        <p class="mb-0 text-muted">Aperçu des images</p>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-3">
-                                                    <input type="file" class="form-control form-control-file d-none" id="images" name="images[]" accept="image/*" multiple>
-                                                    <label for="images" class="btn btn-primary btn-gradient rounded-pill shadow-sm w-100">
-                                                        <i class="fa fa-cloud-upload-alt mr-2"></i> Sélectionner des images
-                                                    </label>
-                                                    <small class="form-text text-muted mt-2">
-                                                        <i class="fa fa-info-circle mr-1"></i> Formats acceptés: JPG, PNG, GIF. Taille max: 5MB.
-                                                        <br>Vous pouvez sélectionner plusieurs images à la fois.
-                                                    </small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <style>
+                                    /* Custom shipping styles */
+                                    .border-3 { border-width: 3px !important; }
+                                    .shipping-bg-element { font-size: 6rem; right: -10px; bottom: -25px; transform: rotate(-10deg); z-index: 0; }
+                                    .opacity-10 { opacity: 0.1; }
+                                    .text-lighter { color: #e9ecef; }
+                                    .shipping-toggle-container { transition: all 0.3s ease; }
+                                    .shipping-toggle-container:hover { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+                                    .shipping-price-container { transition: all 0.3s ease; }
+                                    .custom-switch-lg .custom-control-label { padding-left: 6px; cursor: pointer; }
+                                    .bg-gradient-primary { background: linear-gradient(45deg, #007bff, #00a5ff); }
+                                </style>
                                 
                                 <div class="form-group mb-4">
                                     <label class="form-label">Couleurs du produit</label>
@@ -313,16 +257,146 @@
                                         </div>
                                     </div>
                                 </div>
+
+<div class="form-group mb-4">
+                                    <label for="shippingOptions" class="form-label h5 mb-3"><i class="fa fa-shipping-fast text-primary mr-2"></i>Options de livraison</label>
+                                    <div class="shipping-options-container">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                                <div class="shipping-toggle-container mb-3 p-3 rounded bg-light border-left border-primary border-3 position-relative overflow-hidden">
+                                                    <!-- Design elements -->
+                                                    <div class="position-absolute shipping-bg-element"><i class="fa fa-truck-loading opacity-10 text-lighter"></i></div>
+                                                    
+                                                    <!-- Free shipping toggle -->
+                                                    <div class="custom-control custom-switch custom-switch-lg">
+                                                        <input type="checkbox" class="custom-control-input" id="freeShipping" name="freeShipping" {% if product.freeShipping %}checked{% endif %} onchange="toggleShippingPrice()">
+                                                        <label class="custom-control-label h5 mb-0" for="freeShipping">Livraison gratuite</label>
+                                                    </div>
+                                                    <p class="text-muted mb-0 mt-2">L'option livraison gratuite attirera plus de clients et augmentera le taux de conversion.</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Shipping price section with animated transition -->
+                                            <div class="col-md-12">
+                                                <div id="shippingPriceGroup" class="shipping-price-container p-3 border rounded{% if product.freeShipping %} d-none{% endif %}" data-animation="fade-in-up">
+                                                    <div class="mb-3">
+                                                        <label for="shippingPrice" class="form-label font-weight-bold">Prix de livraison</label>
+                                                        <div class="input-group input-group-lg shadow-sm">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text bg-gradient-primary text-white border-0"><i class="fa fa-money-bill-wave"></i></span>
+                                                            </div>
+                                                            <input type="number" class="form-control form-control-lg border-0 shadow-none" id="shippingPrice" name="shippingPrice" placeholder="Ex: 7.99" step="0.01" min="0" value="{{ product.shippingPrice }}">
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text bg-light border-0">TND</span>
+                                                            </div>
+                                                        </div>
+                                                        <small class="form-text text-muted mt-2">
+                                                            <i class="fa fa-info-circle mr-1"></i> Ce coût sera ajouté automatiquement au total de la commande client
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            
+                            <div class="col-md-6">
+
+                                
+                                <div class="form-group mb-4">
+                                    <label for="images" class="form-label">Images du produit <span class="text-danger">*</span></label>
+                                    
+                                    {# Current images #}
+                                    <div class="current-images mb-3 mt-3">
+                                        <h6 class="fw-bold mb-3 d-flex align-items-center"><i class="fa fa-images text-primary mr-2"></i> Images actuelles</h6>
+                                        <div class="d-flex flex-wrap" id="current-images-container">
+                                            {% if product.images|length > 0 %}
+                                                {% for image in product.images %}
+                                                    <div class="image-item position-relative m-2 animate__animated animate__fadeIn" id="img-container-{{ image.id }}">
+                                                        <div class="card border-0 shadow-sm h-100">
+                                                            <div class="position-relative">
+                                                                <img src="{{ asset('uploads/products/' ~ image.imagePath) }}" alt="{{ product.name }}" class="card-img-top" width="150" height="150" style="object-fit: cover;">
+                                                                {% if image.isPrimary %}
+                                                                    <span class="badge bg-success position-absolute top-0 end-0 m-2">Principale</span>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="card-body p-2">
+                                                                <div class="form-check mb-2">
+                                                                    <input type="radio" id="primary_{{ image.id }}" name="primary_image" value="{{ image.id }}" class="form-check-input" {% if image.isPrimary %}checked{% endif %}>
+                                                                    <label class="form-check-label" for="primary_{{ image.id }}">Image principale</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="delete_{{ image.id }}" name="delete_images[]" value="{{ image.id }}" class="form-check-input delete-image-checkbox">
+                                                                    <label class="form-check-label text-danger" for="delete_{{ image.id }}">Supprimer</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="text-center w-100 py-4 text-muted bg-light rounded">
+                                                    <i class="fa fa-image fa-3x mb-3 opacity-50"></i>
+                                                    <p>Aucune image téléversée.</p>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    {# Add new images #}
+                                    <div class="add-new-images mt-4 mb-4">
+                                        <h6 class="fw-bold mb-3 d-flex align-items-center"><i class="fa fa-plus-circle text-success mr-2"></i> Ajouter de nouvelles images</h6>
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-body">
+                                                <div class="image-preview-container" id="image-previews">
+                                                    <div class="image-preview-item text-center p-3">
+                                                        <img class="img-upload-preview mb-2" width="120" height="120" src="{{ asset('back/assets/img/placeholder.svg') }}" alt="preview" style="object-fit: contain;">
+                                                        <p class="mb-0 text-muted">Aperçu des images</p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3">
+                                                    <input type="file" class="form-control form-control-file d-none" id="images" name="images[]" accept="image/*" multiple>
+                                                    <label for="images" class="btn btn-primary btn-gradient rounded-pill shadow-sm w-100">
+                                                        <i class="fa fa-cloud-upload-alt mr-2"></i> Sélectionner des images
+                                                    </label>
+                                                    <small class="form-text text-muted mt-2">
+                                                        <i class="fa fa-info-circle mr-1"></i> Formats acceptés: JPG, PNG, GIF. Taille max: 5MB.
+                                                        <br>Vous pouvez sélectionner plusieurs images à la fois.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="d-flex gap-3 mt-4">
-                            <button type="submit" id="submit-btn" class="btn btn-success rounded-pill shadow-sm fw-bold">
-                                <i class="fa fa-save mr-2"></i>Mettre à jour le produit
-                            </button>
-                            <a href="{{ path('admin_products') }}" class="btn btn-outline-danger rounded-pill shadow-sm">
-                                <i class="fa fa-times mr-2"></i>Annuler
-                            </a>
+                        <hr class="mt-4">
+                        <div class="card-action">
+                            <div id="form-errors" class="alert alert-danger d-none mb-3 animate__animated animate__fadeIn">
+                                <div class="d-flex">
+                                    <div class="mr-3">
+                                        <i class="fa fa-exclamation-triangle fa-2x text-danger"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Erreur de validation</h5>
+                                        <p class="mb-0">Veuillez corriger les erreurs ci-dessous avant de soumettre le formulaire.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 text-center text-md-left mb-3 mb-md-0">
+                                    <a href="{{ path('admin_products') }}" class="btn btn-outline-danger btn-rounded px-4">
+                                        <i class="fa fa-arrow-left mr-2"></i> Annuler et retourner aux produits
+                                    </a>
+                                </div>
+                                <div class="col-md-6 text-center text-md-right">
+                                    <button type="submit" id="submit-btn" class="btn btn-success btn-lg btn-rounded shadow px-5">
+                                        <i class="fa fa-save mr-2"></i> Mettre à jour le produit
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -348,6 +422,13 @@
                     $('#char-count').removeClass('text-muted').addClass('text-danger');
                 } else {
                     $('#char-count').removeClass('text-danger').addClass('text-muted');
+                }
+                
+                // Add appropriate validation classes
+                if (currentLength > 0) {
+                    $('#description').removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $('#description').removeClass('is-valid').addClass('is-invalid');
                 }
             };
             
@@ -663,6 +744,28 @@
                     $(this).addClass('is-valid');
                 }
             });
+            
+            // Initialize shipping price toggle
+            toggleShippingPrice();
         });
+        
+        // Function to toggle shipping price field based on free shipping checkbox
+        function toggleShippingPrice() {
+            var freeShipping = $('#freeShipping').is(':checked');
+            var $priceGroup = $('#shippingPriceGroup');
+            
+            if (freeShipping) {
+                // Hide with animation
+                $priceGroup.slideUp(300, function() {
+                    $priceGroup.addClass('d-none');
+                });
+                $('#shippingPrice').removeAttr('required');
+            } else {
+                // Show with animation
+                $priceGroup.removeClass('d-none');
+                $priceGroup.hide().slideDown(300);
+                $('#shippingPrice').attr('required', 'required');
+            }
+        }
     </script>
 {% endblock %}

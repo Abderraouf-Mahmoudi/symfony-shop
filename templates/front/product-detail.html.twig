@@ -4,11 +4,8 @@
 
 {% block body %}
     <!-- Banner Title Section -->
-    <div class="page-heading-banner bg-img1" style="background-image: url('{{ asset('front/images/bg-02.jpg') }}');">
+    <div class="page-heading-banner bg-img1">
         <div class="container">
-            <div class="page-title-text text-center">
-                <h2>{{ product.name }}</h2>
-            </div>
         </div>
     </div>
     
@@ -64,18 +61,6 @@
                             <span class="product-price">{{ product.price|number_format(2, '.', ',') }} TND</span>
                         </div>
                         
-                        <!-- Rating Stars -->                        
-                        <div class="ratings mb-4">
-                            <span class="stars">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                            </span>
-                            <span class="rating-count">(4.5/5)</span>
-                        </div>
-                        
                         <!-- Product Description -->                        
                         <div class="product-description mb-4">
                             <p>{{ product.description }}</p>
@@ -85,12 +70,6 @@
                         
                         <!-- Product Details -->                        
                         <div class="product-details mb-4">
-                            <!-- Category -->                            
-                            <div class="detail-row d-flex align-items-center mb-3">
-                                <span class="detail-label">Catégorie:</span>
-                                <span class="detail-value">{{ product.category }}</span>
-                            </div>
-                            
                             <!-- Stock Status -->                            
                             <div class="detail-row d-flex align-items-center mb-3">
                                 <span class="detail-label">Disponibilité:</span>
@@ -134,6 +113,12 @@
 
                                 <input type="radio" id="size-xl" name="size" value="XL" class="size-radio">
                                 <label for="size-xl" class="size-btn">XL</label>
+
+                                <input type="radio" id="size-xxl" name="size" value="XXL" class="size-radio">
+                                <label for="size-xxl" class="size-btn">XXL</label>
+
+                                <input type="radio" id="size-4xl" name="size" value="4XL" class="size-radio">
+                                <label for="size-4xl" class="size-btn">4XL</label>
                             </div>
                         </div>
                         
@@ -141,15 +126,15 @@
                         <div class="quantity-container mb-4">
                             <h5 class="option-title">Quantité</h5>
                             <div class="quantity-selector d-flex align-items-center">
-                                <div class="btn-num-product-down qty-btn">
+                                <button type="button" class="custom-qty-down qty-btn" id="decrementQuantity">
                                     <i class="fa fa-minus"></i>
-                                </div>
+                                </button>
 
-                                <input class="qty-input" type="number" name="num-product" value="1" min="1">
+                                <input class="qty-input" type="number" id="productQuantity" value="1" min="1" readonly>
 
-                                <div class="btn-num-product-up qty-btn">
+                                <button type="button" class="custom-qty-up qty-btn" id="incrementQuantity">
                                     <i class="fa fa-plus"></i>
-                                </div>
+                                </button>
                             </div>
                         </div>
                         
@@ -166,9 +151,6 @@
                                     <button type="submit" class="add-to-cart-btn">
                                         <i class="fa fa-shopping-cart mr-2"></i> Ajouter au panier
                                     </button>
-                                    <button type="button" class="wishlist-btn ml-3">
-                                        <i class="fa fa-heart"></i>
-                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -177,6 +159,125 @@
             </div>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer class="bg3 p-t-75 p-b-32">
+        <div class="container">
+            <div class="row">
+                <!-- Company Info -->
+                <div class="col-sm-6 col-lg-4">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        <i class="fa fa-store m-r-10"></i>
+                        À Propos de Nous
+                    </h4>
+
+                    <div class="p-b-20">
+                        <div class="flex-w p-b-5">
+                            <i class="fa fa-phone fs-18 cl7 m-r-10"></i>
+                            <span class="stext-107 cl7">+216 98 431 061</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Service -->
+                <div class="col-sm-6 col-lg-3">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        <i class="fa fa-headset m-r-10"></i>
+                        Service Client
+                    </h4>
+
+                    <ul>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-search m-r-5"></i>
+                                Suivi de commande
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-undo m-r-5"></i>
+                                Retours & Échanges
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-truck m-r-5"></i>
+                                Livraison
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-question-circle m-r-5"></i>
+                                FAQ
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-shield-alt m-r-5"></i>
+                                Garantie
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter & Social -->
+                <div class="col-sm-6 col-lg-3">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        <i class="fa fa-paper-plane m-r-10"></i>
+                        Restez Connecté
+                    </h4>
+
+                    <div class="footer-social">
+                        <h5 class="stext-107 cl0 p-b-10">Suivez-nous</h5>
+                        <div class="flex-w">
+                            <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="fs-18 cl7 hov-cl1 trans-04" title="TikTok">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="p-t-40 p-b-20">
+                <div class="bor15"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="stext-107 cl6 txt-center">
+                        &copy; {{ "now"|date("Y") }} BAdiscount. Tous droits réservés.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="flex-c-m flex-w">
+                        <a href="#" class="stext-107 cl6 hov-cl1 trans-04 m-r-16">
+                            Conditions d'utilisation
+                        </a>
+                        <a href="#" class="stext-107 cl6 hov-cl1 trans-04 m-r-16">
+                            Confidentialité
+                        </a>
+                        <a href="#" class="stext-107 cl6 hov-cl1 trans-04">
+                            Mentions légales
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top -->
+    <div class="btn-back-to-top" id="myBtn">
+        <span class="symbol-btn-back-to-top">
+            <i class="zmdi zmdi-chevron-up"></i>
+        </span>
+    </div>
 {% endblock %}
 
 {% block stylesheets %}
@@ -326,26 +427,42 @@
     
     .size-options {
         display: flex;
+        flex-wrap: wrap;
         gap: 10px;
+        margin-top: 15px;
     }
     
     .size-btn {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 45px;
+        min-width: 50px;
         height: 45px;
+        padding: 0 15px;
+        background: #ffffff;
         border: 2px solid #ddd;
         border-radius: 8px;
-        font-weight: 500;
+        font-weight: 600;
+        color: #333;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        text-align: center;
+        user-select: none;
     }
     
-    .size-btn:hover, .size-btn.active-size {
-        background-color: #333;
+    .size-btn:hover {
+        border-color: #e63946;
+        color: #e63946;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(230, 57, 70, 0.2);
+    }
+    
+    .size-radio:checked + .size-btn {
+        background: #e63946;
+        border-color: #e63946;
         color: white;
-        border-color: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
     }
     
     /* Quantity selector styling */
@@ -400,28 +517,10 @@
         transform: translateY(-2px);
     }
     
-    .wishlist-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 45px;
-        height: 45px;
-        background-color: transparent;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .wishlist-btn:hover {
-        background-color: #f8f8f8;
-        color: #e63946;
-    }
-    
     /* Banner styling */
     .page-heading-banner {
         position: relative;
-        padding: 100px 0;
+        height: 200px;
         background-size: cover;
         background-position: center;
         text-align: center;
@@ -445,13 +544,545 @@
         z-index: 2;
     }
     
-    .page-heading-banner h2 {
-        color: white;
-        font-size: 2.5rem;
+    /* Hide banner on mobile devices */
+    @media (max-width: 768px) {
+        .page-heading-banner {
+            display: none;
+        }
+    }
+    
+    /* Enhanced Product Detail Styling */
+    .sec-product-detail {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        position: relative;
+    }
+    
+    .sec-product-detail::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 30% 20%, rgba(231, 76, 60, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 70% 80%, rgba(52, 152, 219, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    
+    .sec-product-detail .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .product-image-container {
+        margin-bottom: 30px;
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .product-image-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .product-info {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    
+    .product-title {
+        font-size: 28px;
         font-weight: 700;
+        margin-bottom: 15px;
+        color: #2c3e50;
+        line-height: 1.3;
+    }
+    
+    .product-price {
+        font-size: 24px;
+        font-weight: 700;
+        color: #e63946;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .product-price::before {
+        content: '';
+        width: 4px;
+        height: 30px;
+        background: linear-gradient(135deg, #e63946, #c1121f);
+        border-radius: 2px;
+        margin-right: 15px;
+    }
+    
+    .ratings {
+        margin-bottom: 25px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .product-description {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        line-height: 1.6;
+        color: #555;
+    }
+    
+    .detail-row {
+        margin-bottom: 20px;
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+    }
+    
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #2c3e50;
+        width: 140px;
+        font-size: 14px;
         text-transform: uppercase;
-        margin: 0;
+        letter-spacing: 0.5px;
+    }
+    
+    .detail-value {
+        color: #555;
+        font-weight: 500;
+    }
+    
+    .color-selection, .size-selection {
+        margin-bottom: 25px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+    
+    .color-selection h5, .size-selection h5 {
+        margin-bottom: 15px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    
+    .quantity-container {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+    
+    .quantity-container h5 {
+        margin-bottom: 15px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    
+    .cart-actions {
+        margin-bottom: 30px;
+    }
+    
+    .add-to-cart-btn {
+        padding: 18px 40px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #e63946, #c1121f);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
         letter-spacing: 1px;
+        box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+        width: 100%;
+    }
+    
+    .add-to-cart-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(230, 57, 70, 0.4);
+        background: linear-gradient(135deg, #c1121f, #a00e1e);
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .product-info {
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .product-title {
+            font-size: 24px;
+        }
+        
+        .product-price {
+            font-size: 20px;
+        }
+        
+        .add-to-cart-btn {
+            padding: 15px 30px;
+            font-size: 16px;
+        }
+        
+        .detail-label {
+            width: 120px;
+            font-size: 13px;
+        }
+        
+        .size-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .size-btn {
+            min-width: auto;
+            height: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+        
+        .size-btn:hover {
+            transform: none;
+        }
+        
+        .size-radio:checked + .size-btn {
+            transform: none;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .size-options {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .size-btn {
+            height: 55px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+    }
+    
+    /* Enhanced Footer Styling */
+    footer.bg3 {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    footer.bg3::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(120, 200, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 120, 200, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    
+    footer h4.stext-301.cl0 {
+        color: #ffffff !important;
+        font-size: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 3px solid #e74c3c;
+        padding-bottom: 10px;
+        display: inline-block;
+        position: relative;
+    }
+    
+    footer h4.stext-301.cl0 i {
+        color: #e74c3c;
+        margin-right: 10px;
+        font-size: 18px;
+    }
+    
+    footer h5.stext-107.cl0 {
+        color: #ffffff !important;
+        font-weight: 500;
+        margin-bottom: 15px;
+    }
+    
+    footer .stext-107.cl7 {
+        color: rgba(255, 255, 255, 0.9) !important;
+        transition: color 0.3s ease;
+        font-size: 15px;
+    }
+    
+    footer .stext-107.cl7:hover {
+        color: #e74c3c !important;
+        transform: translateX(5px);
+    }
+    
+    footer ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    footer ul li {
+        transition: all 0.3s ease;
+        border-radius: 5px;
+        padding: 5px 0;
+    }
+    
+    footer ul li:hover {
+        background: rgba(255, 255, 255, 0.05);
+        padding-left: 10px;
+    }
+    
+    footer ul li a i {
+        color: #e74c3c;
+        width: 16px;
+        text-align: center;
+    }
+    
+    .footer-social a {
+        background: rgba(255, 255, 255, 0.1);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .footer-social a:hover {
+        background: #e74c3c;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+    }
+    
+    .footer-social a i {
+        font-size: 16px;
+    }
+    
+    footer .bor15 {
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #e74c3c 50%, transparent 100%);
+        border: none;
+    }
+    
+    footer .stext-107.cl6 {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    footer .stext-107.cl6:hover {
+        color: #ffffff !important;
+    }
+    
+    /* Contact info styling */
+    .contact-info-item {
+        transition: all 0.3s ease;
+        padding: 5px 0;
+        border-radius: 5px;
+    }
+    
+    .contact-info-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        padding-left: 10px;
+    }
+    
+    .contact-info-item i {
+        color: #e74c3c;
+        width: 20px;
+        text-align: center;
+    }
+    
+    /* Responsive footer enhancements */
+    @media (max-width: 991.98px) {
+        footer h4.stext-301 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        footer .stext-107 {
+            font-size: 14px;
+        }
+        
+        .footer-social a {
+            width: 35px;
+            height: 35px;
+            margin-right: 10px;
+        }
+    }
+    
+    @media (max-width: 575.98px) {
+        footer.bg3 {
+            padding-top: 50px;
+        }
+        
+        footer h4.stext-301.cl0 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .footer-social a {
+            width: 30px;
+            height: 30px;
+            margin-right: 8px;
+        }
+        
+        .footer-social a i {
+            font-size: 14px;
+        }
+        
+        /* Simple mobile footer centering */
+        footer .col-sm-6,
+        footer .col-lg-4,
+        footer .col-lg-3 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        footer .footer-social {
+            text-align: center;
+        }
+        
+        footer .stext-107.cl6 {
+            text-align: center;
+        }
+        
+        footer .flex-w {
+            justify-content: center;
+            text-align: center;
+        }
+    }
+    
+    /* Back to top button styling */
+    .btn-back-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    }
+    
+    .btn-back-to-top:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+    }
+    
+    .btn-back-to-top i {
+        color: white;
+        font-size: 18px;
+    }
+    
+    /* Product Image Slider Styling */
+    .slick3.gallery-lb.product-main-image img {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 10px;
+    }
+    
+    .item-slick3 {
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+    
+    .wrap-pic-w {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    
+    .wrap-pic-w img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.3s ease;
+    }
+    
+    .wrap-pic-w:hover img {
+        transform: scale(1.05);
+    }
+    
+    /* Slick slider thumbnails */
+    .wrap-slick3-dots .slick-dots {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    
+    .wrap-slick3-dots .slick-dots li {
+        margin: 0 5px;
+    }
+    
+    .wrap-slick3-dots .slick-dots li button {
+        width: 80px;
+        height: 80px;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        overflow: hidden;
+        padding: 0;
+        background: none;
+    }
+    
+    .wrap-slick3-dots .slick-dots li.slick-active button {
+        border-color: #e63946;
+    }
+    
+    .wrap-slick3-dots .slick-dots li button img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    @media (max-width: 768px) {
+        .slick3.gallery-lb.product-main-image img {
+            height: 350px;
+        }
+        
+        .item-slick3 {
+            height: 350px;
+        }
+        
+        .wrap-slick3-dots .slick-dots li button {
+            width: 60px;
+            height: 60px;
+        }
     }
 </style>
 {% endblock %}
@@ -496,41 +1127,30 @@
             });
         }
         
-        // Handle quantity changes
-        const quantityInput = document.querySelector('.qty-input');
+        // Handle quantity changes with direct ID selection
+        const quantityInput = document.getElementById('productQuantity');
         const selectedQuantityInput = document.getElementById('selected-quantity');
-        const btnUp = document.querySelector('.btn-num-product-up');
-        const btnDown = document.querySelector('.btn-num-product-down');
+        const incrementBtn = document.getElementById('incrementQuantity');
+        const decrementBtn = document.getElementById('decrementQuantity');
         
-        // Update hidden field when quantity changes
-        quantityInput.addEventListener('change', function() {
-            if(this.value < 1) this.value = 1;
-            selectedQuantityInput.value = this.value;
-        });
+        // Initialize hidden field with default value
+        selectedQuantityInput.value = quantityInput.value;
         
-        // Plus button
-        btnUp.addEventListener('click', function() {
+        // Plus button with direct ID
+        incrementBtn.onclick = function() {
             let currentValue = parseInt(quantityInput.value);
             quantityInput.value = currentValue + 1;
             selectedQuantityInput.value = quantityInput.value;
-        });
+        };
         
-        // Minus button
-        btnDown.addEventListener('click', function() {
+        // Minus button with direct ID
+        decrementBtn.onclick = function() {
             let currentValue = parseInt(quantityInput.value);
             if(currentValue > 1) {
                 quantityInput.value = currentValue - 1;
                 selectedQuantityInput.value = quantityInput.value;
             }
-        });
-        
-        // Wishlist button toggle effect
-        const wishlistBtn = document.querySelector('.wishlist-btn');
-        if(wishlistBtn) {
-            wishlistBtn.addEventListener('click', function() {
-                this.classList.toggle('text-danger');
-            });
-        }
+        };
     });
 </script>
 {% endblock %}

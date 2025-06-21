@@ -92,25 +92,7 @@ class OrderController extends AbstractController
         // Update income and decrease stock if status changes to done
         if ($oldStatus !== 'done' && $status === 'done') {
             try {
-                // Get current income from dashboard settings
-                $settingRepository = $entityManager->getRepository('App\Entity\Setting');
-                $incomeSetting = $settingRepository->findOneBy(['name' => 'income']);
-                
-                if ($incomeSetting) {
-                    $currentIncome = (float)$incomeSetting->getValue();
-                    $orderTotal = (float)$order->getTotalAmount();
-                    $newIncome = $currentIncome + $orderTotal;
-                    
-                    // Update income in dashboard settings
-                    $incomeSetting->setValue((string)$newIncome);
-                } else {
-                    // Create new income setting if it doesn't exist
-                    $incomeSetting = new \App\Entity\Setting();
-                    $incomeSetting->setName('income');
-                    $incomeSetting->setValue($order->getTotalAmount());
-                    $entityManager->persist($incomeSetting);
-                }
-                
+                // Income is now calculated dynamically, no need to update any settings
                 // Debug information to track order processing
                 $this->addFlash('info', 'Processing order #' . $order->getId() . ' with ' . count($order->getItems()) . ' items');
                 

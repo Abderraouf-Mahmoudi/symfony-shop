@@ -7,31 +7,420 @@
 <style>
     /* Fix for product card alignment */
     .block2 {
-        height: 100%;
+        height: 420px; /* Fixed height for uniform desktop sizing */
         display: flex;
         flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+    
+    /* Ensure isotope items have uniform sizing */
+    .isotope-item .block2 {
+        height: 420px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 420px !important;
+    }
+    
+    .block2:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    
     .block2-pic {
-        height: 300px; /* Fixed height for all product images */
+        height: 250px; /* Consistent height for all devices */
         overflow: hidden;
         position: relative;
+        flex-shrink: 0;
     }
     .block2-pic img {
         width: 100%;
         height: 100%;
         object-fit: cover; /* Maintain aspect ratio while filling container */
         object-position: center;
+        transition: transform 0.3s ease;
     }
+    
+    .block2:hover .block2-pic img {
+        transform: scale(1.05);
+    }
+    
     .block2-txt {
+        height: 170px; /* Fixed height for uniform text sections */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 15px 12px;
+        background: white;
+    }
+    
+    /* Ensure isotope text sections are uniform */
+    .isotope-item .block2-txt {
+        height: 170px !important;
+        flex-grow: 0 !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .block2-txt .text-center:first-child {
         flex-grow: 1;
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        min-height: 60px;
     }
+    
+    .block2-txt .stext-104 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.4;
+        max-height: 2.8em;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    
+    .block2-txt .stext-105 {
+        font-weight: 600;
+        color: #e74c3c;
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .isotope-grid .col-6,
     .isotope-grid .col-sm-6,
     .isotope-grid .col-md-4,
     .isotope-grid .col-lg-3 {
         display: flex;
-        margin-bottom: 15px;
+        margin-bottom: 15px; /* Match home page margin */
+    }
+    
+    /* Force uniform dimensions for all isotope items */
+    .isotope-grid .isotope-item {
+        box-sizing: border-box !important;
+    }
+    
+    .isotope-grid .isotope-item .block2 {
+        box-sizing: border-box !important;
+        height: 420px !important;
+    }
+    
+    /* Enhanced Footer Styling */
+    footer.bg3 {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    footer.bg3::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        pointer-events: none;
+    }
+    
+    footer h4.stext-301 {
+        position: relative;
+        border-bottom: 2px solid #e74c3c;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+    
+    footer h4.stext-301::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: #e74c3c;
+    }
+    
+    footer h4.stext-301 i {
+        color: #e74c3c;
+        font-size: 18px;
+    }
+    
+    footer ul li a {
+        padding: 8px 0;
+        display: block;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+    
+    footer ul li a:hover {
+        padding-left: 15px;
+        border-left-color: #e74c3c;
+        color: #ffffff !important;
+    }
+    
+    footer ul li a i {
+        width: 20px;
+        color: #e74c3c;
+        transition: transform 0.3s ease;
+    }
+    
+    footer ul li a:hover i {
+        transform: translateX(5px);
+    }
+    
+    .footer-social a {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .footer-social a:hover {
+        background: #e74c3c;
+        border-color: #e74c3c;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+    }
+    
+    .footer-social a i {
+        font-size: 16px;
+    }
+    
+    footer .bor15 {
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #e74c3c 50%, transparent 100%);
+        border: none;
+    }
+    
+    footer .stext-107.cl6 {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    footer .stext-107.cl6:hover {
+        color: #ffffff !important;
+    }
+    
+    /* Contact info styling */
+    .contact-info-item {
+        transition: all 0.3s ease;
+        padding: 5px 0;
+        border-radius: 5px;
+    }
+    
+    .contact-info-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        padding-left: 10px;
+    }
+    
+    .contact-info-item i {
+        color: #e74c3c;
+        width: 20px;
+        text-align: center;
+    }
+    
+    /* Responsive footer enhancements */
+    @media (max-width: 991.98px) {
+        footer h4.stext-301 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        footer .stext-107 {
+            font-size: 14px;
+        }
+        
+        .footer-social a {
+            width: 35px;
+            height: 35px;
+            margin-right: 10px;
+        }
+    }
+    
+    @media (max-width: 575.98px) {
+        footer.bg3 {
+            padding-top: 50px;
+        }
+        
+        footer h4.stext-301 {
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        footer .col-sm-6 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .footer-social {
+            text-align: center;
+        }
+        
+        .footer-social .flex-w {
+            justify-content: center;
+        }
+    }
+</style>
+
+<style>
+    /* Mobile responsive - 2 products per row */
+    @media (max-width: 575.98px) {
+        .block2 {
+            height: 380px; /* Slightly smaller on mobile */
+        }
+        
+        /* Mobile isotope item overrides */
+        .isotope-item .block2 {
+            height: 380px !important;
+            min-height: 380px !important;
+        }
+        
+        .block2-pic {
+            height: 220px; /* Adjusted for mobile */
+        }
+        
+        .block2-txt {
+            height: 160px; /* Fixed height for mobile text section */
+            padding: 12px 8px;
+        }
+        
+        /* Mobile isotope text section overrides */
+        .isotope-item .block2-txt {
+            height: 160px !important;
+            flex-grow: 0 !important;
+            flex-shrink: 0 !important;
+        }
+        
+        .isotope-grid .col-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+            padding-left: 7.5px;
+            padding-right: 7.5px;
+            margin-bottom: 20px;
+        }
+        
+        .isotope-grid .col-6 .block2-txt .stext-104 {
+            font-size: 13px;
+            line-height: 1.3;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .isotope-grid .col-6 .block2-txt .stext-105 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e74c3c;
+            margin-bottom: 8px;
+        }
+        
+        /* Mobile container improvements */
+        .isotope-grid {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+        }
+        
+        /* Better spacing for mobile section */
+        .bg0.p-t-23.p-b-130 {
+            padding-top: 20px !important;
+            padding-bottom: 40px !important;
+        }
+    }
+    
+    /* Enhanced mobile experience for very small screens */
+    @media (max-width: 360px) {
+        .block2 {
+            height: 340px; /* Fixed height for very small screens */
+        }
+        
+        /* Very small screens isotope item overrides */
+        .isotope-item .block2 {
+            height: 340px !important;
+            min-height: 340px !important;
+        }
+        
+        .block2-pic {
+            height: 180px;
+        }
+        
+        .block2-txt {
+            height: 160px; /* Fixed height */
+            padding: 10px 6px;
+        }
+        
+        /* Very small screens isotope text section overrides */
+        .isotope-item .block2-txt {
+            height: 160px !important;
+            flex-grow: 0 !important;
+            flex-shrink: 0 !important;
+        }
+        
+        .isotope-grid .col-6 {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        
+        .isotope-grid .col-6 .block2-txt .stext-104 {
+            font-size: 12px;
+        }
+        
+        .isotope-grid .col-6 .block2-txt .stext-105 {
+            font-size: 14px;
+        }
+    }
+
+    /* Button and general styling */
+    .btn-viewproduct-b2 {
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-viewproduct-b2:hover {
+        background-color: #2980b9;
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    .btn-viewproduct-b2:active {
+        transform: scale(0.95);
+    }
+
+    /* Mobile specific button adjustments */
+    @media (max-width: 768px) {
+        .btn-viewproduct-b2 {
+            font-size: 14px;
+            padding: 8px 16px;
+        }
+        
+        .text-center {
+            width: 100%;
+        }
+        
+        /* Mobile 2-column layout adjustments */
+        .col-6 {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        
+        .stext-105 {
+            font-size: 14px !important;
+            font-weight: 600;
+        }
     }
 </style>
 {% endblock stylesheets %}
@@ -54,24 +443,36 @@
                     </div>
                 {% else %}
                     {% for product in products %}
-                        <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item {{ product.category|lower }}">
+                        <div class="col-6 col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item {% if product.category %}{{ product.category|lower }}{% else %}all{% endif %}">
+                            <!-- Block2 -->
                             <div class="block2">
-                                <div class="block2-pic hov-img0">
+                                <div class="block2-pic hov-img0{% if product.isNew %} label-new" data-label="New"{% else %}"{% endif %}">
                                     {% if product.primaryImage %}
                                         <img src="{{ asset('uploads/products/' ~ product.primaryImage.imagePath) }}" alt="{{ product.name }}">
                                     {% else %}
-                                        <img src="{{ asset('back/img/placeholder.jpg') }}" alt="{{ product.name }}">
+                                        <img src="{{ asset('front/images/product-placeholder.jpg') }}" alt="No Image">
                                     {% endif %}
-                                    <a href="{{ path('front_product_detail', {'id': product.id}) }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-                                        Aperçu rapide
-                                    </a>
                                 </div>
-                                <div class="block2-txt flex-w flex-t p-t-14">
-                                    <div class="block2-txt-child1 flex-col-l">
+
+                                <div class="block2-txt flex-col-c p-t-14">
+                                    <div class="text-center p-b-10">
                                         <a href="{{ path('front_product_detail', {'id': product.id}) }}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
                                             {{ product.name }}
                                         </a>
-                                        <span class="stext-105 cl3">{{ product.price|number_format(2, '.', ',') }} TND</span>
+                                    </div>
+
+                                    <div class="text-center p-b-15">
+                                        <span class="stext-105 cl3">
+                                            {{ product.price }} TND
+                                        </span>
+                                    </div>
+
+                                    <div class="flex-c-m">
+                                        <a href="{{ path('front_product_detail', {'id': product.id}) }}" 
+                                           class="btn-viewproduct-b2" 
+                                           title="Aperçu rapide">
+                                            Aperçu rapide
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -81,5 +482,124 @@
             </div>
         </div>
     </section>
-{% endblock %}
 
+    <!-- Footer -->
+    <footer class="bg3 p-t-75 p-b-32">
+        <div class="container">
+            <div class="row">
+                <!-- Company Info -->
+                <div class="col-sm-6 col-lg-4">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        <i class="fa fa-store m-r-10"></i>
+                        À Propos de Nous
+                    </h4>
+
+                    <div class="p-b-20">
+                        <div class="flex-w p-b-5">
+                            <i class="fa fa-phone fs-18 cl7 m-r-10"></i>
+                            <span class="stext-107 cl7">+216 98 431 061</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Service -->
+                <div class="col-sm-6 col-lg-3">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        <i class="fa fa-headset m-r-10"></i>
+                        Service Client
+                    </h4>
+
+                    <ul>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-search m-r-5"></i>
+                                Suivi de commande
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-undo m-r-5"></i>
+                                Retours & Échanges
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-truck m-r-5"></i>
+                                Livraison
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-question-circle m-r-5"></i>
+                                FAQ
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                <i class="fa fa-shield-alt m-r-5"></i>
+                                Garantie
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter & Social -->
+                <div class="col-sm-6 col-lg-3">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        <i class="fa fa-paper-plane m-r-10"></i>
+                        Restez Connecté
+                    </h4>
+
+                    <div class="footer-social">
+                        <h5 class="stext-107 cl0 p-b-10">Suivez-nous</h5>
+                        <div class="flex-w">
+                            <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="fs-18 cl7 hov-cl1 trans-04" title="TikTok">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="p-t-40 p-b-20">
+                <div class="bor15"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="stext-107 cl6 txt-center">
+                        &copy; {{ "now"|date("Y") }} BAdiscount. Tous droits réservés.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="flex-c-m flex-w">
+                        <a href="#" class="stext-107 cl6 hov-cl1 trans-04 m-r-16">
+                            Conditions d'utilisation
+                        </a>
+                        <a href="#" class="stext-107 cl6 hov-cl1 trans-04 m-r-16">
+                            Confidentialité
+                        </a>
+                        <a href="#" class="stext-107 cl6 hov-cl1 trans-04">
+                            Mentions légales
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top -->
+    <div class="btn-back-to-top" id="myBtn">
+        <span class="symbol-btn-back-to-top">
+            <i class="zmdi zmdi-chevron-up"></i>
+        </span>
+    </div>
+
+{% endblock %}
